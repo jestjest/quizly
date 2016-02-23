@@ -1,4 +1,4 @@
-package project;
+package quizme;
 
 /**
  * This class is used to uniquely determine one

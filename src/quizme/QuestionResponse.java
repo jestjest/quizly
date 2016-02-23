@@ -1,4 +1,4 @@
-package project;
+package quizme;
 
 public class QuestionResponse extends Question {
 

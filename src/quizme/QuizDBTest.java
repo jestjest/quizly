@@ -1,4 +1,4 @@
-package quiz;
+package quizme;
 
 import static org.junit.Assert.*;
 
