@@ -1,6 +1,11 @@
-package quizly;
+// Quiz.java
+package quizme;
+
 import java.util.ArrayList;
 
+/**
+ * Quiz class encapsulating a single quiz and its information.
+ */
 public class Quiz {
 	private ArrayList<Question> questions;
 	boolean singlePage;
@@ -10,5 +15,4 @@ public class Quiz {
 	String purpose;
 	long timeTaken;
 	int numQuestions;
-	
 }
