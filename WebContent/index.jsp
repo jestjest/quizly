@@ -19,7 +19,7 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">	
         <div class="navbar-header">
-          <a class="navbar-brand" href="<%= (request.getSession().getAttribute("user") != null) ? "home.jsp" : "index.jsp" %>">Quizz</a>
+          <a class="navbar-brand" href="index.jsp">QuizMe</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
         	<div class="navbar-form navbar-right">

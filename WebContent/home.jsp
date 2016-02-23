@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="quizme.User" %>
-<% User user = (User) request.getSession().getAttribute("user"); %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,24 +11,8 @@
 </head>
 
 <body>
+	<jsp:include page="header.jsp"/>
 
-	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">QuizMe</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-        	<div class="navbar-form navbar-right">
-				<span style="color: white">Hi TestUser<%--=user.getName() --%>! &nbsp;&nbsp;&nbsp;</span>
-	        	<a href="create-quiz.jsp" class="btn btn-primary">Create a Quiz</a>
-	        	<a href="messages.jsp" class="btn btn-primary">See Messages</a>
-	        	<a href="LogoutServlet" name="logout" class="btn btn-danger">Logout</a>
-        	</div>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </nav>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
         <h1>Announcements</h1>
@@ -103,7 +85,6 @@
 	<hr>
 	
 	<script src="js/vendor/jquery-1.11.2.min.js"></script>
-	<script src="js/vendor/bootstrap.min.js"></script>        
-        
+	<script src="js/vendor/bootstrap.min.js"></script>            
 </body>
 </html>
