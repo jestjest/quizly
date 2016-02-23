@@ -21,10 +21,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
         	<div class="navbar-form navbar-right">
-				Hi <%= user.getName() %>!
+				<span style="color: white">Hi TestUser<%--=user.getName() --%>! &nbsp;&nbsp;&nbsp;</span>
 	        	<a href="create-quiz.jsp" class="btn btn-primary">Create a Quiz</a>
 	        	<a href="messages.jsp" class="btn btn-primary">See Messages</a>
-	        	<a href="LogoutServlet" class="btn btn-danger">Logout</a>
+	        	<a href="LogoutServlet" name="logout" class="btn btn-danger">Logout</a>
         	</div>
         </div><!--/.navbar-collapse -->
       </div>

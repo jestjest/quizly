@@ -3,10 +3,7 @@ package quizme;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +34,9 @@ public class MainLoginServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Handles POST requests for logins and account creations. If the user clicked the login button, handles a login.
+	 * If the user clicked the create account button, handles account creation. If the user didn't not click any button,
+	 * simply redirects the user back to the page.
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("username");
@@ -58,6 +57,10 @@ public class MainLoginServlet extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * Handles user login. If the account does not exist yet, returns an error on the page. Otherwise,
+	 * redirects the user to the home page and logins the user in.
+	 */
 	private void handleLogin(String username, String hashed, 
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -83,7 +86,7 @@ public class MainLoginServlet extends HttpServlet {
 
 	/**
 	 * Handles account creation. Checks if the account already exists. If it does, then tells the user to try again.
-	 * Otherwise, ad
+	 * Otherwise, adds the account to the database and redirects the user to the home page.
 	 */
 	private void handleAccountCreation(String username, HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
@@ -108,7 +111,8 @@ public class MainLoginServlet extends HttpServlet {
 	}
 	
 	/**
-	 * 
+	 * Creates an account in the database and redirects the user to the home page if the insertion
+	 * was successful.
 	 */
 	private void createAccount(DBConnection con, String username, HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
@@ -118,7 +122,7 @@ public class MainLoginServlet extends HttpServlet {
 			stmt.setString(1, username);
 			int rows = stmt.executeUpdate();
 			if (rows != 1) {
-				displayError("Username/password combination was wrong.", request, response);
+				displayError("Something went wrong adding account.", request, response);
 				return;
 			} 
 			
