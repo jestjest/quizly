@@ -1,4 +1,4 @@
-package project;
+package quizme;
 
 /**
  * An abstract class used as a framework to implement different types
@@ -14,7 +14,9 @@ public abstract class Question {
 	 * 2: Multiple Choice
 	 * 3: Picture-Response Question
 	 */
-	static final int[] TYPES = {0,1,2,3};
+	public static enum TYPES {
+		QR, BLANK, MC, PICTURE
+	}
 	
 	/**
 	 * [type] can take a value from the array [TYPES].
