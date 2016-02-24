@@ -1,6 +1,9 @@
 <%@ page import="quizme.User" %>
 <% User user = (User) request.getSession().getAttribute("user"); %>
 
+<script src="js/vendor/jquery-1.12.1.min.js"></script>
+<script src="js/vendor/bootstrap.min.js"></script>  
+
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 	    <div class="navbar-header">

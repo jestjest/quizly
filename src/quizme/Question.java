@@ -1,5 +1,7 @@
 package quizme;
 
+import java.sql.ResultSet;
+
 /**
  * An abstract class used as a framework to implement different types
  * of questions.
@@ -9,48 +11,74 @@ package quizme;
 public abstract class Question {
 	/**
 	 * This is the list of all Question types extending this class.
-	 * 0: Question-Response
-	 * 1: Fill in the blank
-	 * 2: Multiple Choice
-	 * 3: Picture-Response Question
 	 */
-	public static enum TYPES {
+	public static enum TYPE {
 		QR, BLANK, MC, PICTURE
-	}
-	
+	}		
+
 	/**
-	 * [type] can take a value from the array [TYPES].
-	 * It represents the type of question.
+	 * Every question type should implement this function. The function 
+	 * returns the column names of the corresponding table in the 
+	 * data base.
+	 * @return array of strings consisting column names of the
+	 * corresponding table in the data base.
 	 */
-	public int type;
-	
+	public abstract String[] columnNames();
+
 	/**
-	 * [number] represents the question number.
+	 * Every question type should implement this function. The function 
+	 * returns the column types of the corresponding table in the 
+	 * data base.
+	 * @return array of strings consisting column types of the
+	 * corresponding table in the data base.
+	 */
+	public abstract String[] columnTypes();
+
+
+	/**
+	 * Every question type should implement this function. This 
+	 * returns the question type.
+	 * @return an integer shows question type.
+	 * @see #TYPES
+	 */
+	public abstract TYPE type();
+
+	/**
+	 * [order] represents the question number.
 	 * This is also can be served as a unique id for each question
 	 * within a quiz.
 	 */
-	public int number;
-	
+	public int order;
+
 	/**
-	 * Show the maximum points can be earned from the question
+	 * An integer representing the ID of the quiz encapsulating the 
+	 * question.
 	 */
-	public int maxPoints;
-	
+	public int quizID;
+
+	/**
+	 * Every question type should implement this function. This function
+	 * returns the maximum achievable points of the question.
+	 * @return an integer representing the maximum achievable points.
+	 */
+	public abstract int maxPoints();
+
 	/**
 	 * show the points user earned on this question.
 	 */
 	protected int points;
-	
-	
+
+
 	/**
-	 * Constructor: create a question with its question number.
-	 * @param n the question number
+	 * Constructor: create an instance of a question using one row
+	 * of the corresponding data base.
+	 * @param rs a ResultSet object pointing to a row in the table 
+	 * storing the question data.
 	 */
-	public Question( int n ) {
-		number = n;
+	public Question( ResultSet rs ) {
 		points = 0;
 	}
-	
+
 	/**
 	 * Each question type should override this function.
 	 * Call this function to print the content of the question. 
@@ -61,7 +89,7 @@ public abstract class Question {
 	public void show( StringBuilder out ) {
 		out.append("<h1>Super question</h1>");
 	}
-	
+
 	/**
 	 * Show the necessary fields for this question type, allowing the
 	 * user (creator) to create a new question. If the question is 
@@ -72,7 +100,7 @@ public abstract class Question {
 	public void create( StringBuilder out ) {
 		out.append("<h1>Create a super question</h1>");
 	}
-	
+
 	/**
 	 * Present a question and the answer of user.
 	 * @param out a StringBuilder used to write contents.
@@ -81,7 +109,7 @@ public abstract class Question {
 	public void answer( StringBuilder out ) {
 		out.append("<h1>Super answer</h1>");
 	}
-	
+
 	/**
 	 * Present a summary of the question and user answer.
 	 * @param out a StringBuilder used to write contents.
@@ -90,7 +118,7 @@ public abstract class Question {
 	public void answerSummary( StringBuilder out ) {
 		out.append("Super answer summary");
 	}
-	
+
 	/**
 	 * For an answered question, returns the points earned.
 	 * @return the points earned from this question.
@@ -98,18 +126,6 @@ public abstract class Question {
 	public int points() {
 		return points;
 	}
-	
 
-	/**
-	 * Given a parameter pair, update appropriate fields in the
-	 * question class.
-	 * @param key is a String consists of name of a field in one 
-	 * of the forms for this question.
-	 * @param value is an Object required to fill 
-	 * the corresponding field.
-	 */
-	public void update( String key, Object value) {
-	}
-	
-	
+
 }

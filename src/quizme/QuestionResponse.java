@@ -1,5 +1,8 @@
 package quizme;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class QuestionResponse extends Question {
 
 	/**
@@ -16,14 +19,50 @@ public class QuestionResponse extends Question {
 	 * A String that stores the correct response text.
 	 */
 	private String correctResponseText;
-
-	public QuestionResponse( int n ) {
-		super(n);
-		type = 0; // This is a Question-Response type.
-		questionText = "question";
-		responseText = "response";
-		correctResponseText = "correct response";
-		maxPoints = 1;	
+	
+	/**
+	 * List of column names in the corresponding data base.
+	 */
+	private static final String[] columnNames = {
+			"quizID",
+			"order",
+			"questionText",
+			"responseText"
+	};
+	
+	/**
+	 * List of column types in the corresponding data base.
+	 */
+	private static final String[] columnTypes = {
+			"INT",
+			"INT",
+			"TEXT",
+			"TEXT"
+	};
+	
+	/**
+	 * The type of this question.
+	 */
+	private static final TYPE type = TYPE.QR;
+	
+	/**
+	 * The maximum achievable points of this question.
+	 */
+	private static final int maxPoints = 1;
+	
+	/**
+	 * Constructor: create an instance of a question using one row
+	 * of the corresponding data base.
+	 * @param rs a ResultSet object pointing to a row in the table
+	 * @throws SQLException
+	 */
+	public QuestionResponse( ResultSet rs ) throws SQLException {
+		super( rs );
+		quizID = rs.getInt( columnNames[0] );
+		order = rs.getInt( columnNames[1] );
+		questionText = rs.getString( columnNames[2] );
+		correctResponseText = rs.getString( columnNames[3] );
+		responseText = "";
 	}
 
 	@Override
@@ -32,16 +71,16 @@ public class QuestionResponse extends Question {
 		out.append(questionText);
 		out.append("</b>");
 		out.append("<br>");
-		out.append("<input type=\"text\" name=\"responseText_" + Integer.toString(number) 
+		out.append("<input type=\"text\" name=\"responseText_" + Integer.toString(order) 
 		+ "\" value=\""	+ responseText + "\">");
 	}
 
 	@Override
 	public void create( StringBuilder out ) {
-		out.append("<input type=\"text\" name=\"questionText_" + Integer.toString(number) 
+		out.append("<input type=\"text\" name=\"questionText_" + Integer.toString(order) 
 		+ "\" value=\""	+ questionText + "\">");
 		out.append("<br>");
-		out.append("<input type=\"text\" name=\"correctResponseText_" + Integer.toString(number) 
+		out.append("<input type=\"text\" name=\"correctResponseText_" + Integer.toString(order) 
 		+ "\" value=\""	+ correctResponseText + "\">");
 	}	
 
@@ -65,17 +104,22 @@ public class QuestionResponse extends Question {
 	}
 
 	@Override
-	public void update( String key, Object value) {
-		switch( key ) {
-		case "questionText":
-			questionText = (String) value;
-		break;
-		case "responseText":
-			responseText = (String) value;
-		break;
-		case "correctResponseText":
-			correctResponseText = (String) value;
-		break;
-		}
+	public String[] columnNames() {
+		return columnNames;
+	}
+	
+	@Override
+	public String[] columnTypes() {
+		return columnTypes;
+	}
+
+	@Override
+	public TYPE type() {
+		return type;
+	}
+
+	@Override
+	public int maxPoints() {
+		return maxPoints;
 	}
 }
