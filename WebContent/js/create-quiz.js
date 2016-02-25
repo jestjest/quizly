@@ -8,6 +8,7 @@ $(".dropdown-menu li a").click(function(event) {
 var $rightPane = $('#right-pane');
 var $leftPane = $('#left-pane');
 var $newQuestionBtn = $("#new-question");
+var $quizSubmission = $('.quiz-submission');
 var QUESTION_NUM = 1;
 
 $rightPane.html(tag("h2", {}, "Create a question!"));
@@ -26,6 +27,19 @@ $newQuestionBtn.click(function (event) {
 	}
 	addAnswersListener();
 	addNewQuestionListener();
+});
+
+/**
+ * 
+ */
+$quizSubmission.submit(function (event) {
+	event.preventDefault();
+	var root = buildXMLQuiz($quizSubmission, $('.added-question'));
+	console.log(new XMLSerializer().serializeToString(root));
+//	$.post('CreateQuizServlet', {xml: new XMLSerializer().serializeToString(root)})
+//		.done(function() {
+//			// redirect to ???
+//		});
 });
 
 /**
@@ -60,11 +74,11 @@ function addNewQuestionListener() {
 				return this.value;
 			});
 			
-			var answerIndex = getSelectedIndex();
+			var correctIndex = getSelectedIndex();
 			
 			questionElement = renderMCQuestion(type, QUESTION_NUM,
 					$('.question-form').find("[name='question']").val(),
-					$choices, answerIndex);
+					$choices, correctIndex);
 			
 			break;
 		}

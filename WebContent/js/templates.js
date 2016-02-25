@@ -198,9 +198,9 @@ function renderSimpleQuestion(type, number, question, $answers, preferredIndex) 
 function answersListTags($answers, preferredIndex) {
 	return $answers.map(function(index) {
 		if (index === preferredIndex)
-			return tag("li", {class: "preferred"}, [this, tag("span", {}, "  (preferred)")]);
+			return tag("li", {class: "preferred"}, [tag("answer", {}, this), "  (preferred)"]);
 		else
-			return tag("li", {}, this);
+			return tag("li", {}, tag("answer", {}, this));
 	}).get();
 }
 
@@ -221,12 +221,12 @@ function renderMCQuestion(type, number, question, $choices, answerIndex) {
 }
 
 /** Returns a list of HTML list items, each one representing a multiple choice option. */
-function choicesListTags($choices, answerIndex) {
+function choicesListTags($choices, correctIndex) {
 	return $choices.map(function(index) {
-		if (index === answerIndex)
-			return tag("li", {class: "answer"}, [tag("span", {}, this),"  (answer)"]);
+		if (index === correctIndex)
+			return tag("li", {class: "correct"}, [tag("answer", {}, this),"  (answer)"]);
 		else
-			return tag("li", {}, this);
+			return tag("li", {}, tag("answer", {}, this));
 	}).get();
 }
 

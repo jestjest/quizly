@@ -20,7 +20,7 @@
         If you leave this page, your quiz will not be created or saved. 
         <br><br>
         
-        <form role="form" action="CreateQuizServlet" method="POST">
+        <form class="quiz-submission" role="form">
         	<div class="form-group">
         		<label for="name">Quiz name</label> 
         		<input class="form-control" type="text" name="title" placeholder="Title">
@@ -69,7 +69,8 @@
     </div>
     
     <script type="text/javascript" src="js/templates.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/xml-builder.js"></script>
+    <script type="text/javascript" src="js/create-quiz.js"></script>
 </body>
 
 </html>
