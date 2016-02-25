@@ -12,7 +12,11 @@ public class QuizDB {
 	
 	private void createQuizTable() {
 		try {
+<<<<<<< HEAD
 			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes ( quizid INT, name VARCHAR(128), description VARCHAR(128), purpose VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
+=======
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS quizzes (quizid INT, name CHAR(64), description CHAR(64), numOfQuestions INT, randomOrder BOOL, "
+>>>>>>> origin/master
 					+ "multiplePages BOOL, immediateCorrection BOOL)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
