@@ -2,6 +2,9 @@ package quizme;
 
 import static org.junit.Assert.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.junit.*;
 
 public class QuizDBTest {
@@ -18,12 +21,12 @@ public class QuizDBTest {
 	
 	@AfterClass
 	public static void oneTimeTearDown() {
-		db.closeDatabase();
+		db.closeConnection();
 	}
 	
 	@Test
 	public void basictest() {
-		int quizid = quizDB.addQuiz("testQuiz", "fake description");
+		int quizid = quizDB.addQuiz("testQuiz", "fake description", "just for testing");
 		assertEquals(quizid, 1);
 		
 		String name = quizDB.getName(quizid);
@@ -34,6 +37,12 @@ public class QuizDBTest {
 		quizDB.setDescription(quizid, "another fake description");
 		description = quizDB.getDescription(quizid);
 		assertTrue(description.equals("another fake description"));
+		
+		String purpose = quizDB.getPurpose(quizid);
+		assertTrue(purpose.equals("just for testing"));
+		quizDB.setPurpose(quizid, "just for junit testing");
+		purpose = quizDB.getPurpose(quizid);
+		assertTrue(purpose.equals("just for junit testing"));
 		
 		int numOfQuestions = quizDB.getNumOfQuestions(quizid);
 		assertEquals(numOfQuestions, 0);
@@ -53,8 +62,17 @@ public class QuizDBTest {
 		quizDB.setImmediateCorrection(quizid, true);
 		assertTrue(quizDB.getImmediateCorrection(quizid));
 		
-		int quizid2 = quizDB.addQuiz("Fake2", "fake quiz!");
+		int quizid2 = quizDB.addQuiz("Fake2", "fake quiz!", "more testing");
 		assertEquals(quizid2, 2);
+		
+		ResultSet rs = quizDB.getEntry(quizid2);
+		try {
+			rs.first();
+			assertTrue(rs.getString("name").equals("Fake2"));
+			assertEquals(rs.getInt("numOfQuestions"), 0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

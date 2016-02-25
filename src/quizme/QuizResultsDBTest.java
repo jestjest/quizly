@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class QuizResultDBTest {
+public class QuizResultsDBTest {
 	static DBConnection db;
 	static QuizResultsDB resultDB;
 	
@@ -23,20 +23,20 @@ public class QuizResultDBTest {
 	
 	@AfterClass
 	public static void oneTimeTearDown() {
-		db.closeDatabase();
+		db.closeConnection();
 	}
 	
 	@Test
 	public void basictest() {
-		Date today = new Date();
-		int resultid = resultDB.addResult(300, 20, 90.5, 60, today);
+		java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+		int resultid = resultDB.addResult(300, "fakeuser", 90.5, 60, today);
 		assertEquals(resultid, 1);
 		
 		int quizid = resultDB.getQuizID(resultid);
 		assertEquals(quizid, 300);
 		
-		int userid = resultDB.getUserID(resultid);
-		assertEquals(userid, 20);
+		String username = resultDB.getUsername(resultid);
+		assertTrue(username.equals("fakeuser"));
 		
 		double score = resultDB.getScore(resultid);
 		assertEquals(score, 90.5, 0.0001);
@@ -44,7 +44,7 @@ public class QuizResultDBTest {
 		long time = resultDB.getTime(resultid);
 		assertEquals(time, 60);
 		
-		DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
 		Date date = resultDB.getDate(resultid);
 		String dateString = df.format(date);
 		String todayString = df.format(today);

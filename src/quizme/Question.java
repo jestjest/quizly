@@ -1,4 +1,4 @@
-package project;
+package quizme;
 
 /**
  * An abstract class used as a framework to implement different types
