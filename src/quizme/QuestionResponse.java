@@ -27,7 +27,7 @@ public class QuestionResponse extends Question {
 			"quizID",
 			"order",
 			"questionText",
-			"responseText"
+			"correctResponseText"
 	};
 	
 	/**
@@ -64,6 +64,21 @@ public class QuestionResponse extends Question {
 		correctResponseText = rs.getString( columnNames[3] );
 		responseText = "";
 	}
+	
+	/**
+	 * Constructor for debugging.
+	 * @param QID
+	 * @param ord
+	 * @param QT
+	 * @param CRT
+	 */
+	public QuestionResponse( int QID, int ORD, String QT, String CRT) {
+		quizID = QID;
+		order = ORD;
+		questionText = QT;
+		correctResponseText = CRT;
+		responseText = "";
+	}
 
 	@Override
 	public void show( StringBuilder out ) {
@@ -71,17 +86,20 @@ public class QuestionResponse extends Question {
 		out.append(questionText);
 		out.append("</b>");
 		out.append("<br>");
+		out.append("Please eneter your response here:<br>");
 		out.append("<input type=\"text\" name=\"responseText_" + Integer.toString(order) 
-		+ "\" value=\""	+ responseText + "\">");
+		+ "\" value=\""	+ responseText + "\"><br>");
 	}
 
 	@Override
 	public void create( StringBuilder out ) {
+		out.append("Please enetr your question here:<br>");
 		out.append("<input type=\"text\" name=\"questionText_" + Integer.toString(order) 
 		+ "\" value=\""	+ questionText + "\">");
 		out.append("<br>");
+		out.append("Please enter the correct answer here:<br>");
 		out.append("<input type=\"text\" name=\"correctResponseText_" + Integer.toString(order) 
-		+ "\" value=\""	+ correctResponseText + "\">");
+		+ "\" value=\""	+ correctResponseText + "\"><br>");
 	}	
 
 	@Override
@@ -98,7 +116,7 @@ public class QuestionResponse extends Question {
 		if ( correctResponseText.equals( responseText ) ) {
 			points = 1;
 		}
-		out.append("<b>Your points:</b>");
+		out.append("<b>Your points: </b>");
 		out.append( Integer.toString( points) );
 		out.append("<br>");
 	}

@@ -14,12 +14,32 @@
 <body>
 	<jsp:include page="header.jsp"/>
 	
-    <div class="jumbotron">
-      <div class="container">
+    <div class="jumbotron vertical-center">
+      <div class="container text-center">
         <h1>Create a quiz!</h1>
         If you leave this page, your quiz will not be created or saved. 
         <br><br>
-        <a href="CreateQuizServlet" class="btn btn-success">Submit my quiz</a>
+        
+        <form role="form" action="CreateQuizServlet" method="POST">
+        	<div class="form-group">
+        		<label for="name">Quiz name</label> 
+        		<input class="form-control" type="text" name="title" placeholder="Title">
+	        </div>
+		    
+	        <div class="form-group">
+			        <label for="description">Description</label> 
+			        <input class="form-control" name="description" type="text" placeholder="Description">
+		    </div>
+		    
+		    <div class="form-group">
+			      <div class="checkbox"><input type="checkbox" name="random" value="random">Random order<br></div>
+			      <div class="checkbox"><input type="checkbox" name="one-page" value="one-age">One page<br></div>
+			      <div class="checkbox"><input type="checkbox" name="immediate-correction" value="immediate-correction">Immediate correction<br></div>
+			      <div class="checkbox"><input type="checkbox" name="practice-mode" value="practice-mode">Practice mode<br></div>
+	        </div>
+	        
+        	<input type="submit" name="submit" value="Create quiz">
+        </form>
       </div>
     </div>
     
@@ -34,10 +54,10 @@
 					Pick a question type
 				  </button>
 				  <ul class="dropdown-menu">
-				  	<li><a href="#" id="qr">Question-Response</a></li>
-				    <li><a href="#" id="fill">Fill in the blank</a></li>
-				    <li><a href="#" id="mc">Multiple choice</a></li>
-				    <li><a href="#" id="picture">Picture-Response</a></li>
+				  	<li><a href="#" id="question-response">Question-Response</a></li>
+				    <li><a href="#" id="fill-in-blank">Fill in the blank</a></li>
+				    <li><a href="#" id="multiple-choice">Multiple choice</a></li>
+				    <li><a href="#" id="picture-response">Picture-Response</a></li>
 				  </ul>
 				</div>
 			</div>

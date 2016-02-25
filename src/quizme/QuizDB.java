@@ -14,7 +14,7 @@ public class QuizDB {
 	
 	private void createQuizTable() {
 		try {
-			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS quizes (quizid INT, name CHAR(64), description CHAR(64), numOfQuestions INT, randomOrder BOOL, "
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS quizzes (quizid INT, name CHAR(64), description CHAR(64), numOfQuestions INT, randomOrder BOOL, "
 					+ "multiplePages BOOL, immediateCorrection BOOL)");
 		} catch (SQLException e) {
 			e.printStackTrace();

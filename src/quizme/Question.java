@@ -78,6 +78,13 @@ public abstract class Question {
 	public Question( ResultSet rs ) {
 		points = 0;
 	}
+	
+	/**
+	 * Default constructor.
+	 */
+	public Question() {
+		points = 0;
+	}
 
 	/**
 	 * Each question type should override this function.
