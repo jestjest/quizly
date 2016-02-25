@@ -1,0 +1,61 @@
+#wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#navigation {
+    float: left;
+    width: 65%;
+    min-height: 100%;
+    border-right: 1px solid #ddd;
+}
+
+#right-pane {
+    float: left;
+    width: 35%;
+    padding-left: 40px;
+}
+
+#interactors {
+    padding-left: 70px;
+	padding-bottom: 10px;
+}
+
+#left-pane {
+    padding-left: 40px;
+}
+
+h2 {
+	margin: 0px;
+}
+
+input[type="text"] {
+    padding: 6px 8px 6px 8px;
+    width: 300px;
+    border: 1px solid #bbb;
+    box-shadow: inset 0px 1px 2px #ccc;
+    margin-bottom: 10px !important;
+    margin: auto;
+    text-align: center;
+}
+
+ul {
+	list-style-type: none;
+	padding-left: 0px;
+}
+
+ul li input[name='possible-choice'] {
+	margin-left: 5px;
+}
+
+ul li input[name='possible-answer'] {
+	margin-left: 5px;
+}
+
+.added-question {
+    padding: 20px 30px;
+    margin-bottom: 0px;
+    border-bottom: 1px dotted #232323;
+    overflow: hidden;
+}
