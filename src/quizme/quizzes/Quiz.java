@@ -1,5 +1,5 @@
 // Quiz.java
-package quizme;
+package quizme.quizzes;
 
 import java.util.ArrayList;
 

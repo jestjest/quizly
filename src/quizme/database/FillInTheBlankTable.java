@@ -1,38 +1,36 @@
-package quizme;
+package quizme.database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MultipleChoiceQuestionDB {
-	private DBConnection db;
-	private final static int numOfOptions = 5;
+import quizme.DBConnection;
+
+public class FillInTheBlankTable {
+private DBConnection db;
 	
-	public MultipleChoiceQuestionDB(DBConnection db) {
+	public FillInTheBlankTable(DBConnection db) {
 		this.db = db;
-		createMultipleChoiceQuestionTable();
+		createFillInTheBlankTable();
 	}
 	
 	
-	private void createMultipleChoiceQuestionTable() {
+	private void createFillInTheBlankTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS multiplechoice (quizid INT, questionOrder INT, question TEXT, optionA TEXT, optionB TEXT, optionC TEXT, optionD TEXT, optionE TEXT, correctAnswer CHAR(64))");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS fillintheblank (quizid INT, questionOrder INT, question TEXT, correctAnswer TEXT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void addQuestion(int quizid, int questionOrder, String question, String[] options, String correctAnswer) {
+	public void addQuestion(int quizid, int questionOrder, String question, String correctAnswer) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO multiplechoice VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO fillintheblank VALUES (?, ?, ?, ?)");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			pstmt.setString(3, question);
-			int optionIndexOffset = 4;
-			for (int i = 0; i < numOfOptions; i++) 
-				pstmt.setString(i + optionIndexOffset, options[i]);
-			pstmt.setString(9, correctAnswer);
+			pstmt.setString(4, correctAnswer);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -41,7 +39,7 @@ public class MultipleChoiceQuestionDB {
 	
 	public void removeQuestion(int quizid, int questionOrder) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM multiplechoice WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM fillintheblank WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			pstmt.executeUpdate();
@@ -54,12 +52,12 @@ public class MultipleChoiceQuestionDB {
 		return getInt(quizid, questionOrder, "quizid");
 	}
 	
-	public int getQuestionOrder(int quizid, int questionOrder) {
-		return getInt(quizid, questionOrder, "questionOrder");
-	}
-	
 	public void setQuestionOrder(int quizid, int questionOrder, int newQuestionOrder) {
 		setInt(quizid, questionOrder, "questionOrder", newQuestionOrder);
+	}
+	
+	public int getQuestionOrder(int quizid, int questionOrder) {
+		return getInt(quizid, questionOrder, "questionOrder");
 	}
 	
 	public void setQuestion(int quizid, int questionOrder, String question) {
@@ -68,18 +66,6 @@ public class MultipleChoiceQuestionDB {
 	
 	public String getQuestion(int quizid, int questionOrder) {
 		return getString(quizid, questionOrder, "question");
-	}
-	
-	public void setOption(int quizid, int questionOrder, char letter, String option) {
-		char uppercaseLetter = Character.toUpperCase(letter);
-		if (uppercaseLetter < 'A' || uppercaseLetter > 'E') return; 
-		setString(quizid, questionOrder, "option" + uppercaseLetter, option);
-	}
-	
-	public String getOption(int quizid, int questionOrder, char letter) {
-		char uppercaseLetter = Character.toUpperCase(letter);
-		if (uppercaseLetter < 'A' || uppercaseLetter > 'E') return null; 
-		return getString(quizid, questionOrder, "option" + uppercaseLetter);
 	}
 	
 	public void setCorrectAnswer(int quizid, int questionOrder, String correctAnswer) {
@@ -92,7 +78,7 @@ public class MultipleChoiceQuestionDB {
 	
 	public ResultSet getAllQuizEntries(int quizid) {
 		try {
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT * FROM multiplechoice WHERE quizid = ?");
+			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT * FROM fillintheblank WHERE quizid = ?");
 			pstmt1.setInt(1, quizid);
 			return pstmt1.executeQuery();
 		} catch (SQLException e) {
@@ -102,10 +88,9 @@ public class MultipleChoiceQuestionDB {
 	}
 	
 	/* helper functions */
-	
 	private void setString(int quizid, int questionOrder, String field, String value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE multiplechoice SET " + field + " = ? WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE fillintheblank SET " + field + " = ? WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setString(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.setInt(3, questionOrder);
@@ -117,7 +102,7 @@ public class MultipleChoiceQuestionDB {
 	
 	private String getString(int quizid, int questionOrder, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM multiplechoice WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM fillintheblank WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			ResultSet rs = pstmt.executeQuery();
@@ -131,7 +116,7 @@ public class MultipleChoiceQuestionDB {
 	
 	private void setInt(int quizid, int questionOrder, String field, int value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE multiplechoice SET " + field + " = ? WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE fillintheblank SET " + field + " = ? WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.setInt(3, questionOrder);
@@ -143,7 +128,7 @@ public class MultipleChoiceQuestionDB {
 	
 	private int getInt(int quizid, int questionOrder, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM multiplechoice WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM fillintheblank WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			ResultSet rs = pstmt.executeQuery();

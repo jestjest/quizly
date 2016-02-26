@@ -1,4 +1,4 @@
-package quizme;
+package quizme.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,14 +10,17 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import quizme.DBConnection;
+import quizme.database.QuestionResponseTable;
+
 public class QuestionResponseDBTest {
 	static DBConnection db;
-	static QuestionResponseDB questionResponseDB;
+	static QuestionResponseTable questionResponseDB;
 	
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		db = new DBConnection();
-		questionResponseDB = new QuestionResponseDB(db);
+		questionResponseDB = new QuestionResponseTable(db);
 		questionResponseDB.removeQuestion(7, 30); /* keep replacing questions in basic test */
 		questionResponseDB.removeQuestion(7, 500);
 		questionResponseDB.removeQuestion(500, 500);

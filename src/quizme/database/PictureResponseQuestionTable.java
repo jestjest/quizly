@@ -1,13 +1,15 @@
-package quizme;
+package quizme.database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PictureResponseQuestionDB {
+import quizme.DBConnection;
+
+public class PictureResponseQuestionTable {
 private DBConnection db;
 	
-	public PictureResponseQuestionDB(DBConnection db) {
+	public PictureResponseQuestionTable(DBConnection db) {
 		this.db = db;
 		createPictureResponseQuestionTable();
 	}

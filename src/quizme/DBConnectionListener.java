@@ -4,6 +4,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import quizme.database.*;
+
 /**
  * Application Lifecycle Listener implementation class DBConnectListener
  *
@@ -26,6 +28,22 @@ public class DBConnectionListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0)  { 
          DBConnection con = new DBConnection();
          arg0.getServletContext().setAttribute("connection", con);
+         
+         QuizTable quizTable = new QuizTable(con);
+         arg0.getServletContext().setAttribute("quizTable", quizTable);
+         
+         QuestionResponseTable qrTable = new QuestionResponseTable(con);
+         arg0.getServletContext().setAttribute("qrTable", qrTable);
+         
+         FillInTheBlankTable blankTable = new FillInTheBlankTable(con);
+         arg0.getServletContext().setAttribute("blankTable", blankTable);
+         
+         MultipleChoiceQuestionTable mcTable = new MultipleChoiceQuestionTable(con);
+         arg0.getServletContext().setAttribute("mcTable", mcTable);
+         
+         PictureResponseQuestionTable prTable = new PictureResponseQuestionTable(con);
+         arg0.getServletContext().setAttribute("pictureTable", prTable);
+         
     }
 
 	/**

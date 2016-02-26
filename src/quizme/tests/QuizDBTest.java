@@ -1,4 +1,4 @@
-package quizme;
+package quizme.tests;
 
 import static org.junit.Assert.*;
 
@@ -7,14 +7,17 @@ import java.sql.SQLException;
 
 import org.junit.*;
 
+import quizme.DBConnection;
+import quizme.database.QuizTable;
+
 public class QuizDBTest {
 	static DBConnection db;
-	static QuizDB quizDB;
+	static QuizTable quizDB;
 	
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		db = new DBConnection();
-		quizDB = new QuizDB(db);
+		quizDB = new QuizTable(db);
 		quizDB.removeQuiz(1); /* keep replacing quiz 1 in basic test */
 		quizDB.removeQuiz(2); /* keep replacing quiz 2 in basic test */
 	}

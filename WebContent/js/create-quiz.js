@@ -30,16 +30,17 @@ $newQuestionBtn.click(function (event) {
 });
 
 /**
- * 
+ * Builds and serializes an XML representation of the quiz and uses AJAX to POST it to a servlet.
+ * The servlet will in turn store the quiz and callback by redirecting the user to the home page.
  */
 $quizSubmission.submit(function (event) {
 	event.preventDefault();
 	var root = buildXMLQuiz($quizSubmission, $('.added-question'));
-	console.log(new XMLSerializer().serializeToString(root));
-//	$.post('CreateQuizServlet', {xml: new XMLSerializer().serializeToString(root)})
-//		.done(function() {
-//			// redirect to ???
-//		});
+	$.post('CreateQuizServlet', {xml: new XMLSerializer().serializeToString(root)})
+		.done(function() {
+			alert('Success!');
+			window.location.href = "/QuizMe/HomepageServlet";
+		});
 });
 
 /**

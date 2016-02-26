@@ -1,4 +1,4 @@
-package quizme;
+package quizme.tests;
 
 import static org.junit.Assert.*;
 
@@ -6,14 +6,17 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import quizme.DBConnection;
+import quizme.database.PictureResponseQuestionTable;
+
 public class PictureResponseQuestionDBTest {
 	static DBConnection db;
-	static PictureResponseQuestionDB pictureResponseDB;
+	static PictureResponseQuestionTable pictureResponseDB;
 	
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		db = new DBConnection();
-		pictureResponseDB = new PictureResponseQuestionDB(db);
+		pictureResponseDB = new PictureResponseQuestionTable(db);
 	}
 	
 	@AfterClass

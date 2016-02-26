@@ -1,4 +1,4 @@
-package quizme;
+package quizme.quizzes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,21 +102,7 @@ public class MultipleChoice extends Question {
 			out.append("<br>");
 		}
 	}
-
-	@Override
-	public void create( StringBuilder out ) {
-		out.append("Please eneter your question here.<br>");
-		out.append("<input type=\"text\" name=\"questionText_" + Integer.toString(order) 
-		+ "\" value=\""	+ questionText + "\">");
-		out.append("<br>");
-		out.append("Please eneter choice textes here. (one choice per row)<br>");
-		out.append("<textarea class=\"scrollabletextbox\" name=\"choicesText_" + Integer.toString(order) 
-		+ "\">"+choicesText+"</textarea><br>");
-		out.append("Please eneter the correct choice here. (a number 1,2,3,...)<br>");
-		out.append("<input type=\"text\" name=\"correctChoice_" + Integer.toString(order) 
-		+ "\" value=\""	+ Integer.toString(correctChoice) + "\"><br>");
-	}	
-
+	
 	@Override
 	public void answer( StringBuilder out ) {
 		out.append("<b>Question: </b>");

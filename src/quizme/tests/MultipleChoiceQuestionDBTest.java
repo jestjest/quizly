@@ -1,4 +1,4 @@
-package quizme;
+package quizme.tests;
 
 import static org.junit.Assert.*;
 
@@ -9,14 +9,17 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import quizme.DBConnection;
+import quizme.database.MultipleChoiceQuestionTable;
+
 public class MultipleChoiceQuestionDBTest {
 	static DBConnection db;
-	static MultipleChoiceQuestionDB multipleChoiceDB;
+	static MultipleChoiceQuestionTable multipleChoiceDB;
 	
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		db = new DBConnection();
-		multipleChoiceDB = new MultipleChoiceQuestionDB(db);
+		multipleChoiceDB = new MultipleChoiceQuestionTable(db);
 		multipleChoiceDB.removeQuestion(300, 3); /* keep replacing questions in basic test */
 		multipleChoiceDB.removeQuestion(300, 50);
 		multipleChoiceDB.removeQuestion(27, 3);

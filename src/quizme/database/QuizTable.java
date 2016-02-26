@@ -1,11 +1,13 @@
-package quizme;
+package quizme.database;
 
 import java.sql.*;
 
-public class QuizDB {
+import quizme.DBConnection;
+
+public class QuizTable {
 	private DBConnection db;
 	
-	public QuizDB(DBConnection db) {
+	public QuizTable(DBConnection db) {
 		this.db = db;
 		createQuizTable();
 	}

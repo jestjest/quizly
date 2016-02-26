@@ -1,4 +1,4 @@
-package quizme;
+package quizme.tests;
 
 import static org.junit.Assert.*;
 
@@ -10,14 +10,17 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import quizme.DBConnection;
+import quizme.database.QuizResultsTable;
+
 public class QuizResultsDBTest {
 	static DBConnection db;
-	static QuizResultsDB resultDB;
+	static QuizResultsTable resultDB;
 	
 	@BeforeClass
 	public static void oneTimeSetUp() {
 		db = new DBConnection();
-		resultDB = new QuizResultsDB(db);
+		resultDB = new QuizResultsTable(db);
 		resultDB.removeResult(1); /* keep replacing result 1 in basic test */
 	}
 	

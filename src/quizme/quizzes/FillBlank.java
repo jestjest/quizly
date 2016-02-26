@@ -1,4 +1,4 @@
-package quizme;
+package quizme.quizzes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -104,17 +104,6 @@ public class FillBlank extends Question {
 		out.append(rightText);
 		out.append("</b><br>");
 	}
-
-	@Override
-	public void create( StringBuilder out ) {
-		out.append("Please eneter your question here. Use \"___\" to show a blank space.<br>");
-		out.append("<input type=\"text\" name=\"questionText_" + Integer.toString(order) 
-		+ "\" value=\""	+ questionText + "\">");
-		out.append("<br>");
-		out.append("Please eneter the correct answer here:<br>");
-		out.append("<input type=\"text\" name=\"correctResponseText_" + Integer.toString(order) 
-		+ "\" value=\""	+ correctResponseText + "\"><br>");
-	}	
 
 	@Override
 	public void answer( StringBuilder out ) {
