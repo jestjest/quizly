@@ -1,33 +1,39 @@
 package quizme;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class QuizDB {
-	private Statement stmt;
+	private DBConnection db;
 	
 	public QuizDB(DBConnection db) {
-		stmt = db.getStatement();
+		this.db = db;
 		createQuizTable();
 	}
 	
 	private void createQuizTable() {
 		try {
-			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS quizzes (quizid INT, name CHAR(64), description CHAR(64), numOfQuestions INT, randomOrder BOOL, "
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes ( quizid INT, name VARCHAR(128), description VARCHAR(128), purpose VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
 					+ "multiplePages BOOL, immediateCorrection BOOL)");
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public int addQuiz(String name, String description) {
+	public int addQuiz(String name, String description, String purpose) {
 		try{
-			ResultSet tableRS = stmt.executeQuery("SELECT quizid FROM quizes");
-			tableRS.last();
-			int quizid = tableRS.getRow() + 1;
+			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT quizid FROM quizes");
+			ResultSet rs = pstmt1.executeQuery();
+			rs.last();
+			int quizid = rs.getRow() + 1;
+
 			
-			stmt.executeUpdate("INSERT INTO quizes VALUES (" + quizid + ", \"" + name + "\", \"" + description + "\", 0, 0, 0, 0)" );
+			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO quizes VALUES ( ?, ?, ?, ?, 0, 0, 0, 0)");
+			pstmt2.setInt(1, quizid);
+			pstmt2.setString(2, name);
+			pstmt2.setString(3, description);
+			pstmt2.setString(4, purpose);
+			pstmt2.executeUpdate();
 			
 			return quizid;
 		} catch (SQLException e) {
@@ -38,12 +44,27 @@ public class QuizDB {
 	
 	public void removeQuiz(int quizid) {
 		try {
-			stmt.executeUpdate("DELETE FROM quizes WHERE quizid = " + quizid);
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM quizes WHERE quizid = ?");
+			pstmt.setInt(1, quizid);
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public ResultSet getEntry(int quizid) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM quizes where quizid = ?");
+			pstmt.setInt(1, quizid);
+			ResultSet rs = pstmt.executeQuery();
+			rs.first();
+			return rs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null; /* indicates database error */
+	}
+	
 	public String getName(int quizid) {
 		return getString(quizid, "name");
 	}
@@ -56,7 +77,14 @@ public class QuizDB {
 		return getString(quizid, "description");
 	}
 	
-	//Add incNumOfQuestions and decNumOfQuestions?
+	public void setPurpose(int quizid, String purpose) {
+		setString(quizid, "purpose", purpose);
+	}
+	
+	public String getPurpose(int quizid) {
+		return getString(quizid, "purpose");
+	}
+	
 	public void setNumOfQuestions(int quizid, int numOfQuestions) {
 		setInt(quizid, "numOfQuestions", numOfQuestions);
 	}
@@ -96,7 +124,10 @@ public class QuizDB {
 	
 	private void setString(int quizid, String field, String value) {
 		try {
-			stmt.executeUpdate("UPDATE quizes SET " +  field + " = \"" + value + "\" where quizid = " + quizid);
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ?  WHERE quizid = ?");
+			pstmt.setString(1, value);
+			pstmt.setInt(2, quizid);
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -104,7 +135,9 @@ public class QuizDB {
 	
 	private String getString(int quizid, String field) {
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT " +  field + " FROM quizes where quizid = " + quizid);
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
+			pstmt.setInt(1, quizid);
+			ResultSet rs = pstmt.executeQuery();
 			rs.first();
 			return rs.getString(1);
 		} catch (SQLException e) {
@@ -115,7 +148,10 @@ public class QuizDB {
 	
 	private void setInt(int quizid, String field, int value) {
 		try {
-			stmt.executeUpdate("UPDATE quizes SET " + field + " = " + value + " WHERE quizid = " + quizid);
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ? WHERE quizid = ?");
+			pstmt.setInt(1, value);
+			pstmt.setInt(2, quizid);
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -123,7 +159,9 @@ public class QuizDB {
 	
 	private int getInt(int quizid, String field) {
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT " + field + " FROM quizes WHERE quizid = " + quizid);
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
+			pstmt.setInt(1, quizid);
+			ResultSet rs = pstmt.executeQuery();
 			rs.first();
 			return rs.getInt(1);
 		} catch (SQLException e) {
@@ -134,6 +172,3 @@ public class QuizDB {
 	
 }
 
-//Functionality to add:
-//More getters?
-//Ability to clear the table?
