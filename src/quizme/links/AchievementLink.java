@@ -1,6 +1,6 @@
 package quizme.links;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 
 public class AchievementLink {
@@ -17,9 +17,9 @@ public class AchievementLink {
 	/**
 	 * The date in which this achievement is accomplished by the user.
 	 */
-	public Date date;
+	public Timestamp date;
 	
-	public AchievementLink ( String name, String username, Date date) {
+	public AchievementLink ( String name, String username, Timestamp date) {
 		this.name = name;
 		this.username = username;
 		this.date = date;

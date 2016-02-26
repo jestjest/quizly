@@ -1,6 +1,6 @@
 package quizme.links;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class MessageLink {
 	
@@ -17,7 +17,7 @@ public class MessageLink {
 	/**
 	 * The date message sent.
 	 */
-	public Date date;
+	public Timestamp date;
 	
 	/**
 	 * Different message types.

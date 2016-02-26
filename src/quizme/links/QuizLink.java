@@ -1,6 +1,6 @@
 package quizme.links;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class QuizLink {
 	/**
@@ -16,7 +16,7 @@ public class QuizLink {
 	/**
 	 * The date quiz is created.
 	 */
-	public Date dateCreated;
+	public Timestamp dateCreated;
 	
 	/**
 	 * How many times people have taken this quiz.
@@ -33,7 +33,7 @@ public class QuizLink {
 	 */
 	public int score;
 	
-	public QuizLink( String name, String creatorUsername, Date dateCreated,
+	public QuizLink( String name, String creatorUsername, Timestamp dateCreated,
 					int numberTaken, String takenUsername, int score) {
 		this.name = name;
 		this.creatorUsername = creatorUsername;
