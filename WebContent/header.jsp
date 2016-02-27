@@ -11,6 +11,7 @@
 	    </div>
 	    <div id="navbar" class="navbar-collapse collapse">
 	    	<div class="navbar-form navbar-right">
+	    	<input type="hidden" name="username" value=TestUser<%--=user.getName() %>>
 			<a href="user-page.jsp?name=TestUser<%--=user.getName()--%>" class="btn btn-success" style="color: white">Hi TestUser<%--=user.getName()--%>!</a> &nbsp;&nbsp;&nbsp;
 		 	<a href="create-quiz.jsp" class="btn btn-primary">Create a Quiz</a>
 		 	<a href="messages.jsp" class="btn btn-primary">See Messages</a>

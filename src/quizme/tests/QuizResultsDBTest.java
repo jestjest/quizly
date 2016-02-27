@@ -2,9 +2,9 @@ package quizme.tests;
 
 import static org.junit.Assert.*;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,7 +31,7 @@ public class QuizResultsDBTest {
 	
 	@Test
 	public void basictest() {
-		java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+		Timestamp today = new Timestamp(System.currentTimeMillis());
 		int resultid = resultDB.addResult(300, "fakeuser", 90.5, 60, today);
 		assertEquals(resultid, 1);
 		
@@ -47,10 +47,12 @@ public class QuizResultsDBTest {
 		long time = resultDB.getTime(resultid);
 		assertEquals(time, 60);
 		
-		DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
-		Date date = resultDB.getDate(resultid);
+		DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		Timestamp date = resultDB.getDate(resultid);
 		String dateString = df.format(date);
 		String todayString = df.format(today);
+		System.out.println(dateString);
+		System.out.println(todayString);
 		assertTrue(dateString.equals(todayString));
 	}
 

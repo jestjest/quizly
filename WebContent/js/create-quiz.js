@@ -36,7 +36,10 @@ $newQuestionBtn.click(function (event) {
 $quizSubmission.submit(function (event) {
 	event.preventDefault();
 	var root = buildXMLQuiz($quizSubmission, $('.added-question'));
-	$.post('CreateQuizServlet', {xml: new XMLSerializer().serializeToString(root)})
+	$.post('CreateQuizServlet', 
+			{xml: new XMLSerializer().serializeToString(root),
+			 user: $('input[name="username"]').val()
+			 })
 		.done(function() {
 			alert('Success!');
 			window.location.href = "/QuizMe/HomepageServlet";

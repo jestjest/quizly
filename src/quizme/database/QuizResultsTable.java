@@ -15,14 +15,14 @@ public class QuizResultsTable {
 	
 	private void createQuizResultsTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date DATE)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date TIMESTAMP)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public int addResult(int quizid, String username, double score, long time, java.sql.Date date) {
+	public int addResult(int quizid, String username, double score, long time, Timestamp date) {
 		try {
 			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT resultid FROM results");
 			ResultSet rs = pstmt1.executeQuery();
@@ -35,7 +35,7 @@ public class QuizResultsTable {
 			pstmt2.setString(3, username);
 			pstmt2.setDouble(4, score);
 			pstmt2.setFloat(5, time);
-			pstmt2.setDate(6, date); 
+			pstmt2.setTimestamp(6, date); 
 			pstmt2.executeUpdate();
 			return resultid;
 		} catch (SQLException e) {
@@ -70,7 +70,7 @@ public class QuizResultsTable {
 		return getLong(resultid, "time");
 	}
 	
-	public Date getDate(int resultid) {
+	public Timestamp getDate(int resultid) {
 		return getDate(resultid, "date");
 	}
 	
@@ -128,7 +128,7 @@ public class QuizResultsTable {
 		return -1; /* indicates database error */
 	}
 	
-	private Date getDate(int resultid, String field) {
+	private Timestamp getDate(int resultid, String field) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM results WHERE resultid = ?");
 			pstmt.setInt(1, resultid);
