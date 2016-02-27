@@ -3,38 +3,46 @@ package quizme.database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import quizme.DBConnection;
 
 public class MultipleChoiceQuestionTable {
 	private DBConnection db;
-	private final static int numOfOptions = 5;
 	
 	public MultipleChoiceQuestionTable(DBConnection db) {
 		this.db = db;
 		createMultipleChoiceQuestionTable();
 	}
 	
-	
 	private void createMultipleChoiceQuestionTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS multiplechoice (quizid INT, questionOrder INT, question TEXT, optionA TEXT, optionB TEXT, optionC TEXT, optionD TEXT, optionE TEXT, correctAnswer CHAR(64))");
+			PreparedStatement pstmt0 = db.getPreparedStatement("DROP TABLE multiplechoice");
+			pstmt0.executeUpdate();
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS multiplechoice (quizid INT, questionOrder INT, question TEXT, answerChoices TEXT, correctAnswer INT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void addQuestion(int quizid, int questionOrder, String question, String[] options, String correctAnswer) {
+	private String answersToString(List<String> answers) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < answers.size(); i++) {
+			sb.append(answers.get(i) + ", ");
+		}
+		return sb.toString();
+	}
+	
+	public void addQuestion(int quizid, int questionOrder, String question, List<String> answerChoices, int correctAnswer) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO multiplechoice VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO multiplechoice VALUES (?, ?, ?, ?, ?)");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			pstmt.setString(3, question);
-			int optionIndexOffset = 4;
-			for (int i = 0; i < numOfOptions; i++) 
-				pstmt.setString(i + optionIndexOffset, options[i]);
-			pstmt.setString(9, correctAnswer);
+			pstmt.setString(4, answersToString(answerChoices));
+			pstmt.setInt(5, correctAnswer);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -72,24 +80,21 @@ public class MultipleChoiceQuestionTable {
 		return getString(quizid, questionOrder, "question");
 	}
 	
-	public void setOption(int quizid, int questionOrder, char letter, String option) {
-		char uppercaseLetter = Character.toUpperCase(letter);
-		if (uppercaseLetter < 'A' || uppercaseLetter > 'E') return; 
-		setString(quizid, questionOrder, "option" + uppercaseLetter, option);
+	public void setAnswerChoices(int quizid, int questionOrder, List<String> answerChoices) {
+		setString(quizid, questionOrder, "answerChoices", answersToString(answerChoices));
 	}
 	
-	public String getOption(int quizid, int questionOrder, char letter) {
-		char uppercaseLetter = Character.toUpperCase(letter);
-		if (uppercaseLetter < 'A' || uppercaseLetter > 'E') return null; 
-		return getString(quizid, questionOrder, "option" + uppercaseLetter);
+	public List<String> getAnswerChoices(int quizid, int questionOrder) {
+		String answers = getString(quizid, questionOrder, "answerChoices");
+		return Arrays.asList(answers.split("\\s*,\\s*"));
 	}
 	
-	public void setCorrectAnswer(int quizid, int questionOrder, String correctAnswer) {
-		setString(quizid, questionOrder, "correctAnswer", correctAnswer);
+	public void setCorrectAnswer(int quizid, int questionOrder, int correctAnswer) {
+		setInt(quizid, questionOrder, "correctAnswer", correctAnswer);
 	}
 	
-	public String getCorrectAnswer(int quizid, int questionOrder) {
-		return getString(quizid, questionOrder, "correctAnswer");
+	public int getCorrectAnswer(int quizid, int questionOrder) {
+		return getInt(quizid, questionOrder, "correctAnswer");
 	}
 	
 	public ResultSet getAllQuizEntries(int quizid) {

@@ -71,6 +71,8 @@ public class CreateQuizServlet extends HttpServlet {
 	private void addQuestions(int quizID, NodeList questions, ServletContext context) {
 		QuestionResponseTable qrTable = (QuestionResponseTable) context.getAttribute("qrTable");
 		FillInTheBlankTable blankTable = (FillInTheBlankTable) context.getAttribute("blankTable");
+		MultipleChoiceQuestionTable mcTable = (MultipleChoiceQuestionTable) context.getAttribute("mcTable");
+		PictureResponseQuestionTable pictureTable = (PictureResponseQuestionTable) context.getAttribute("pictureTable");
 		
 		for (int i = 0; i < questions.getLength(); i++) {
 			Element question = (Element) questions.item(i);
@@ -86,19 +88,46 @@ public class CreateQuizServlet extends HttpServlet {
 				break;
 				
 			case "multiple-choice":
-				
+				addMultipleChoice(quizID, i, question, mcTable);
 				break;
 				
 			case "picture-response":
-				
+				addPictureResponse(quizID, i, question, pictureTable);
 				break;
 			}
 				
 		}
 	}
 
+	private void addPictureResponse(int quizID, int questionOrder, Element questionElem, PictureResponseQuestionTable pictureTable) {
+		String imageLocation = questionElem.getElementsByTagName("image-location").item(0).getTextContent();
+		NodeList answerList = questionElem.getElementsByTagName("answer");
+		
+		ArrayList<String> answers = new ArrayList<String>();
+		int preferred = populateAnswers(answers, answerList);
+		
+		pictureTable.addQuestion(quizID, questionOrder, imageLocation, answers, preferred);
+	}
+	
+	private void addMultipleChoice(int quizID, int questionOrder, Element questionElem, MultipleChoiceQuestionTable mcTable) {
+		String question = questionElem.getElementsByTagName("query").item(0).getTextContent();
+		NodeList choiceList = questionElem.getElementsByTagName("option");
+		
+		ArrayList<String> choices = new ArrayList<String>();
+		int correctAnswer = populateChoices(choices, choiceList);
+		
+		mcTable.addQuestion(quizID, questionOrder, question, choices, correctAnswer);
+	}
+
 	private void addFillInBlank(int quizID, int questionOrder, Element questionElem, FillInTheBlankTable blankTable) {
-		blankTable.addQuestion(quizID, questionOrder, question, correctAnswer);
+		String preQuestion = questionElem.getElementsByTagName("pre").item(0).getTextContent();
+		String postQuestion = questionElem.getElementsByTagName("post").item(0).getTextContent();
+		NodeList answerList = questionElem.getElementsByTagName("answer");
+
+		ArrayList<String> answers = new ArrayList<String>();
+		int preferred = populateAnswers(answers, answerList);
+		
+		blankTable.addQuestion(quizID, questionOrder, preQuestion, postQuestion, answers, preferred);
 	}
 
 	private void addQuestionResponse(int quizID, int questionOrder, Element questionElem, QuestionResponseTable qrTable) {
@@ -106,18 +135,12 @@ public class CreateQuizServlet extends HttpServlet {
 		NodeList answerList = questionElem.getElementsByTagName("answer");
 		
 		ArrayList<String> answers = new ArrayList<String>();
-		int preferred = 0;
-		for (int i = 0; i < answerList.getLength(); i++) {
-			Element answer = (Element) answerList.item(i);
-			answers.add(answer.getTextContent());
-			if (answer.hasAttribute("preferred"))
-				preferred = i;
-		}
+		int preferred = populateAnswers(answers, answerList);
 		
 		qrTable.addQuestion(quizID, questionOrder, question, answers, preferred);
 	}
 
-	public int addQuiz(Document quiz, int numQuestions, String creator, QuizTable quizTable) {
+	private int addQuiz(Document quiz, int numQuestions, String creator, QuizTable quizTable) {
 		String random = quiz.getDocumentElement().getAttribute("random");
 		String immediateCorrection = quiz.getDocumentElement().getAttribute("immediate-correction");
 		String onePage = quiz.getDocumentElement().getAttribute("one-page");
@@ -132,7 +155,29 @@ public class CreateQuizServlet extends HttpServlet {
 				random, immediateCorrection, onePage, practiceMode, 0);
 	}
 	
-	public static Document loadXMLFromString(String xml) throws Exception
+	private int populateAnswers(ArrayList<String> answers, NodeList answerList) {
+		int preferred = 0;
+		for (int i = 0; i < answerList.getLength(); i++) {
+			Element answer = (Element) answerList.item(i);
+			answers.add(answer.getTextContent());
+			if (answer.hasAttribute("preferred"))
+				preferred = i;
+		}
+		return preferred;
+	}
+	
+	private int populateChoices(ArrayList<String> choices, NodeList choiceList) {
+		int correct = 0;
+		for (int i = 0; i < choiceList.getLength(); i++) {
+			Element choice = (Element) choiceList.item(i);
+			choices.add(choice.getTextContent());
+			if (choice.hasAttribute("answer"))
+				correct = i;
+		}
+		return correct;
+	}
+	
+	private static Document loadXMLFromString(String xml) throws Exception
 	{
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder builder = factory.newDocumentBuilder();

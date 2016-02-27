@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -35,8 +37,9 @@ public class MultipleChoiceQuestionDBTest {
 	public void basictest() {
 		int quizid = 300;
 		int questionOrder = 3;
-		String options[] = {"Washington", "Bush Sr.", "Clinton", "Bush Jr.", "Obama"};
-		multipleChoiceDB.addQuestion(quizid, questionOrder, "Who was the first US president?", options, "A");
+		String answerChoicesArray[] = {"Washington", "Bush Sr.", "Clinton", "Bush Jr.", "Obama"};
+		List<String> answerChoicesList = Arrays.asList(answerChoicesArray);
+		multipleChoiceDB.addQuestion(quizid, questionOrder, "Who was the first US president?", answerChoicesList, 1);
 		
 		int quizidFromDB = multipleChoiceDB.getQuizID(quizid, questionOrder);
 		assertEquals(quizidFromDB, 300);
@@ -47,40 +50,44 @@ public class MultipleChoiceQuestionDBTest {
 		String question = multipleChoiceDB.getQuestion(quizid, questionOrder);
 		assertTrue(question.equals("Who was the first US president?"));
 		
-		char letters[] = {'A', 'B', 'C', 'D', 'E'};
-		for (int i = 0; i < 5; i++) {
-			String option = multipleChoiceDB.getOption(quizid, questionOrder, letters[i]);
-			assertTrue(option.equals(options[i]));
+		List<String> answerChoices = multipleChoiceDB.getAnswerChoices(quizid, questionOrder);
+		for (int i = 0; i < answerChoices.size(); i++) {
+			String choice = answerChoices.get(i);
+			assertTrue(choice.equals(answerChoicesArray[i]));
 		}
 		
-		String correctAnswer = multipleChoiceDB.getCorrectAnswer(quizid, questionOrder);
-		assertTrue(correctAnswer.equals("A"));
+		int correctAnswer = multipleChoiceDB.getCorrectAnswer(quizid, questionOrder);
+		assertEquals(correctAnswer, 1);
 		
 		multipleChoiceDB.setQuestion(quizid, questionOrder, "Who is not running for president right now?");
 		question = multipleChoiceDB.getQuestion(quizid, questionOrder);
 		assertTrue(question.equals("Who is not running for president right now?"));
 		
-		String newOptions[] = {"Trump", "Clinton", "Sanders", "Cruz", "Mickey Mouse"};
-		for (int i = 0; i < 5; i++) 
-			multipleChoiceDB.setOption(quizid, questionOrder, letters[i], newOptions[i]);
+		String answerChoicesArray2[] = {"Trump", "Clinton", "Sanders", "Cruz", "Mickey Mouse", "Minnie Mouse"};
+		List<String> answerChoicesList2 = Arrays.asList(answerChoicesArray2);
+		multipleChoiceDB.setAnswerChoices(quizid, questionOrder, answerChoicesList2);
 		
-		for (int i = 0; i < 5; i++) { 
-			String option = multipleChoiceDB.getOption(quizid, questionOrder, letters[i]);
-			assertTrue(option.equals(newOptions[i]));
+		List<String> answerChoices2 = multipleChoiceDB.getAnswerChoices(quizid, questionOrder);
+		for (int i = 0; i < answerChoices2.size(); i++) { 
+			String choice = answerChoices2.get(i);
+			assertTrue(choice.equals(answerChoicesArray2[i]));
 		}
 		
-		multipleChoiceDB.setCorrectAnswer(quizid, questionOrder, "E");
+		multipleChoiceDB.setCorrectAnswer(quizid, questionOrder, 6);
 		correctAnswer = multipleChoiceDB.getCorrectAnswer(quizid, questionOrder);
-		assertTrue(correctAnswer.equals("E"));
+		assertEquals(correctAnswer, 6);
 		
-		String options2[] = {"Biden", "Gore", "Cheney", "Adams", "Washington"};
-		multipleChoiceDB.addQuestion(quizid, 50, "Who is the current vice president?", options2, "A");
+		String answerChoicesArray3[] = {"Biden", "Gore", "Cheney", "Adams", "Washington"};
+		List<String> answerChoicesList3 = Arrays.asList(answerChoicesArray3);
+		multipleChoiceDB.addQuestion(quizid, 50, "Who is the current vice president?", answerChoicesList3, 1);
 		
-		String options3[] = { "Sparky", "Pluto", "Bo", "Skipper", "Roger"};
-		multipleChoiceDB.addQuestion(27, questionOrder, "What is the name of the Obama's dog?", options3, "C");
+		String answerChoicesArray4[] = { "Sparky", "Pluto", "Bo"};
+		List<String> answerChoicesList4 = Arrays.asList(answerChoicesArray4);
+		multipleChoiceDB.addQuestion(27, questionOrder, "What is the name of the Obama's dog?", answerChoicesList4, 3);
 		
-		String options4[] = { "Illinois", "New York", "California", "Hawaii", "Texas"};
-		multipleChoiceDB.addQuestion(quizid, 1000, "Where did Obama grow up?", options4, "D");
+		String answerChoicesArray5[] = { "Illinois", "New York", "California", "Hawaii"};
+		List<String> answerChoicesList5 = Arrays.asList(answerChoicesArray5);
+		multipleChoiceDB.addQuestion(quizid, 1000, "Where did Obama grow up?", answerChoicesList5, 4);
 		
 		ResultSet rs = multipleChoiceDB.getAllQuizEntries(quizid);
 		try {
@@ -88,7 +95,7 @@ public class MultipleChoiceQuestionDBTest {
 			while(rs.next()) {
 				count++;
 				assertEquals(rs.getInt("quizid"), quizid);
-				assertFalse(rs.getString("correctAnswer").equals("C"));
+				assertFalse(rs.getString("correctAnswer").equals(3));
 			}
 			assertEquals(count, 3);
 		} catch (SQLException e) {
