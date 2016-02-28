@@ -17,7 +17,7 @@ public class AchievementLink {
 	/**
 	 * The date in which this achievement is accomplished by the user.
 	 */
-	public Timestamp date;
+	private Timestamp date;
 	
 	/**
 	 * Constructor
