@@ -56,36 +56,36 @@ public class HomePageServlet extends HttpServlet {
 		// recently created quizzes by everyone
 		QuizTable quizTable = (QuizTable) request.getSession().getAttribute("quizTable");
 		List<QuizLink> allRecentQuizzesCreated = quizTable.getRecentQuizzesCreated( resultNumLimit, recentTime );
-		request.getSession().setAttribute("allRecentQuizzesCreated ", allRecentQuizzesCreated );
+		request.setAttribute("allRecentQuizzesCreated ", allRecentQuizzesCreated );
 		
 		// recently created quizzes by this user
 		List<QuizLink> myRecentQuizzesCreated  = quizTable.getRecentQuizzesCreated(
 				user.getName(), resultNumLimit, recentTime);
-		request.getSession().setAttribute("myRecentQuizzesCreated ", myRecentQuizzesCreated ); 
+		request.setAttribute("myRecentQuizzesCreated ", myRecentQuizzesCreated ); 
 		
 		// popular quizzes
 		QuizResultsTable quizResultTable = (QuizResultsTable) 
 				request.getSession().getAttribute("quizResultTable");
 		List<QuizLink> popularQuizzes = quizResultTable.getPopularQuizzes(
 				resultNumLimit, new Timestamp(0) ); // no time constraint.
-		request.getSession().setAttribute("popularQuizzes ", popularQuizzes );
+		request.setAttribute("popularQuizzes ", popularQuizzes );
 		
 		// recently taken quizzes by this user
 		List<QuizLink> myRecentQuizzesTaken  = quizResultTable.getRecentQuizzesTaken(
 				user.getName(), resultNumLimit, recentTime);
-		request.getSession().setAttribute("myRecentQuizzesTaken ", myRecentQuizzesTaken ); 
+		request.setAttribute("myRecentQuizzesTaken ", myRecentQuizzesTaken ); 
 		
 		// announcements
 		AnnouncementsTable announcementsTable = (AnnouncementsTable) 
 				request.getSession().getAttribute("announcementsTable");
 		LinkedHashMap<Timestamp, String> announcements = announcementsTable.getAllAnnouncementsMap();
-		request.getSession().setAttribute("announcements ", announcements );
+		request.setAttribute("announcements ", announcements );
 		
 		// achievements
 		AchievementsTable achievementsTable = (AchievementsTable) 
 				request.getSession().getAttribute("achievementsTable");
 		List<AchievementLink> myAchievements = achievementsTable.getAllUserAchievementsLinkList( user.getName() );
-		request.getSession().setAttribute("myAchievements ", myAchievements );
+		request.setAttribute("myAchievements ", myAchievements );
 		
 		// Friend activities
 		FriendTable friendTable = (FriendTable) request.getSession().getAttribute("friendTable");
@@ -103,9 +103,9 @@ public class HomePageServlet extends HttpServlet {
 			friendsAchievements.addAll( achievementsTable.getAllUserAchievementsLinkList(username) );
 		}
 		
-		request.getSession().setAttribute("friendsRecentQuizzesCreated ", friendsRecentQuizzesCreated );
-		request.getSession().setAttribute("friendsRecentQuizzesTaken ", friendsRecentQuizzesTaken );
-		request.getSession().setAttribute("friendsAchievements ", friendsAchievements );
+		request.setAttribute("friendsRecentQuizzesCreated ", friendsRecentQuizzesCreated );
+		request.setAttribute("friendsRecentQuizzesTaken ", friendsRecentQuizzesTaken );
+		request.setAttribute("friendsAchievements ", friendsAchievements );
 
 		
 	}
