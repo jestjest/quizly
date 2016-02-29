@@ -80,25 +80,27 @@ public class QuizResultsTable {
 	/* HomePage related functions */
 	
 	/**
-	 * Query list of recently created quizzes
+	 * Quarry list of most popular quizzes among the recently taken quizzes
 	 * @param n an integer determining maximum number of quizzes to be returned
 	 * @param t a Timstamp object determining the time after which is considered recent.
-	 * @return a chronologically ordered list of QuizLink of the recently created quizzes.
+	 * @return an ordered by frequency list of QuizLink of the popular quizzes.
 	 */
-	public List<QuizLink> getRecentQuizzesCreated( int n, Timestamp t ) {
+	public List<QuizLink> getPopularQuizzes( int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE createdDate > ? ORDER BY createdDate DESC LIMIT ?");
+					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results "
+							+ "INNER JOIN quizes USING(quizid) "
+							+ "WHERE date > ? GROUP BY quizid ORDER BY quiz_count DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setInt(2, n);
-			ResultSet rs = pstmt.executeQuery(); // Query
-			
+			ResultSet rs = pstmt.executeQuery(); // Quarry
+
 			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
 			while( rs.next() ) {
 				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null, 
-						rs.getInt("numOfTimesTaken"), null, 0);
+						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), 
+						rs.getTimestamp("date"), rs.getInt("numOfTimesTaken"), 
+						rs.getString("username"), rs.getFloat("score"));
 				quizLinks.add(quizLink);
 			}
 			return quizLinks;
@@ -109,29 +111,31 @@ public class QuizResultsTable {
 	}
 	
 	/**
-	 * Query list of recently created quizzes by a person determined by its user name
+	 * Quarry list of recently taken quizzes by a person determined by its user name
 	 * @param username A String containing user name of a person
 	 * @param n an integer determining maximum number of quizzes to be returned
 	 * @param t a Timstamp object determining the time after which is considered recent.
-	 * @return a chronologically ordered list of QuizLink of the recently created quizzes
+	 * @return a chronologically ordered list of QuizLink of the recently taken quizzes
 	 * by a specific person.
 	 */
-	public List<QuizLink> getRecentQuizzesCreated( String username, int n, Timestamp t ) {
+	public List<QuizLink> getRecentQuizzesTaken( String username, int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE createdDate > ? AND creatorUsername = ? "
+					db.getPreparedStatement("SELECT * FROM results "
+							+ "INNER JOIN quizes USING(quizid) "
+							+ "WHERE date > ? AND username = ? "
 							+ "ORDER BY createdDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setString(2, username);
 			pstmt.setInt(3, n);
-			ResultSet rs = pstmt.executeQuery(); // Query
+			ResultSet rs = pstmt.executeQuery(); // Quarry
 			
-			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
+			ArrayList<QuizLink> quizLinks = new ArrayList<QuizLink>();
 			while( rs.next() ) {
 				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null,
-						rs.getInt("numOfTimesTaken"), null, 0);
+						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), 
+						rs.getTimestamp("date"), rs.getInt("numOfTimesTaken"), 
+						rs.getString("username"), rs.getFloat("score"));
 				quizLinks.add(quizLink);
 			}
 			return quizLinks;
