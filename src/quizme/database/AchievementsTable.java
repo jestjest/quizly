@@ -1,11 +1,14 @@
 package quizme.database;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import quizme.DBConnection;
+import quizme.links.AchievementLink;
 
 public class AchievementsTable {
 private DBConnection db;
@@ -17,19 +20,21 @@ private DBConnection db;
 	
 	private void createAchievementTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS achievements (username VARCHAR(128), achievement VARCHAR(128), date DATE)");
+			PreparedStatement pstmt0 = db.getPreparedStatement("DROP TABLE achievements");
+			pstmt0.executeUpdate();
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS achievements (username VARCHAR(128), achievement VARCHAR(128), date TIMESTAMP)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public int addAchievement(String username, String achievement, Date date) {
+	public int addAchievement(String username, String achievement, Timestamp date) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO achievements VALUES(?, ?, ?)");
 			pstmt.setString(1, username);
 			pstmt.setString(2, achievement);
-			pstmt.setDate(3, date);
+			pstmt.setTimestamp(3, date);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -89,6 +94,28 @@ private DBConnection db;
 			pstmt.setInt(2, numOfResults);
 			System.out.println(pstmt);
 			return pstmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/* HomePage related functions */
+	/**
+	 * Provide chronologically ordered list of all achievements of a user
+	 * @param username
+	 * @return a list of AchievementLink of the specified user.
+	 */
+	public List<AchievementLink> getAllUserAchievementsLinkList( String username ) {
+		ResultSet rs = getAllUserAchievements( username );
+		List<AchievementLink> achieveList = new ArrayList<AchievementLink>();
+		try {
+			while ( rs.next() ) {
+				AchievementLink achieveLink = new AchievementLink( rs.getString("achievement"), 
+						rs.getString("username"), rs.getTimestamp("date") );
+				achieveList.add( achieveLink );
+			}
+			return achieveList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

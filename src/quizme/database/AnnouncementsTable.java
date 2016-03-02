@@ -4,6 +4,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.ArrayList;
+import quizme.links.AnnouncementLink;
 
 import quizme.DBConnection;
 
@@ -17,7 +21,8 @@ public class AnnouncementsTable {
 	
 	private void createAnnouncementTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS announcements (announcementid INT, message TEXT, date DATE)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
+					+ "announcements (announcementid INT, message TEXT, date DATE)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -57,6 +62,28 @@ public class AnnouncementsTable {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM announcements ORDER BY date DESC");
 			return pstmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/* HomePage related functions */
+
+	/**
+	 * Interact with announcement data base and returns list of all available announcements.
+	 * @return List<AnnouncementLink> of all available announcements ordered chronologically.
+	 */
+	public List<AnnouncementLink> getAllAnnouncementsList( ) {
+		ResultSet rs = getAllAnnouncements();
+		List<AnnouncementLink> announcementLinks = new ArrayList<AnnouncementLink>();
+		try {
+			while ( rs.next() ) {
+				AnnouncementLink announcementLink = new AnnouncementLink( "New announcement",
+						rs.getString("message"), rs.getTimestamp("date") );
+				announcementLinks.add( announcementLink );
+			}
+			return announcementLinks;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

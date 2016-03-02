@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.sql.*;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -78,14 +77,22 @@ public class HomePageServlet extends HttpServlet {
 		// announcements
 		AnnouncementsTable announcementsTable = (AnnouncementsTable) 
 				request.getSession().getAttribute("announcementsTable");
-		LinkedHashMap<Timestamp, String> announcements = announcementsTable.getAllAnnouncementsMap();
+		List<AnnouncementLink> announcements = announcementsTable.getAllAnnouncementsList();
 		request.setAttribute("announcements ", announcements );
 		
 		// achievements
 		AchievementsTable achievementsTable = (AchievementsTable) 
 				request.getSession().getAttribute("achievementsTable");
-		List<AchievementLink> myAchievements = achievementsTable.getAllUserAchievementsLinkList( user.getName() );
+		List<AchievementLink> myAchievements = achievementsTable.getAllUserAchievementsLinkList( 
+				user.getName() );
 		request.setAttribute("myAchievements ", myAchievements );
+		
+		// unseen messages
+		MessagesTable messagesTable = (MessagesTable)
+				request.getSession().getAttribute("messagesTable");
+		List<MessageLink> myUnseenMessages = messagesTable.getAllUnseenMessages( 
+				user.getName(), resultNumLimit);
+		request.setAttribute("myUnseenMessages ", myUnseenMessages );
 		
 		// Friend activities
 		FriendTable friendTable = (FriendTable) request.getSession().getAttribute("friendTable");
