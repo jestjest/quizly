@@ -69,7 +69,16 @@ public class MessageLink {
 	}
 	
 	/**
+	 * Returns an HTML link for a message's sender page
+	 */
+	public String getSenderLink() {
+		return "<a href='UserPageServlet?name=" + senderUsername + "' class='btn'>" + senderUsername + "</a>";
+	}
+	
+	/**
 	 * Returns the subject of the message.
+	 * 
+	 * NOTE: If the message is a challenge, the subject contains an HTML link to the quiz summary page.
 	 * @return
 	 */
 	public String getSubject() {
@@ -94,6 +103,8 @@ public class MessageLink {
 	
 	/**
 	 * Returns the message content.
+	 * 
+	 * NOTE: If the message is a challenge, the content contains
 	 * @return
 	 */
 	public String content() {

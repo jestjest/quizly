@@ -55,44 +55,44 @@ public class HomePageServlet extends HttpServlet {
 		// recently created quizzes by everyone
 		QuizTable quizTable = (QuizTable) request.getSession().getAttribute("quizTable");
 		List<QuizLink> allRecentQuizzesCreated = quizTable.getRecentQuizzesCreated( resultNumLimit, recentTime );
-		request.setAttribute("allRecentQuizzesCreated ", allRecentQuizzesCreated );
+		request.setAttribute("allRecentQuizzesCreated", allRecentQuizzesCreated );
 		
 		// recently created quizzes by this user
 		List<QuizLink> myRecentQuizzesCreated  = quizTable.getRecentQuizzesCreated(
 				user.getName(), resultNumLimit, recentTime);
-		request.setAttribute("myRecentQuizzesCreated ", myRecentQuizzesCreated ); 
+		request.setAttribute("myRecentQuizzesCreated", myRecentQuizzesCreated ); 
 		
 		// popular quizzes
 		QuizResultsTable quizResultTable = (QuizResultsTable) 
 				request.getSession().getAttribute("quizResultTable");
 		List<QuizLink> popularQuizzes = quizResultTable.getPopularQuizzes(
 				resultNumLimit, new Timestamp(0) ); // no time constraint.
-		request.setAttribute("popularQuizzes ", popularQuizzes );
+		request.setAttribute("popularQuizzes", popularQuizzes );
 		
 		// recently taken quizzes by this user
 		List<QuizLink> myRecentQuizzesTaken  = quizResultTable.getRecentQuizzesTaken(
 				user.getName(), resultNumLimit, recentTime);
-		request.setAttribute("myRecentQuizzesTaken ", myRecentQuizzesTaken ); 
+		request.setAttribute("myRecentQuizzesTaken", myRecentQuizzesTaken ); 
 		
 		// announcements
 		AnnouncementsTable announcementsTable = (AnnouncementsTable) 
 				request.getSession().getAttribute("announcementsTable");
 		List<AnnouncementLink> announcements = announcementsTable.getAllAnnouncementsList();
-		request.setAttribute("announcements ", announcements );
+		request.setAttribute("announcements", announcements );
 		
 		// achievements
 		AchievementsTable achievementsTable = (AchievementsTable) 
 				request.getSession().getAttribute("achievementsTable");
 		List<AchievementLink> myAchievements = achievementsTable.getAllUserAchievementsLinkList( 
 				user.getName() );
-		request.setAttribute("myAchievements ", myAchievements );
+		request.setAttribute("myAchievements", myAchievements );
 		
 		// unseen messages
 		MessagesTable messagesTable = (MessagesTable)
 				request.getSession().getAttribute("messagesTable");
 		List<MessageLink> myUnseenMessages = messagesTable.getAllUnseenMessages( 
 				user.getName(), resultNumLimit);
-		request.setAttribute("myUnseenMessages ", myUnseenMessages );
+		request.setAttribute("myUnseenMessages", myUnseenMessages );
 		
 		// Friend activities
 		FriendTable friendTable = (FriendTable) request.getSession().getAttribute("friendTable");
@@ -100,19 +100,19 @@ public class HomePageServlet extends HttpServlet {
 		
 		List<QuizLink> friendsRecentQuizzesCreated = new ArrayList<QuizLink>();
 		List<QuizLink> friendsRecentQuizzesTaken = new ArrayList<QuizLink>();
-		List<AchievementLink> friendsAchievements = new ArrayList<AchievementLink>();
+		List<AchievementLink> friendsRecentAchievements = new ArrayList<AchievementLink>();
 
 		for ( String username: friendsList ) {
 			friendsRecentQuizzesCreated.addAll( 
 					quizTable.getRecentQuizzesCreated(username, resultNumLimit, recentTime));
 			friendsRecentQuizzesTaken.addAll( 
 					quizResultTable.getRecentQuizzesTaken(username, resultNumLimit, recentTime));
-			friendsAchievements.addAll( achievementsTable.getAllUserAchievementsLinkList(username) );
+			friendsRecentAchievements.addAll( achievementsTable. );
 		}
 		
-		request.setAttribute("friendsRecentQuizzesCreated ", friendsRecentQuizzesCreated );
-		request.setAttribute("friendsRecentQuizzesTaken ", friendsRecentQuizzesTaken );
-		request.setAttribute("friendsAchievements ", friendsAchievements );
+		request.setAttribute("friendsRecentQuizzesCreated", friendsRecentQuizzesCreated );
+		request.setAttribute("friendsRecentQuizzesTaken", friendsRecentQuizzesTaken );
+		request.setAttribute("friendsRecentAchievements", friendsRecentAchievements );
 
 		
 	}

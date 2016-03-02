@@ -146,10 +146,6 @@ public class QuizTable {
 	public boolean getPracticeMode(int quizid) {
 		return (getInt(quizid, "practiceMode") > 0) ? true : false;
 	}
-	
-	public boolean getPracticeMode(int quizid) {
-		return (getInt(quizid, "practiceMode") > 0) ? true : false;
-	}
 
 	public String getCreatorUsername(int quizid) {
 		return getString(quizid, "creatorUsername");
@@ -164,7 +160,7 @@ public class QuizTable {
 	/**
 	 * Query list of recently created quizzes
 	 * @param n an integer determining maximum number of quizzes to be returned
-	 * @param t a Timstamp object determining the time after which is considered recent.
+	 * @param t a Timestamp object determining the time after which is considered recent.
 	 * @return a chronologically ordered list of QuizLink of the recently created quizzes.
 	 */
 	public List<QuizLink> getRecentQuizzesCreated( int n, Timestamp t ) {
@@ -240,70 +236,6 @@ public class QuizTable {
 				return quiz;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	/* HomePage related functions */
-	
-	/**
-	 * Query list of recently created quizzes
-	 * @param n an integer determining maximum number of quizzes to be returned
-	 * @param t a Timstamp object determining the time after which is considered recent.
-	 * @return a chronologically ordered list of QuizLink of the recently created quizzes.
-	 */
-	public List<QuizLink> getRecentQuizzesCreated( int n, Timestamp t ) {
-		try {
-			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE createdDate > ? ORDER BY createdDate DESC LIMIT ?");
-			pstmt.setTimestamp(1, t);
-			pstmt.setInt(2, n);
-			ResultSet rs = pstmt.executeQuery(); // Query
-			
-			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
-			while( rs.next() ) {
-				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null, 
-						rs.getInt("numOfTimesTaken"), null, 0);
-				quizLinks.add(quizLink);
-			}
-			return quizLinks;
-		} catch( SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	/**
-	 * Query list of recently created quizzes by a person determined by its user name
-	 * @param username A String containing user name of a person
-	 * @param n an integer determining maximum number of quizzes to be returned
-	 * @param t a Timstamp object determining the time after which is considered recent.
-	 * @return a chronologically ordered list of QuizLink of the recently created quizzes
-	 * by a specific person.
-	 */
-	public List<QuizLink> getRecentQuizzesCreated( String username, int n, Timestamp t ) {
-		try {
-			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE createdDate > ? AND creatorUsername = ? "
-							+ "ORDER BY createdDate DESC LIMIT ?");
-			pstmt.setTimestamp(1, t);
-			pstmt.setString(2, username);
-			pstmt.setInt(3, n);
-			ResultSet rs = pstmt.executeQuery(); // Query
-			
-			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
-			while( rs.next() ) {
-				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null,
-						rs.getInt("numOfTimesTaken"), null, 0);
-				quizLinks.add(quizLink);
-			}
-			return quizLinks;
-		} catch( SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

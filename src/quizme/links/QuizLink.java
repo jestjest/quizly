@@ -64,10 +64,17 @@ public class QuizLink {
 	}
 	
 	/**
-	 * Returns an HTML link element for the user.
+	 * Returns an HTML link element for the creator.
 	 */
 	public String getCreatorLink() {
 		return "<a href='UserPageServlet?name=" + creatorUsername + "' class='btn'>" + creatorUsername + "</a>";
+	}
+	
+	/**
+	 * Return an HTML link element for the quiz-taker
+	 */
+	public String getTakerLink() {
+		return "<a href='UserPageServlet?name=" + takenUsername + "' class='btn'>" + takenUsername + "</a>";
 	}
 	
 	/**
@@ -75,6 +82,20 @@ public class QuizLink {
 	 */
 	public Timestamp getDateCreated() {
 		return dateCreated;
+	}
+
+	/**
+	 * Returns the Timestamp instance variable for when the quiz was taken
+	 */
+	public Timestamp getDateTaken() {
+		return dateTaken;
+	}
+	
+	/**
+	 * Returns the score that a specific user got on a quiz.
+	 */
+	public float getScore() {
+		return score;
 	}
 	
 	/**
