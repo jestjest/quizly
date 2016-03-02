@@ -61,7 +61,6 @@ public class AchievementsTableTest {
 			rs = achievementsDB.getRecentUserAchievements("Jestin", 5);
 			count = 0;
 			while(rs.next()) {
-				System.out.println(rs.getTimestamp("date"));
 				assertFalse(rs.getString(2).equals("Top CS Scorer"));
 				count++;
 			}

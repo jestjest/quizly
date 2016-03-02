@@ -129,7 +129,7 @@ public class QuizResultsTable {
 			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
 			while( rs.next() ) {
 				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), 
+						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), 
 						rs.getTimestamp("date"), rs.getInt("numOfTimesTaken"), 
 						rs.getString("username"), rs.getFloat("score"));
 				quizLinks.add(quizLink);
@@ -155,7 +155,7 @@ public class QuizResultsTable {
 					db.getPreparedStatement("SELECT * FROM results "
 							+ "INNER JOIN quizes USING(quizid) "
 							+ "WHERE date > ? AND username = ? "
-							+ "ORDER BY createdDate DESC LIMIT ?");
+							+ "ORDER BY modifiedDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setString(2, username);
 			pstmt.setInt(3, n);
@@ -164,7 +164,7 @@ public class QuizResultsTable {
 			ArrayList<QuizLink> quizLinks = new ArrayList<QuizLink>();
 			while( rs.next() ) {
 				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), 
+						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), 
 						rs.getTimestamp("date"), rs.getInt("numOfTimesTaken"), 
 						rs.getString("username"), rs.getFloat("score"));
 				quizLinks.add(quizLink);

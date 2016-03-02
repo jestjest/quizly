@@ -2,7 +2,7 @@ package quizme.tests;
 
 import static org.junit.Assert.*;
 
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -21,7 +21,8 @@ public class QuizResultsDBTest {
 	public static void oneTimeSetUp() {
 		db = new DBConnection();
 		resultDB = new QuizResultsTable(db);
-		resultDB.removeResult(1); /* keep replacing result 1 in basic test */
+		for (int i = 1; i <= 12; i++) 
+			resultDB.removeResult(i); /* keep replacing results used in basic test */
 	}
 	
 	@AfterClass
@@ -51,9 +52,44 @@ public class QuizResultsDBTest {
 		Timestamp date = resultDB.getDate(resultid);
 		String dateString = df.format(date);
 		String todayString = df.format(today);
-		System.out.println(dateString);
-		System.out.println(todayString);
 		assertTrue(dateString.equals(todayString));
+		
+		Timestamp date2 = new Timestamp(2016 - 1900, 2 - 1, 27, 11, 0, 0, 0);
+		Timestamp date3 = new Timestamp(2016 - 1900, 1 - 1, 27, 11, 0, 0, 0);
+		for (int i = 0; i < 5; i++) {
+			resultDB.addResult(1, "LB", i * 10, 60, today);
+			resultDB.addResult(2, "JB", i * 20, 900, date2);
+		}
+		resultDB.addResult(1, "LB", 55, 40, date2);
+		
+		ResultSet rs = resultDB.getRecentQuizzesTakenHelper("LB", 6, date2);
+		try {
+			int count = 0;
+			while(rs.next()) {
+				assertEquals(rs.getFloat("time"), 60, 0.1);
+				assertTrue(rs.getString("name").equals("testQuiz"));
+				count++;
+			}
+			assertEquals(count, 5); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		rs = resultDB.getRecentQuizzesTakenHelper("LB", 10, date3);
+		try {
+			rs.last();
+			assertEquals(rs.getRow(), 6);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		rs = resultDB.getPopularQuizzesHelper("JB", 10, date3);
+		try {
+			rs.last();
+			assertEquals(rs.getRow(), 6);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

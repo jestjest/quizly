@@ -7,6 +7,7 @@ import java.sql.*;
 import org.junit.*;
 
 import quizme.DBConnection;
+import quizme.database.AnnouncementsTable;
 
 public class AnnouncementsTableTest {
 	static DBConnection db;

@@ -74,7 +74,7 @@ public class QuizDBTest {
 		
 		assertTrue(quizDB.getCreatorUsername(quizid).equals("master quiz creator"));
 		
-		Timestamp date = quizDB.getCreatedDate(quizid);
+		Timestamp date = quizDB.getModifiedDate(quizid);
 		DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 		String dateString = df.format(date);
 		String todayString = df.format(today);
@@ -89,7 +89,7 @@ public class QuizDBTest {
 			rs.first();
 			assertTrue(rs.getString("name").equals("Fake2"));
 			assertTrue(rs.getString("creatorUsername").equals("another quiz master"));
-			assertTrue(rs.getTimestamp("createdDate").equals(anotherDate));
+			assertTrue(rs.getTimestamp("modifiedDate").equals(anotherDate));
 			assertEquals(rs.getInt("numOfQuestions"), 5);
 			assertEquals(rs.getInt("numOfTimesTaken"), 45);
 			assertTrue(rs.getBoolean("practiceMode"));

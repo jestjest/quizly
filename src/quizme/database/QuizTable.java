@@ -196,7 +196,7 @@ public class QuizTable {
 		try {
 			PreparedStatement pstmt = 
 					db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE createdDate > ? ORDER BY createdDate DESC LIMIT ?");
+							+ "WHERE modifiedDate > ? ORDER BY modifiedDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setInt(2, n);
 			ResultSet rs = pstmt.executeQuery(); // Query
@@ -204,7 +204,7 @@ public class QuizTable {
 			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
 			while( rs.next() ) {
 				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null, 
+						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), null, 
 						rs.getInt("numOfTimesTaken"), null, 0);
 				quizLinks.add(quizLink);
 			}
@@ -227,8 +227,8 @@ public class QuizTable {
 		try {
 			PreparedStatement pstmt = 
 					db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE createdDate > ? AND creatorUsername = ? "
-							+ "ORDER BY createdDate DESC LIMIT ?");
+							+ "WHERE modifiedDate > ? AND creatorUsername = ? "
+							+ "ORDER BY modifiedDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setString(2, username);
 			pstmt.setInt(3, n);
@@ -237,7 +237,7 @@ public class QuizTable {
 			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
 			while( rs.next() ) {
 				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
-						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null,
+						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), null,
 						rs.getInt("numOfTimesTaken"), null, 0);
 				quizLinks.add(quizLink);
 			}
@@ -261,7 +261,7 @@ public class QuizTable {
 			while( rs.next() ) {
 				QuizSummaryInfo quiz = new QuizSummaryInfo( quizID, rs.getString("name"),
 						rs.getString("description"), rs.getString("creatorUsername"), 
-						rs.getTimestamp("createdDate"), rs.getInt("numOfTimesTaken") );
+						rs.getTimestamp("modifiedDate"), rs.getInt("numOfTimesTaken") );
 				return quiz;
 			}
 		} catch (SQLException e) {
