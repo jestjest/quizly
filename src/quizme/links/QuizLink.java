@@ -55,68 +55,32 @@ public class QuizLink {
 		this.takenUsername = takenUsername;
 		this.score = score;
 	}
-
+	
 	/**
-	 * Returns quiz ID
-	 * @return
+	 * Returns an HTML link element for the quiz link.
 	 */
-	public int getQuizID() {
-		return quizID;
+	public String getQuizLink() {
+		return "<a href='QuizSummaryServlet?id=" + quizID + "' class='btn'>" + name + "</a>";
 	}
 	
 	/**
-	 * Returns the name of this quiz
-	 * @return
+	 * Returns an HTML link element for the user.
 	 */
-	public String getName() {
-		return name;
+	public String getCreatorLink() {
+		return "<a href='UserPageServlet?name=" + creatorUsername + "' class='btn'>" + creatorUsername + "</a>";
 	}
 	
 	/**
-	 * Returns the user name of the person who has created this quiz
-	 * @return
-	 */
-	public String getCreatorUsername() {
-		return creatorUsername;
-	}
-	
-	/**
-	 * Returns the time that quiz is created
-	 * @return a Timestamp object
+	 * Returns the Timestamp instance variable for when the quiz was created
 	 */
 	public Timestamp getDateCreated() {
 		return dateCreated;
 	}
-
-	/**
-	 * Returns the time that this quiz is taken
-	 * @return a Timestamp object
-	 */
-	public Timestamp getDateTaken() {
-		return dateTaken;
-	}
 	
 	/**
-	 * Returns number of times this quiz has been taken
-	 * @return
+	 * Returns the number of times the quiz has been taken
 	 */
-	public int getNumberTaken() {
+	public int getNumTaken() {
 		return numberTaken;
-	}
-	
-	/**
-	 * Returns the user name of the person who has taken this quiz
-	 * @return
-	 */
-	public String getTakenUsername() {
-		return takenUsername;
-	}
-	
-	/**
-	 * Returns the score (in percentage) of the person who has taken the quiz
-	 * @return
-	 */
-	public float getScore() {
-		return score;
 	}
 }

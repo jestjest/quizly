@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 
 import quizme.DBConnection;
 
@@ -57,6 +59,26 @@ public class AnnouncementsTable {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM announcements ORDER BY date DESC");
 			return pstmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/* HomePage related functions */
+
+	/**
+	 * Interact with announcement data base an return all available announcements.
+	 * @return Map <Date, String> of all available announcements ordered chronologically.
+	 */
+	public LinkedHashMap<Timestamp, String> getAllAnnouncementsMap( ) {
+		ResultSet rs = getAllAnnouncements();
+		LinkedHashMap<Timestamp, String> mp = new LinkedHashMap<Timestamp, String>();
+		try {
+			while ( rs.next() ) {
+				mp.put( rs.getTimestamp("date"), rs.getString("message") );
+			}
+			return mp;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

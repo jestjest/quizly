@@ -106,7 +106,7 @@ public class CreateQuizServlet extends HttpServlet {
 		ArrayList<String> answers = new ArrayList<String>();
 		int preferred = populateAnswers(answers, answerList);
 		
-		pictureTable.addQuestion(quizID, questionOrder, imageLocation, answers, preferred);
+		pictureTable.addQuestion(quizID, questionOrder, answers, preferred, imageLocation);
 	}
 	
 	private void addMultipleChoice(int quizID, int questionOrder, Element questionElem, MultipleChoiceQuestionTable mcTable) {
@@ -141,10 +141,10 @@ public class CreateQuizServlet extends HttpServlet {
 	}
 
 	private int addQuiz(Document quiz, int numQuestions, String creator, QuizTable quizTable) {
-		String random = quiz.getDocumentElement().getAttribute("random");
-		String immediateCorrection = quiz.getDocumentElement().getAttribute("immediate-correction");
-		String onePage = quiz.getDocumentElement().getAttribute("one-page");
-		String practiceMode = quiz.getDocumentElement().getAttribute("practice-mode");
+		boolean random = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("random"));
+		boolean immediateCorrection = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("immediate-correction"));
+		boolean onePage = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("one-page"));
+		boolean practiceMode = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("practice-mode"));
 		
 		String title = quiz.getElementsByTagName("title").item(0).getTextContent();
 		String desc = quiz.getElementsByTagName("description").item(0).getTextContent();

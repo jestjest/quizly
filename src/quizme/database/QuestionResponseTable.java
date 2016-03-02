@@ -1,6 +1,8 @@
 package quizme.database;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
 import quizme.DBConnection;
 
@@ -15,20 +17,29 @@ public class QuestionResponseTable {
 	
 	private void createQuestionResponseTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS questionresponse (quizid INT, questionOrder INT, question TEXT, correctAnswer TEXT)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS questionresponse (quizid INT, questionOrder INT, question TEXT, correctAnswers TEXT, preferredAnswer INT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void addQuestion(int quizid, int questionOrder, String question, String correctAnswer) {
+	private String answersToString(List<String> answers) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < answers.size(); i++) {
+			sb.append(answers.get(i) + "~~~ ");
+		}
+		return sb.toString();
+	}
+	
+	public void addQuestion(int quizid, int questionOrder, String question, List<String> correctAnswer, int preferredAnswer) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO questionresponse VALUES (?, ?, ?, ?)");
+			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO questionresponse VALUES (?, ?, ?, ?, ?)");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			pstmt.setString(3, question);
-			pstmt.setString(4, correctAnswer);
+			pstmt.setString(4, answersToString(correctAnswer));
+			pstmt.setInt(5, preferredAnswer);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,12 +77,21 @@ public class QuestionResponseTable {
 		return getString(quizid, questionOrder, "question");
 	}
 	
-	public void setCorrectAnswer(int quizid, int questionOrder, String correctAnswer) {
-		setString(quizid, questionOrder, "correctAnswer", correctAnswer);
+	public void setCorrectAnswers(int quizid, int questionOrder, List<String> correctAnswer) {
+		setString(quizid, questionOrder, "correctAnswers", answersToString(correctAnswer));
 	}
 	
-	public String getCorrectAnswer(int quizid, int questionOrder) {
-		return getString(quizid, questionOrder, "correctAnswer");
+	public List<String> getCorrectAnswers(int quizid, int questionOrder) {
+		String answers = getString(quizid, questionOrder, "correctAnswers");
+		return Arrays.asList(answers.split("\\s*~~~\\s*"));
+	}
+	
+	public void setPreferredAnswer(int quizid, int questionOrder, int preferredAnswer) {
+		setInt(quizid, questionOrder, "preferredAnswer", preferredAnswer);
+	}
+	
+	public int getPreferredAnswer(int quizid, int questionOrder) {
+		return getInt(quizid, questionOrder, "preferredAnswer");
 	}
 	
 	public ResultSet getAllQuizEntries(int quizid) {

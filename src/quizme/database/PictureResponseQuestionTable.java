@@ -18,7 +18,7 @@ private DBConnection db;
 	
 	private void createPictureResponseQuestionTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS pictureresponse (quizid INT, questionOrder INT, question TEXT, correctAnswers TEXT, preferredAnswer INT, pictureURL TEXT)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS pictureresponse (quizid INT, questionOrder INT, correctAnswers TEXT, preferredAnswer INT, pictureURL TEXT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -28,20 +28,19 @@ private DBConnection db;
 	private String answersToString(List<String> answers) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < answers.size(); i++) {
-			sb.append(answers.get(i) + ", ");
+			sb.append(answers.get(i) + "~~~ ");
 		}
 		return sb.toString();
 	}
 	
-	public void addQuestion(int quizid, int questionOrder, String question, List<String> correctAnswers, int preferredAnswer, String pictureURL) {
+	public void addQuestion(int quizid, int questionOrder, List<String> correctAnswers, int preferredAnswer, String pictureURL) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO pictureresponse VALUES (?, ?, ?, ?, ?, ?)");
+			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO pictureresponse VALUES (?, ?, ?, ?, ?)");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
-			pstmt.setString(3, question);
-			pstmt.setString(4, answersToString(correctAnswers));
-			pstmt.setInt(5, preferredAnswer);
-			pstmt.setString(6, pictureURL);
+			pstmt.setString(3, answersToString(correctAnswers));
+			pstmt.setInt(4, preferredAnswer);
+			pstmt.setString(5, pictureURL);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -71,21 +70,13 @@ private DBConnection db;
 		return getInt(quizid, questionOrder, "questionOrder");
 	}
 	
-	public void setQuestion(int quizid, int questionOrder, String question) {
-		setString(quizid, questionOrder, "question", question);
-	}
-	
-	public String getQuestion(int quizid, int questionOrder) {
-		return getString(quizid, questionOrder, "question");
-	}
-	
 	public void setCorrectAnswers(int quizid, int questionOrder, List<String> correctAnswer) {
 		setString(quizid, questionOrder, "correctAnswers", answersToString(correctAnswer));
 	}
 	
 	public List<String> getCorrectAnswers(int quizid, int questionOrder) {
 		String answers = getString(quizid, questionOrder, "correctAnswers");
-		return Arrays.asList(answers.split("\\s*,\\s*"));
+		return Arrays.asList(answers.split("\\s*~~~\\s*"));
 	}
 	
 	public void setPreferredAnswer(int quizid, int questionOrder, int preferredAnswer) {

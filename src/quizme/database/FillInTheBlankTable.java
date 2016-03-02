@@ -29,7 +29,7 @@ private DBConnection db;
 	private String answersToString(List<String> answers) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < answers.size(); i++) {
-			sb.append(answers.get(i) + ", ");
+			sb.append(answers.get(i) + "~~~ ");
 		}
 		return sb.toString();
 	}
@@ -94,7 +94,7 @@ private DBConnection db;
 	
 	public List<String> getCorrectAnswers(int quizid, int questionOrder) {
 		String answers = getString(quizid, questionOrder, "correctAnswers");
-		return Arrays.asList(answers.split("\\s*,\\s*"));
+		return Arrays.asList(answers.split("\\s*~~~\\s*"));
 	}
 	
 	public void setPreferredAnswer(int quizid, int questionOrder, int preferredAnswer) {

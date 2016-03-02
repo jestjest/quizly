@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,10 +32,10 @@ public class AchievementsTableTest {
 	
 	@Test
 	public void basictest() {
-		Date date1 = new Date(2016, 2, 14);
-		Date date2 = new Date(2014, 4, 15);
-		Date date3 = new Date(2014, 4, 14);
-		Date date4 = new Date(1990, 2, 27);
+		Timestamp date1 = new Timestamp(2016 - 1900, 2, 14, 5, 59, 0, 0);
+		Timestamp date2 = new Timestamp(2014 - 1900, 4, 15, 7, 59, 0, 0);
+		Timestamp date3 = new Timestamp(2014 - 1900, 4, 14, 11, 59, 0, 0);
+		Timestamp date4 = new Timestamp(1990 - 1900, 2, 27, 15, 59, 0, 0);
 		String achievements[] = {"Amateur Author", "Prolific Author", "Prodigious Author", "Quiz Machine", "I am the Greatest", "Most Active User"};
 		String usernames[] = {"LB", "Jestin", "Hadi"};
 		for (int i = 0; i < achievements.length; i++) {
@@ -60,6 +61,7 @@ public class AchievementsTableTest {
 			rs = achievementsDB.getRecentUserAchievements("Jestin", 5);
 			count = 0;
 			while(rs.next()) {
+				System.out.println(rs.getTimestamp("date"));
 				assertFalse(rs.getString(2).equals("Top CS Scorer"));
 				count++;
 			}

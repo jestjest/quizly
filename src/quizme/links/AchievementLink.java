@@ -46,4 +46,8 @@ public class AchievementLink {
 	public String getUsername() {
 		return username;
 	}
+	
+	public Timestamp getDateAchieved() {
+		return date;
+	}
 }

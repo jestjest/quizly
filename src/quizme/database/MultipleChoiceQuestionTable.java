@@ -30,7 +30,7 @@ public class MultipleChoiceQuestionTable {
 	private String answersToString(List<String> answers) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < answers.size(); i++) {
-			sb.append(answers.get(i) + ", ");
+			sb.append(answers.get(i) + "~~~ ");
 		}
 		return sb.toString();
 	}
@@ -86,7 +86,7 @@ public class MultipleChoiceQuestionTable {
 	
 	public List<String> getAnswerChoices(int quizid, int questionOrder) {
 		String answers = getString(quizid, questionOrder, "answerChoices");
-		return Arrays.asList(answers.split("\\s*,\\s*"));
+		return Arrays.asList(answers.split("\\s*~~~\\s*"));
 	}
 	
 	public void setCorrectAnswer(int quizid, int questionOrder, int correctAnswer) {

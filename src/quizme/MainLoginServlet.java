@@ -143,7 +143,7 @@ public class MainLoginServlet extends HttpServlet {
 		
 		User user = new User(username);
 		request.getSession().setAttribute("user",  user);
-		request.getRequestDispatcher("home.jsp").forward(request, response);
+		request.getRequestDispatcher("HomePaggeServlet").forward(request, response);
 	}
 	
 	/**

@@ -2,8 +2,10 @@ package quizme.database;
 
 import java.sql.*;
 import java.util.Date;
+import java.util.List;
 
 import quizme.DBConnection;
+import quizme.links.QuizLink;
 
 public class QuizTable {
 	private DBConnection db;
@@ -15,16 +17,16 @@ public class QuizTable {
 	
 	private void createQuizTable() {
 		try {
-			
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes (quizid INT, name VARCHAR(128), description VARCHAR(128), purpose VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
-					+ "multiplePages BOOL, immediateCorrection BOOL, creatorUsername VARCHAR(128), createdDate TIMESTAMP, numOfTimesTaken INT)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes (quizid INT, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
+					+ "onePage BOOL, immediateCorrection BOOL, practiceMode BOOL, creatorUsername VARCHAR(128), createdDate TIMESTAMP, numOfTimesTaken INT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public int addQuiz(String name, String description, String purpose, int numOfQuestions, String creatorUsername, Timestamp createdDate) {
+	public int addQuiz(String name, String description, int numOfQuestions, String creatorUsername, Timestamp createdDate, boolean randomOrder, 
+			boolean immediateCorrection, boolean onePage, boolean practiceMode, int numOfTimesTaken) {
 		try{
 			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT quizid FROM quizes");
 			ResultSet rs = pstmt1.executeQuery();
@@ -32,14 +34,18 @@ public class QuizTable {
 			int quizid = rs.getRow() + 1;
 
 			
-			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO quizes VALUES ( ?, ?, ?, ?, ?, 0, 0, 0, ?, ?, 0)");
+			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO quizes VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt2.setInt(1, quizid);
 			pstmt2.setString(2, name);
 			pstmt2.setString(3, description);
-			pstmt2.setString(4, purpose);
-			pstmt2.setInt(5, numOfQuestions);
-			pstmt2.setString(6, creatorUsername);
-			pstmt2.setTimestamp(7, createdDate);
+			pstmt2.setInt(4, numOfQuestions);
+			pstmt2.setInt(5, (randomOrder) ? 1 : 0);
+			pstmt2.setInt(6, (onePage) ? 1 : 0);
+			pstmt2.setInt(7, (immediateCorrection) ? 1 : 0);
+			pstmt2.setInt(8, (practiceMode) ? 1 : 0); 
+			pstmt2.setString(9, creatorUsername);
+			pstmt2.setTimestamp(10, createdDate);
+			pstmt2.setInt(11, numOfTimesTaken);
 			pstmt2.executeUpdate();
 			
 			return quizid;
@@ -84,14 +90,6 @@ public class QuizTable {
 		return getString(quizid, "description");
 	}
 	
-	public void setPurpose(int quizid, String purpose) {
-		setString(quizid, "purpose", purpose);
-	}
-	
-	public String getPurpose(int quizid) {
-		return getString(quizid, "purpose");
-	}
-	
 	public void incNumOfTimesTaken(int quizid) {
 		int priorNumOfTimesTaken = getNumOfTimesTaken(quizid);
 		setInt(quizid, "numOfTimesTaken", priorNumOfTimesTaken + 1);
@@ -118,13 +116,13 @@ public class QuizTable {
 		return (getInt(quizid, "randomOrder") > 0) ? true : false;
 	}
 	
-	public void setMultiplePages(int quizid, boolean multiplePages) {
+	public void setOnePage(int quizid, boolean multiplePages) {
 		int multiplePagesNum = (multiplePages) ? 1 : 0;
-		setInt(quizid, "multiplePages", multiplePagesNum);
+		setInt(quizid, "onePage", multiplePagesNum);
 	}
 	
-	public boolean getMultiplePages(int quizid) {
-		return (getInt(quizid, "multiplePages") > 0) ? true : false;
+	public boolean getOnePage(int quizid) {
+		return (getInt(quizid, "onePage") > 0) ? true : false;
 	}
 	
 	public void setImmediateCorrection(int quizid, boolean immediateCorrection) {
@@ -136,12 +134,85 @@ public class QuizTable {
 		return (getInt(quizid, "immediateCorrection") > 0) ? true : false;
 	}
 	
+	public void setPracticeMode(int quizid, boolean practiceMode) {
+		int practiceModeNum = (practiceMode) ? 1 : 0;
+		setInt(quizid, "practiceMode", practiceModeNum);
+	}
+	
+	public boolean getPracticeMode(int quizid) {
+		return (getInt(quizid, "practiceMode") > 0) ? true : false;
+	}
+	
 	public String getCreatorUsername(int quizid) {
 		return getString(quizid, "creatorUsername");
 	}
 	
 	public Timestamp getCreatedDate(int quizid) {
 		return getDate(quizid, "createdDate");
+	}
+	
+	/* HomePage related functions */
+	
+	/**
+	 * Query list of recently created quizzes
+	 * @param n an integer determining maximum number of quizzes to be returned
+	 * @param t a Timstamp object determining the time after which is considered recent.
+	 * @return a chronologically ordered list of QuizLink of the recently created quizzes.
+	 */
+	public List<QuizLink> getRecentQuizzesCreated( int n, Timestamp t ) {
+		try {
+			PreparedStatement pstmt = 
+					db.getPreparedStatement("SELECT * FROM quizes "
+							+ "WHERE createdDate > ? ORDER BY createdDate DESC LIMIT ?");
+			pstmt.setTimestamp(1, t);
+			pstmt.setInt(2, n);
+			ResultSet rs = pstmt.executeQuery(); // Query
+			
+			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
+			while( rs.next() ) {
+				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
+						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null, 
+						rs.getInt("numOfTimesTaken"), null, 0);
+				quizLinks.add(quizLink);
+			}
+			return quizLinks;
+		} catch( SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Query list of recently created quizzes by a person determined by its user name
+	 * @param username A String containing user name of a person
+	 * @param n an integer determining maximum number of quizzes to be returned
+	 * @param t a Timstamp object determining the time after which is considered recent.
+	 * @return a chronologically ordered list of QuizLink of the recently created quizzes
+	 * by a specific person.
+	 */
+	public List<QuizLink> getRecentQuizzesCreated( String username, int n, Timestamp t ) {
+		try {
+			PreparedStatement pstmt = 
+					db.getPreparedStatement("SELECT * FROM quizes "
+							+ "WHERE createdDate > ? AND creatorUsername = ? "
+							+ "ORDER BY createdDate DESC LIMIT ?");
+			pstmt.setTimestamp(1, t);
+			pstmt.setString(2, username);
+			pstmt.setInt(3, n);
+			ResultSet rs = pstmt.executeQuery(); // Query
+			
+			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
+			while( rs.next() ) {
+				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
+						rs.getString("creatorUsername"), rs.getTimestamp("createdDate"), null,
+						rs.getInt("numOfTimesTaken"), null, 0);
+				quizLinks.add(quizLink);
+			}
+			return quizLinks;
+		} catch( SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/* helper functions */
