@@ -20,9 +20,7 @@ private DBConnection db;
 	
 	private void createAchievementTable() {
 		try {
-			PreparedStatement pstmt0 = db.getPreparedStatement("DROP TABLE achievements");
-			pstmt0.executeUpdate();
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS achievements (username VARCHAR(128), achievement VARCHAR(128), date TIMESTAMP)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS achievements (username VARCHAR(128), achievement VARCHAR(128), date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -92,7 +90,6 @@ private DBConnection db;
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements WHERE username = ? ORDER BY date DESC LIMIT ? ");
 			pstmt.setString(1, username);
 			pstmt.setInt(2, numOfResults);
-			System.out.println(pstmt);
 			return pstmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();

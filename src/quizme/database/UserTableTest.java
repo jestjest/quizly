@@ -1,4 +1,4 @@
-package quizme.tests;
+package quizme.database;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import quizme.DBConnection;
-import quizme.database.UsersTable;
 
 public class UserTableTest {
 	static DBConnection db;

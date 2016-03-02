@@ -109,13 +109,14 @@ public class QuizResultsTable {
 		return null;
 	}
 	
+
 	/**
 	 * Quarry list of most popular quizzes among the recently taken quizzes
 	 * @param n an integer determining maximum number of quizzes to be returned
 	 * @param t a Timstamp object determining the time after which is considered recent.
 	 * @return an ordered by frequency list of QuizLink of the popular quizzes.
 	 */
-	/*public List<QuizLink> getPopularQuizzes( int n, Timestamp t ) {
+	public List<QuizLink> getPopularQuizzes( int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
 					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results "
@@ -138,8 +139,7 @@ public class QuizResultsTable {
 			e.printStackTrace();
 		}
 		return null;
-	}*/
-	
+	}
 	
 	/**
 	 * Quarry list of recently taken quizzes by a person determined by its user name
@@ -149,7 +149,7 @@ public class QuizResultsTable {
 	 * @return a chronologically ordered list of QuizLink of the recently taken quizzes
 	 * by a specific person.
 	 */
-	/*public List<QuizLink> getRecentQuizzesTaken( String username, int n, Timestamp t ) {
+	public List<QuizLink> getRecentQuizzesTaken( String username, int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
 					db.getPreparedStatement("SELECT * FROM results "
@@ -174,8 +174,7 @@ public class QuizResultsTable {
 			e.printStackTrace();
 		}
 		return null;
-	}*/
-	
+	}
 	
 	/* helper functions */
 	
