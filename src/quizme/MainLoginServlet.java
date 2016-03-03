@@ -1,15 +1,12 @@
-package quizme;
+package src.quizme;
 
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.*;
+import java.io.*;
+import java.security.*;
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import src.quizme.database.UsersTable;
 
 /**
  * Servlet implementation class MainLoginServlet
@@ -47,11 +44,11 @@ public class MainLoginServlet extends HttpServlet {
 			return;
 		}
 		
+		String hashed = generateHash(password);
 		if (request.getParameter("login") != null) {
-			String hashed = generateHash(password);
 			handleLogin(username, hashed, request, response);
 		} else if (request.getParameter("create") != null ){
-			handleAccountCreation(username, request, response);
+			handleAccountCreation(username, hashed, request, response);
 		} else {
 			doGet(request, response);
 		}
@@ -63,24 +60,12 @@ public class MainLoginServlet extends HttpServlet {
 	 */
 	private void handleLogin(String username, String hashed, 
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		DBConnection con = (DBConnection) request.getServletContext().getAttribute("connection");
 
-		try {
-			PreparedStatement stmt = con.getPreparedStatement("SELECT * FROM users WHERE username=? AND password=?");
-			stmt.setString(1, username);
-			stmt.setString(2, hashed);
-			ResultSet rs = stmt.executeQuery();
-			
-			if (!rs.next()) {
-				displayError("Username/password combination was wrong.", request, response);
-				return;
-			}
-			
-			forwardLoginSuccess(rs.getString("username"), request, response);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
+		if (usersTable.correctPassword(username, hashed)) {
+			forwardLoginSuccess(username, request, response);
+		} else {
+			displayError("Username/password combination was wrong.", request, response);
 		}
 	}
 
@@ -88,25 +73,14 @@ public class MainLoginServlet extends HttpServlet {
 	 * Handles account creation. Checks if the account already exists. If it does, then tells the user to try again.
 	 * Otherwise, adds the account to the database and redirects the user to the home page.
 	 */
-	private void handleAccountCreation(String username, HttpServletRequest request, 
+	private void handleAccountCreation(String username, String hashed, HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		DBConnection con = (DBConnection) request.getServletContext().getAttribute("connection");
-		
-		try {
-			PreparedStatement stmt = con.getPreparedStatement("SELECT * FROM users WHERE username=?");
-			stmt.setString(1, username);
-			ResultSet rs = stmt.executeQuery();
-			
-			if (rs.next()) {
-				displayError("Username already exists.", request, response);
-				return;
-			}
-			
-			createAccount(con, username, request, response);
-		} catch (SQLException e) {
-			displayError("Something went wrong.", request, response);
-			e.printStackTrace();
+		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
+		if (usersTable.usernameAlreadyExists(username)) {
+			displayError("Username already exists.", request, response);
+		} else {
+			createAccount(usersTable, username, hashed, request, response);
 		}
 	}
 	
@@ -114,23 +88,13 @@ public class MainLoginServlet extends HttpServlet {
 	 * Creates an account in the database and redirects the user to the home page if the insertion
 	 * was successful.
 	 */
-	private void createAccount(DBConnection con, String username, HttpServletRequest request, 
+	private void createAccount(UsersTable usersTable, String username, String hashed, HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
-		
-		PreparedStatement stmt = con.getPreparedStatement("INSERT INTO users VALUES (?)");
-		try {
-			stmt.setString(1, username);
-			int rows = stmt.executeUpdate();
-			if (rows != 1) {
-				displayError("Something went wrong adding account.", request, response);
-				return;
-			} 
-			
+		boolean success = usersTable.addUser(username, hashed);
+		if (success) {
 			forwardLoginSuccess(username, request, response);
-			
-		} catch (SQLException e) {
-			displayError("Something went wrong.", request, response);
-			e.printStackTrace();
+		} else {
+			displayError("Something went wrong adding account.", request, response);
 		}
 	}
 	
