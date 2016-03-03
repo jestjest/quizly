@@ -25,8 +25,8 @@
         if (friendStatus == 0) {
         	out.println("<form role='form' action='FriendRequestServlet' method='POST'>");
         	out.println("<div class='form-group'>");
-        	out.println("<input type='hidden' name='target-person' value='" + request.getParameter("username") + "'>");
-        	out.println("<input type='submit' name='add-friend' value='Add friend' class='btn btn-primary'>");
+        	out.println("<input type='hidden' name='target-user' value='" + request.getParameter("username") + "'>");
+        	out.println("<input type='submit' name='send-request' value='Add friend' class='btn btn-primary'>");
         	out.println("</div>");
         	out.println("</form>");
         } else if (friendStatus == 1) {
@@ -35,15 +35,16 @@
         	out.println("This user wants to be friends with you.");
         	out.println("<form role='form' action='FriendRequestServlet' method='POST'>");
         	out.println("<div class='form-group'>");
-        	out.println("<input type='hidden' name='target-person' value='" + request.getParameter("username") + "'>");
-        	out.println("<input type='submit' name='accept-friend' value='Accept friend' class='btn btn-success'>");
+        	out.println("<input type='hidden' name='target-user' value='" + request.getParameter("username") + "'>");
+        	out.println("<input type='submit' name='accept-request' value='Accept friend' class='btn btn-success'>");
+        	out.println("<input type='submit' name='reject-request' value='Reject friend' class='btn btn-danger'>");
         	out.println("</div>");
         	out.println("</form>");
         } else if (friendStatus == 3) {
         	out.println("You are friends with this user.");
         	out.println("<form role='form' action='FriendRequestServlet' method='POST'>");
         	out.println("<div class='form-group'>");
-        	out.println("<input type='hidden' name='target-person' value='" + request.getParameter("username") + "'>");
+        	out.println("<input type='hidden' name='target-user' value='" + request.getParameter("username") + "'>");
         	out.println("<input type='submit' name='remove-friend' value='Remove friend' class='btn btn-danger'>");
         	out.println("</div>");
         	out.println("</form>");

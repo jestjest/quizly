@@ -154,9 +154,9 @@
 					String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(message.getDate());
 					
 					if (message.getType() == MessageLink.MType.TEXT)
-						out.println(date + ": " + message.getSenderLink() + " has sent you a note: " + message.getSubject());
+						out.println(date + ": " + message.getSenderLink() + " has sent you a note: '" + message.getSubject() + "'");
 					else if (message.getType() == MessageLink.MType.FRIENDSHIP)
-						out.println(date + ": " + message.getSenderLink() + ": " + message.getSubject());
+						out.println(date + ": " + message.getSenderLink() + "wants to be friends!");
 					else if (message.getType() == MessageLink.MType.CHALLENGE) {
 						out.println(date + ": " + message.getSenderLink() + " is challenging you to take this quiz: " + message.getSubject());
 						out.println("The challenger has a best score of " + message.content() + ".");

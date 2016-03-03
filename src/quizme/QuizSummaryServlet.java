@@ -47,7 +47,7 @@ public class QuizSummaryServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 		
 		// get the quiz ID from request
-		int quizID = (int) request.getAttribute("quizID");
+		int quizID = Integer.parseInt(request.getParameter("quizID"));
 		
 		// Get quiz summary info
 		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");

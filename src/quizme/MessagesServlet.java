@@ -49,7 +49,7 @@ public class MessagesServlet extends HttpServlet {
 				getServletContext().getAttribute("messagesTable");
 		List<MessageLink> myMessages = messagesTable.getAllReceivedMessages( 
 				user.getName(), resultNumLimit);
-		request.setAttribute("myMessages ", myMessages );
+		request.setAttribute("myMessages", myMessages );
 	}
 
 }
