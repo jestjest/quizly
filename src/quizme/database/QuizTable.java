@@ -158,34 +158,6 @@ public class QuizTable {
 	}
 	
 	/* HomePage related functions */
-	
-	public ResultSet getRecentQuizzesModifiedHelper(int n, Timestamp t) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE modifiedDate > ? ORDER BY modifiedDate DESC LIMIT ?");
-			pstmt.setTimestamp(1, t);
-			pstmt.setInt(2, n);
-			return pstmt.executeQuery(); 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public ResultSet getRecentQuizzesModifiedHelper(String username, int n, Timestamp t) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM quizes "
-							+ "WHERE modifiedDate > ? AND creatorUsername = ? ORDER BY modifiedDate DESC LIMIT ?");
-			pstmt.setTimestamp(1, t);
-			pstmt.setString(2, username);
-			pstmt.setInt(3, n);
-			return pstmt.executeQuery(); 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	/**
 	 * Query list of recently created quizzes
 	 * @param n an integer determining maximum number of quizzes to be returned

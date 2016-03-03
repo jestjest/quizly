@@ -20,8 +20,7 @@ import quizme.links.*;
 @WebServlet("/UserPageServlet")
 public class UserPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final long recentDuration = 30 * 60 * 1000; // recent mean last 30mins
-	private static final int resultNumLimit = 5;	
+	private static final int MAX_RESULT_NUM = Integer.MAX_VALUE;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -48,32 +47,30 @@ public class UserPageServlet extends HttpServlet {
 
 		// get the user (who is visited)
 		String pageUsername = (String) request.getParameter("username");
-		// determine the time after which is considered "recent"
-		Calendar calendar = Calendar.getInstance();		
-		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() - recentDuration );
 
-		// recently created quizzes by this user
+		// created quizzes by this user
 		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
-		List<QuizLink> pageUserRecentQuizzesCreated  = quizTable.getRecentQuizzesCreated(
-				pageUsername, resultNumLimit, recentTime);
-		request.setAttribute("pageUserRecentQuizzesCreated ", pageUserRecentQuizzesCreated ); 
+		List<QuizLink> pageUserQuizzesCreated  = quizTable.getRecentQuizzesCreated(
+				pageUsername, MAX_RESULT_NUM, new Timestamp(0));
+		request.setAttribute("pageUserQuizzesCreated", pageUserQuizzesCreated ); 
 
-		// recently taken quizzes by this user
+		// taken quizzes by this user
 		QuizResultsTable quizResultTable = (QuizResultsTable) 
 				getServletContext().getAttribute("quizResultTable");
-		List<QuizLink> pageUserRecentQuizzesTaken  = quizResultTable.getRecentQuizzesTaken(
-				pageUsername, resultNumLimit, recentTime);
-		request.setAttribute("pageUserRecentQuizzesTaken ", pageUserRecentQuizzesTaken );
+		List<QuizLink> pageUserQuizzesTaken  = quizResultTable.getRecentQuizzesTaken(
+				pageUsername, MAX_RESULT_NUM, new Timestamp(0));
+		request.setAttribute("pageUserQuizzesTaken", pageUserQuizzesTaken );
 
 		// achievements
 		AchievementsTable achievementsTable = (AchievementsTable) 
 				getServletContext().getAttribute("achievementsTable");
 		List<AchievementLink> pageUserAchievements = achievementsTable.getAllUserAchievementsLinkList( 
 				pageUsername );
-		request.setAttribute("pageUserAchievements ", pageUserAchievements );
+		request.setAttribute("pageUserAchievements", pageUserAchievements );
 
 		// The status of add friend button
 		/**
+		 * -1: same person
 		 * 0: Send friend request
 		 * 1: Friend request pending
 		 * 2: Confirm friend request
@@ -85,23 +82,19 @@ public class UserPageServlet extends HttpServlet {
 		MessagesTable messagesTable = (MessagesTable)
 				getServletContext().getAttribute("messagesTable");
 
-		if ( friendTable.areFriends( user.getName(), pageUsername ) ) { // they are friends
+		if (user.getName().equals(pageUsername)){
+			friendStatus = -1;
+		} else if ( friendTable.areFriends( user.getName(), pageUsername ) ) { // they are friends
 			friendStatus = 3;
-		}
-		else {
-			if ( messagesTable.hasRequested(pageUsername, user.getName()) ) 
-			{ // pageUser want to be friend with user
+		} else if ( messagesTable.hasRequested(pageUsername, user.getName()) ) { // pageUser want to be friend with user
 				friendStatus = 2;
-			}
-			else if ( messagesTable.hasRequested( user.getName(), pageUsername ) ) 
-			{ // user has already requested to be friend with pageUser (pending)
+		} else if ( messagesTable.hasRequested( user.getName(), pageUsername ) ) { // user has already requested to be friend with pageUser (pending)
 				friendStatus = 1;
-			}
-			else { // no request has been sent, and they are not friends
+		} else { // no request has been sent, and they are not friends
 				friendStatus = 0;
-			}
 		}
-		request.setAttribute("friendStatus ", friendStatus );
+		
+		request.setAttribute("friendStatus", friendStatus );
 		request.getRequestDispatcher("user-page.jsp").forward(request, response);
 
 	}
