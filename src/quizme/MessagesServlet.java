@@ -46,7 +46,7 @@ public class MessagesServlet extends HttpServlet {
 		
 		// get all messages
 		MessagesTable messagesTable = (MessagesTable)
-				request.getSession().getAttribute("messagesTable");
+				getServletContext().getAttribute("messagesTable");
 		List<MessageLink> myMessages = messagesTable.getAllReceivedMessages( 
 				user.getName(), resultNumLimit);
 		request.setAttribute("myMessages ", myMessages );

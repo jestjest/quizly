@@ -50,7 +50,7 @@ public class QuizSummaryServlet extends HttpServlet {
 		int quizID = (int) request.getAttribute("quizID");
 		
 		// Get quiz summary info
-		QuizTable quizTable = (QuizTable) request.getSession().getAttribute("quizTable");
+		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
 		QuizSummaryInfo quizSummaryInfo = quizTable.getQuizSummaryInfo(quizID);
 		request.setAttribute("quizSummaryInfo", quizSummaryInfo);
 

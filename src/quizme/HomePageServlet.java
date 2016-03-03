@@ -53,8 +53,9 @@ public class HomePageServlet extends HttpServlet {
 		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() + recentDuration );
 		
 		// recently created quizzes by everyone
-		QuizTable quizTable = (QuizTable) request.getSession().getAttribute("quizTable");
-		List<QuizLink> allRecentQuizzesCreated = quizTable.getRecentQuizzesCreated( resultNumLimit, recentTime );
+		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
+		List<QuizLink> allRecentQuizzesCreated = 
+				quizTable.getRecentQuizzesCreated( resultNumLimit, recentTime );
 		request.setAttribute("allRecentQuizzesCreated", allRecentQuizzesCreated );
 		
 		// recently created quizzes by this user
@@ -64,7 +65,7 @@ public class HomePageServlet extends HttpServlet {
 		
 		// popular quizzes
 		QuizResultsTable quizResultTable = (QuizResultsTable) 
-				request.getSession().getAttribute("quizResultTable");
+				getServletContext().getAttribute("quizResultTable");
 		List<QuizLink> popularQuizzes = quizResultTable.getPopularQuizzes(
 				resultNumLimit, new Timestamp(0) ); // no time constraint.
 		request.setAttribute("popularQuizzes", popularQuizzes );
@@ -76,26 +77,26 @@ public class HomePageServlet extends HttpServlet {
 		
 		// announcements
 		AnnouncementsTable announcementsTable = (AnnouncementsTable) 
-				request.getSession().getAttribute("announcementsTable");
+				getServletContext().getAttribute("announcementsTable");
 		List<AnnouncementLink> announcements = announcementsTable.getAllAnnouncementsList();
 		request.setAttribute("announcements", announcements );
 		
 		// achievements
 		AchievementsTable achievementsTable = (AchievementsTable) 
-				request.getSession().getAttribute("achievementsTable");
+				getServletContext().getAttribute("achievementsTable");
 		List<AchievementLink> myAchievements = achievementsTable.getAllUserAchievementsLinkList( 
 				user.getName() );
 		request.setAttribute("myAchievements", myAchievements );
 		
 		// unseen messages
 		MessagesTable messagesTable = (MessagesTable)
-				request.getSession().getAttribute("messagesTable");
+				getServletContext().getAttribute("messagesTable");
 		List<MessageLink> myUnseenMessages = messagesTable.getAllUnseenMessages( 
 				user.getName(), resultNumLimit);
 		request.setAttribute("myUnseenMessages", myUnseenMessages );
 		
 		// Friend activities
-		FriendTable friendTable = (FriendTable) request.getSession().getAttribute("friendTable");
+		FriendTable friendTable = (FriendTable) getServletContext().getAttribute("friendTable");
 		List<String> friendsList = friendTable.friendsList( user.getName() );
 		
 		List<QuizLink> friendsRecentQuizzesCreated = new ArrayList<QuizLink>();

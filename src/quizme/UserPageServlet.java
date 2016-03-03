@@ -47,28 +47,28 @@ public class UserPageServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 
 		// get the user (who is visited)
-		String pageUsername = (String) request.getSession().getAttribute("username");
+		String pageUsername = (String) request.getAttribute("username");
 
 		// determine the time after which is considered "recent"
 		Calendar calendar = Calendar.getInstance();		
 		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() + recentDuration );
 
 		// recently created quizzes by this user
-		QuizTable quizTable = (QuizTable) request.getSession().getAttribute("quizTable");
+		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
 		List<QuizLink> pageUserRecentQuizzesCreated  = quizTable.getRecentQuizzesCreated(
 				pageUsername, resultNumLimit, recentTime);
 		request.setAttribute("pageUserRecentQuizzesCreated ", pageUserRecentQuizzesCreated ); 
 
 		// recently taken quizzes by this user
 		QuizResultsTable quizResultTable = (QuizResultsTable) 
-				request.getSession().getAttribute("quizResultTable");
+				getServletContext().getAttribute("quizResultTable");
 		List<QuizLink> pageUserRecentQuizzesTaken  = quizResultTable.getRecentQuizzesTaken(
 				pageUsername, resultNumLimit, recentTime);
 		request.setAttribute("pageUserRecentQuizzesTaken ", pageUserRecentQuizzesTaken );
 
 		// achievements
 		AchievementsTable achievementsTable = (AchievementsTable) 
-				request.getSession().getAttribute("achievementsTable");
+				getServletContext().getAttribute("achievementsTable");
 		List<AchievementLink> pageUserAchievements = achievementsTable.getAllUserAchievementsLinkList( 
 				pageUsername );
 		request.setAttribute("pageUserAchievements ", pageUserAchievements );
@@ -82,9 +82,9 @@ public class UserPageServlet extends HttpServlet {
 		 */
 		int friendStatus;
 		FriendTable friendTable = (FriendTable) 
-				request.getSession().getAttribute("friendTable");
+				getServletContext().getAttribute("friendTable");
 		MessagesTable messagesTable = (MessagesTable)
-				request.getSession().getAttribute("messagesTable");
+				getServletContext().getAttribute("messagesTable");
 
 		if ( friendTable.areFriends( user.getName(), pageUsername ) ) { // they are friends
 			friendStatus = 3;
