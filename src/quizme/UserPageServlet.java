@@ -47,11 +47,10 @@ public class UserPageServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 
 		// get the user (who is visited)
-		String pageUsername = (String) request.getAttribute("username");
-
+		String pageUsername = (String) request.getParameter("username");
 		// determine the time after which is considered "recent"
 		Calendar calendar = Calendar.getInstance();		
-		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() + recentDuration );
+		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() - recentDuration );
 
 		// recently created quizzes by this user
 		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
@@ -103,6 +102,7 @@ public class UserPageServlet extends HttpServlet {
 			}
 		}
 		request.setAttribute("friendStatus ", friendStatus );
+		request.getRequestDispatcher("user-page.jsp").forward(request, response);
 
 	}
 

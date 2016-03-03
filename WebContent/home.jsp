@@ -30,8 +30,11 @@
        	for (AnnouncementLink announcement : announcements) {
 			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(announcement.date());
        		out.println(date);
-       		out.println("Subject: " + announcement.subject());
-       		out.println(announcement.content());
+       		out.println("<br>");
+       		out.println("Subject: <b>" + announcement.subject() + "</b>");
+       		out.println("<br>");
+       		out.println("Message: <b>" + announcement.content() + "</b>");
+       		out.println("<br>");
        		out.println("<br>");
        	}
         %>
@@ -102,7 +105,7 @@
 	<hr>
 	
 	<div class="container">
-		<h2>Your quiz taking activity</h2>
+		<h2>Your recent quiz taking activity</h2>
 			<div class="row">
 				<%
 					List<QuizLink> userTakenQuizzes = (List<QuizLink>) request.getAttribute("myRecentQuizzesTaken");
@@ -163,7 +166,7 @@
 				}
 			%>
 		    </div>
-	</div> 1
+	</div>
 	
     <hr>
 	

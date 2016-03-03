@@ -1,4 +1,4 @@
-package src.quizme;
+package quizme;
 
 import java.io.*;
 import java.security.*;
@@ -6,7 +6,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import src.quizme.database.UsersTable;
+import quizme.database.UsersTable;
 
 /**
  * Servlet implementation class MainLoginServlet
@@ -107,7 +107,7 @@ public class MainLoginServlet extends HttpServlet {
 		
 		User user = new User(username);
 		request.getSession().setAttribute("user",  user);
-		request.getRequestDispatcher("HomePaggeServlet").forward(request, response);
+		request.getRequestDispatcher("HomePageServlet").forward(request, response);
 	}
 	
 	/**

@@ -115,7 +115,7 @@ public class HomePageServlet extends HttpServlet {
 		request.setAttribute("friendsRecentQuizzesTaken", friendsRecentQuizzesTaken );
 		request.setAttribute("friendsRecentAchievements", friendsRecentAchievements );
 
-		
+		request.getRequestDispatcher("home.jsp").forward(request, response);
 	}
 
 

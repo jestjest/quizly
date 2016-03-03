@@ -13,6 +13,13 @@
 <body>
 	<jsp:include page="header.jsp"/>
     
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to <%=request.getParameter("username")%>'s page!</h1>
+        
+      </div>
+    </div>
+    
 </body>
 
 </html>

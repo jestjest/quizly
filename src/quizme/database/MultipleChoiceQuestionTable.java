@@ -18,8 +18,6 @@ public class MultipleChoiceQuestionTable {
 	
 	private void createMultipleChoiceQuestionTable() {
 		try {
-			PreparedStatement pstmt0 = db.getPreparedStatement("DROP TABLE multiplechoice");
-			pstmt0.executeUpdate();
 			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS multiplechoice (quizid INT, questionOrder INT, question TEXT, answerChoices TEXT, correctAnswer INT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {

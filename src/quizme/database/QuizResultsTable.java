@@ -78,38 +78,6 @@ public class QuizResultsTable {
 	}
 	
 	/* HomePage related functions */
-	
-	
-	public ResultSet getRecentQuizzesTakenHelper(String username, int n, Timestamp t ) {
-		try {
-			PreparedStatement pstmt =  db.getPreparedStatement("SELECT * FROM results INNER JOIN quizes USING(quizid)"
-					+ "WHERE date > ? AND username = ? ORDER BY date DESC LIMIT ?");
-			
-			pstmt.setTimestamp(1, t);
-			pstmt.setString(2, username);
-			pstmt.setInt(3, n);
-			return pstmt.executeQuery();
-		} catch ( SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public ResultSet getPopularQuizzesHelper( String username, int n, Timestamp t ) {
-		try {
-			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results INNER JOIN quizes USING(quizid) "
-							+ "WHERE date > ? GROUP BY quizid ORDER BY quiz_count DESC LIMIT ?");
-			pstmt.setTimestamp(1, t);
-			pstmt.setInt(2, n);
-			return pstmt.executeQuery(); 
-		} catch ( SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-
 	/**
 	 * Quarry list of most popular quizzes among the recently taken quizzes
 	 * @param n an integer determining maximum number of quizzes to be returned

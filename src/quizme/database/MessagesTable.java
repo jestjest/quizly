@@ -192,7 +192,7 @@ public static int REQUEST = 3;
 					db.getPreparedStatement("SELECT * FROM messages "
 							+ "WHERE fromUsername = ? AND toUsername = ? AND type = 3");
 			pstmt.setString(1, username1);
-			pstmt.setString(1, username2);
+			pstmt.setString(2, username2);
 			ResultSet rs = pstmt.executeQuery(); // Query
 			rs.last();
 			if ( rs.getRow() > 0 ) {

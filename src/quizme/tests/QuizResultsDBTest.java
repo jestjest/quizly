@@ -61,35 +61,6 @@ public class QuizResultsDBTest {
 			resultDB.addResult(2, "JB", i * 20, 900, date2);
 		}
 		resultDB.addResult(1, "LB", 55, 40, date2);
-		
-		ResultSet rs = resultDB.getRecentQuizzesTakenHelper("LB", 6, date2);
-		try {
-			int count = 0;
-			while(rs.next()) {
-				assertEquals(rs.getFloat("time"), 60, 0.1);
-				assertTrue(rs.getString("name").equals("testQuiz"));
-				count++;
-			}
-			assertEquals(count, 5); 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		rs = resultDB.getRecentQuizzesTakenHelper("LB", 10, date3);
-		try {
-			rs.last();
-			assertEquals(rs.getRow(), 6);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		rs = resultDB.getPopularQuizzesHelper("JB", 10, date3);
-		try {
-			rs.last();
-			assertEquals(rs.getRow(), 6);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
