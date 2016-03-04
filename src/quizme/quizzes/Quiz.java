@@ -8,32 +8,17 @@ import java.util.Collections;
  * Quiz class encapsulating a single quiz and its information.
  */
 public class Quiz {
-	private int quizid;
-	private String name;
-	private String description;
-	private long startTime; //start time??
-	private long endTime;
 	private int numOfQuestions;
-	
-	private boolean singlePage;
-	private boolean randomOrder;
-	private boolean immediateFeedback; //from quiz summary page, not database
-	private boolean practiceMode; //from quiz summary page, not database
-	
+	private boolean randomOrder; 
 	private ArrayList<Question> questions;
 	private ArrayList<Integer> questionIndexes;
 	
-	public Quiz(int quizid, String name, String description, int numOfQuestions, boolean singlePage, boolean randomOrder, 
-			boolean immediateFeedback, boolean practiceMode) {
-		this.quizid = quizid;
-		this.name = name;
-		this.description = description;
+	private long startTime; /* may not use this timing approach */
+	private long endTime;
+	
+	public Quiz(int numOfQuestions, boolean randomOrder) {
 		this.numOfQuestions = numOfQuestions;
-		
-		this.singlePage = singlePage;
 		this.randomOrder = randomOrder;
-		this.immediateFeedback = immediateFeedback;
-		this.practiceMode = practiceMode;
 		
 		this.questions = new ArrayList<Question>(numOfQuestions);
 		this.questionIndexes = new ArrayList<Integer>(numOfQuestions);
