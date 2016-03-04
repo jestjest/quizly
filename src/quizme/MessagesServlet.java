@@ -19,7 +19,7 @@ import quizme.links.MessageLink;
 public class MessagesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static final int resultNumLimit = 1000; // The maximum number of messages to show!
+	private static final int MAX_MESSAGES = Integer.MAX_VALUE; // The maximum number of messages to show!
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -45,11 +45,14 @@ public class MessagesServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 		
 		// get all messages
-		MessagesTable messagesTable = (MessagesTable)
-				getServletContext().getAttribute("messagesTable");
-		List<MessageLink> myMessages = messagesTable.getAllReceivedMessages( 
-				user.getName(), resultNumLimit);
-		request.setAttribute("myMessages", myMessages );
+		MessagesTable messagesTable = (MessagesTable) request.getServletContext().getAttribute("messagesTable");
+		List<MessageLink> myMessages = messagesTable.getAllReceivedMessages(user.getName(), MAX_MESSAGES);
+		
+		for (MessageLink message : myMessages)
+			messagesTable.setSeen(message.getID(), true);
+		
+		request.setAttribute("myMessages", myMessages);
+		request.getRequestDispatcher("messages.jsp").forward(request, response);
 	}
 
 }

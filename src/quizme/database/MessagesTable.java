@@ -183,31 +183,16 @@ public static int REQUEST = 3;
 		return null;
 	}
 	
-	/**
-	 * Check if username1 has requested to be friend with username2
-	 * @param username1
-	 * @param username2
-	 * @return true/false, null if exception occurs.
-	 */
-	public Boolean hasRequested( String username1, String username2 ) {
+	public void removeRequestMessage(String toUsername, String fromUsername) {
 		try {
-			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM messages "
-							+ "WHERE fromUsername = ? AND toUsername = ? AND type = 3");
-			pstmt.setString(1, username1);
-			pstmt.setString(2, username2);
-			ResultSet rs = pstmt.executeQuery(); // Query
-			rs.last();
-			if ( rs.getRow() > 0 ) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		} catch( SQLException e) {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ?");
+			pstmt.setString(1, toUsername);
+			pstmt.setString(2, fromUsername);
+			pstmt.setInt(3, REQUEST);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
 	}
 	
 	/* helper functions */

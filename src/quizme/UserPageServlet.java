@@ -86,19 +86,14 @@ public class UserPageServlet extends HttpServlet {
 			friendStatus = -1;
 		} else if ( friendTable.areFriends( user.getName(), pageUsername ) ) { // they are friends
 			friendStatus = 3;
-		}
-		else {
-			if ( requestTable.pendingFriendRequest(pageUsername, user.getName()) ) 
-			{ // pageUser want to be friend with user
+		} else if ( requestTable.pendingFriendRequest(pageUsername, user.getName()) ) { // pageUser want to be friend with user
 				friendStatus = 2;
-			}
-			else if ( requestTable.pendingFriendRequest( user.getName(), pageUsername ) ) 
-			{ // user has already requested to be friend with pageUser (pending)
+		} else if ( requestTable.pendingFriendRequest( user.getName(), pageUsername ) ) { // user has already requested to be friend with pageUser (pending)
 				friendStatus = 1;
-			} else { // no request has been sent, and they are not friends
+		} else { // no request has been sent, and they are not friends
 				friendStatus = 0;
-			}
 		}
+
 		request.setAttribute("friendStatus", friendStatus );
 		request.getRequestDispatcher("user-page.jsp").forward(request, response);
 	}

@@ -70,7 +70,7 @@ public class MessageLink {
 	 * Returns message ID
 	 * @return
 	 */
-	public int messageID() {
+	public int getID() {
 		return messageID;
 	}
 	
@@ -118,10 +118,10 @@ public class MessageLink {
 	/**
 	 * Returns the message content.
 	 * 
-	 * NOTE: If the message is a challenge, the content contains
+	 * NOTE: If the message is a challenge, the content contains the score
 	 * @return
 	 */
-	public String content() {
+	public String getContent() {
 		return content;
 	}
 	
