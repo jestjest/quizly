@@ -30,8 +30,11 @@
        	for (AnnouncementLink announcement : announcements) {
 			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(announcement.date());
        		out.println(date);
-       		out.println("Subject: " + announcement.subject());
-       		out.println(announcement.content());
+       		out.println("<br>");
+       		out.println("Subject: <b>" + announcement.subject() + "</b>");
+       		out.println("<br>");
+       		out.println("Message: <b>" + announcement.content() + "</b>");
+       		out.println("<br>");
        		out.println("<br>");
        	}
         %>
@@ -102,7 +105,7 @@
 	<hr>
 	
 	<div class="container">
-		<h2>Your quiz taking activity</h2>
+		<h2>Your recent quiz taking activity</h2>
 			<div class="row">
 				<%
 					List<QuizLink> userTakenQuizzes = (List<QuizLink>) request.getAttribute("myRecentQuizzesTaken");
@@ -112,7 +115,7 @@
 					for (QuizLink quiz : userTakenQuizzes) {
 						String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateTaken());
 						out.println("You took " + quiz.getQuizLink() + " on " + date +
-								" and scored " + quiz.getScore());
+								" and scored " + quiz.getScore() + "%.");
 						out.println("<br>");
 					}
 				%>
@@ -151,9 +154,9 @@
 					String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(message.getDate());
 					
 					if (message.getType() == MessageLink.MType.TEXT)
-						out.println(date + ": " + message.getSenderLink() + " has sent you a note: " + message.getSubject());
+						out.println(date + ": " + message.getSenderLink() + " has sent you a note: '" + message.getSubject() + "'");
 					else if (message.getType() == MessageLink.MType.FRIENDSHIP)
-						out.println(date + ": " + message.getSenderLink() + ": " + message.getSubject());
+						out.println(date + ": " + message.getSenderLink() + "wants to be friends!");
 					else if (message.getType() == MessageLink.MType.CHALLENGE) {
 						out.println(date + ": " + message.getSenderLink() + " is challenging you to take this quiz: " + message.getSubject());
 						out.println("The challenger has a best score of " + message.content() + ".");
@@ -163,7 +166,7 @@
 				}
 			%>
 		    </div>
-	</div> 1
+	</div>
 	
     <hr>
 	
@@ -198,7 +201,7 @@
 					for (QuizLink quiz : friendsQuizzesTaken) {
 						String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateTaken());
 						out.println(quiz.getTakerLink() + " took " + quiz.getQuizLink() + " on " + date +
-								" and scored " + quiz.getScore());
+								" and scored " + quiz.getScore() + "%.");
 						out.println("<br>");
 					}
 				%>
