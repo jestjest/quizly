@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import src.quizme.database.*;
 import src.quizme.quizzes.*;
+import src.quizme.links.*;
 
 /**
  * Servlet implementation class TakeQuizServlet
@@ -40,27 +41,20 @@ public class TakeQuizServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int quizid = (int) request.getAttribute("quizid");
-		QuizTable quizTable = (QuizTable) request.getServletContext().getAttribute("quizTable");
-		ResultSet rs = quizTable.getEntry(quizid);
+		QuizInfoSummary quizInfoSummary = (QuizInfoSummary) request.getSession().getAttribute("QuizInfoSummary");
+		int quizid = quizInfoSummary.getQuizID();
+		int numOfQuestions = quizInfoSummary.numOfQuestions();
+		boolean randomOrder = quizInfoSummary.randomOrder();
 		
-		boolean practiceMode = (request.getParameter("practice-mode") != null);
-		boolean immediateFeedback = (request.getParameter("immediate-feedback") != null);
-		try {
-			Quiz quiz = new Quiz(quizid, rs.getString("name"), rs.getString("description"), rs.getInt("numOfQuestions"),
-					rs.getBoolean("singlePage"), rs.getBoolean("randomOrder"), immediateFeedback, practiceMode);
-			addQuestionResponseQuestions(request, quizid, quiz);
-			addFillBlankQuestions(request, quizid, quiz);
-			addMultipleChoiceQuestions(request, quizid, quiz);
-			addPictureResponseQuestions(request, quizid, quiz);
+		Quiz quiz = new Quiz(numOfQuestions, randomOrder);
+		addQuestionResponseQuestions(request, quizid, quiz);
+		addFillBlankQuestions(request, quizid, quiz);
+		addMultipleChoiceQuestions(request, quizid, quiz);
+		addPictureResponseQuestions(request, quizid, quiz);
 			
-			quiz.beginTiming();
-			request.getSession().setAttribute("quiz", quiz);
-			request.getRequestDispatcher("take-quiz.jsp").forward(request, response); /* confirm the name */
-		} catch (SQLException e) { 
-			e.printStackTrace(); 
-			request.getRequestDispatcher("quiz-summary.jsp").forward(request, response);
-		} 
+		quiz.beginTiming();
+		request.getSession().setAttribute("quiz", quiz);
+		request.getRequestDispatcher("take-quiz.jsp").forward(request, response); /* confirm the name */
 	}
 
 	private void addQuestionResponseQuestions(HttpServletRequest request, int quizid, Quiz quiz) {
