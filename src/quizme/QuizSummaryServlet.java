@@ -58,7 +58,7 @@ public class QuizSummaryServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 
 		// get the quiz ID from request
-		int quizID = Integer.parseInt(request.getParameter("quizID"));
+		int quizID = Integer.parseInt( (String) request.getSession().getAttribute("quizID") );
 
 		// get order
 		int order = 0; // default
