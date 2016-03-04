@@ -83,18 +83,18 @@ public class UserPageServlet extends HttpServlet {
 		int friendStatus;
 		FriendTable friendTable = (FriendTable) 
 				getServletContext().getAttribute("friendTable");
-		MessagesTable messagesTable = (MessagesTable)
-				getServletContext().getAttribute("messagesTable");
+		FriendRequestTable friendRequestTable = (FriendRequestTable)
+				getServletContext().getAttribute("friendRequestTable");
 
 		if ( friendTable.areFriends( user.getName(), pageUsername ) ) { // they are friends
 			friendStatus = 3;
 		}
 		else {
-			if ( messagesTable.hasRequested(pageUsername, user.getName()) ) 
+			if ( friendRequestTable.pendingFriendRequest(pageUsername, user.getName()) ) 
 			{ // pageUser want to be friend with user
 				friendStatus = 2;
 			}
-			else if ( messagesTable.hasRequested( user.getName(), pageUsername ) ) 
+			else if ( friendRequestTable.pendingFriendRequest( user.getName(), pageUsername ) ) 
 			{ // user has already requested to be friend with pageUser (pending)
 				friendStatus = 1;
 			}

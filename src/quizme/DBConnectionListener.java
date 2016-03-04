@@ -59,6 +59,9 @@ public class DBConnectionListener implements ServletContextListener {
          FriendTable friendTable = new FriendTable(con);
          arg0.getServletContext().setAttribute("friendTable", friendTable);
          
+         FriendRequestTable friendRequestTable = new FriendRequestTable(con);
+         arg0.getServletContext().setAttribute("friendRequestTable", friendRequestTable);
+         
     }
 
 	/**
