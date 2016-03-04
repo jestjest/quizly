@@ -2,31 +2,32 @@ package quizme.database;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import quizme.DBConnection;
-import quizme.links.QuizLink;
-import quizme.links.QuizSummaryInfo;
+import quizme.links.*;
 
 public class QuizTable {
 	private DBConnection db;
-	
+
 	public QuizTable(DBConnection db) {
 		this.db = db;
 		createQuizTable();
 	}
-	
+
 	private void createQuizTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes (quizid INT, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
-					+ "onePage BOOL, immediateCorrection BOOL, practiceMode BOOL, creatorUsername VARCHAR(128), modifiedDate DATETIME, numOfTimesTaken INT)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes"
+					+ " (quizid INT, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, "
+					+ "randomOrder BOOL, "
+					+ "onePage BOOL, immediateCorrection BOOL, practiceMode BOOL, "
+					+ "creatorUsername VARCHAR(128), modifiedDate DATETIME, numOfTimesTaken INT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int addQuiz(String name, String description, int numOfQuestions, String creatorUsername, Timestamp modifiedDate, boolean randomOrder, 
 			boolean immediateCorrection, boolean onePage, boolean practiceMode, int numOfTimesTaken) {
 		try{
@@ -35,7 +36,7 @@ public class QuizTable {
 			rs.last();
 			int quizid = rs.getRow() + 1;
 
-			
+
 			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO quizes VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			pstmt2.setInt(1, quizid);
 			pstmt2.setString(2, name);
@@ -49,14 +50,14 @@ public class QuizTable {
 			pstmt2.setTimestamp(10, modifiedDate);
 			pstmt2.setInt(11, numOfTimesTaken);
 			pstmt2.executeUpdate();
-			
+
 			return quizid;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return -1; /* indicates database error */
 	}
-	
+
 	public void removeQuiz(int quizid) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM quizes WHERE quizid = ?");
@@ -79,84 +80,84 @@ public class QuizTable {
 		}
 		return null; /* indicates database error */
 	}
-	
+
 	public String getName(int quizid) {
 		return getString(quizid, "name");
 	}
-	
+
 	public void setDescription(int quizid, String description) {
 		setString(quizid, "description", description);
 	}
-	
+
 	public String getDescription(int quizid) {
 		return getString(quizid, "description");
 	}
-	
+
 	public void incNumOfTimesTaken(int quizid) {
 		int priorNumOfTimesTaken = getNumOfTimesTaken(quizid);
 		setInt(quizid, "numOfTimesTaken", priorNumOfTimesTaken + 1);
 	}
-	
+
 	public int getNumOfTimesTaken(int quizid) {
 		return getInt(quizid, "numOfTimesTaken");
 	}
-	
+
 	public void setNumOfQuestions(int quizid, int numOfQuestions) {
 		setInt(quizid, "numOfQuestions", numOfQuestions);
 	}
-	
+
 	public int getNumOfQuestions(int quizid) {
 		return getInt(quizid, "numOfQuestions");
 	}
-	
+
 	public void setRandomOrder(int quizid, boolean randomOrder) {
 		int randomOrderNum = (randomOrder) ? 1 : 0;
 		setInt(quizid, "randomOrder", randomOrderNum);
 	}
-	
+
 	public boolean getRandomOrder(int quizid) {
 		return (getInt(quizid, "randomOrder") > 0) ? true : false;
 	}
-	
+
 	public void setOnePage(int quizid, boolean multiplePages) {
 		int multiplePagesNum = (multiplePages) ? 1 : 0;
 		setInt(quizid, "onePage", multiplePagesNum);
 	}
-	
+
 	public boolean getOnePage(int quizid) {
 		return (getInt(quizid, "onePage") > 0) ? true : false;
 	}
-	
+
 	public void setImmediateCorrection(int quizid, boolean immediateCorrection) {
 		int immediateCorrectionNum = (immediateCorrection) ? 1 : 0;
 		setInt(quizid, "immediateCorrection", immediateCorrectionNum);
 	}
-	
+
 	public boolean getImmediateCorrection(int quizid) {
 		return (getInt(quizid, "immediateCorrection") > 0) ? true : false;
 	}
-	
+
 	public void setPracticeMode(int quizid, boolean practiceMode) {
 		int practiceModeNum = (practiceMode) ? 1 : 0;
 		setInt(quizid, "practiceMode", practiceModeNum);
 	}
-	
+
 	public boolean getPracticeMode(int quizid) {
 		return (getInt(quizid, "practiceMode") > 0) ? true : false;
 	}
-	
+
 	public String getCreatorUsername(int quizid) {
 		return getString(quizid, "creatorUsername");
 	}
-	
+
 	public void setModifiedDate(int quizid, Timestamp date) {
 		setDate(quizid, "modifiedDate", date);
 	}
-	
+
 	public Timestamp getModifiedDate(int quizid) {
 		return getDate(quizid, "modifiedDate");
 	}
-	
+
 	/* HomePage related functions */
 	/**
 	 * Query list of recently created quizzes
@@ -221,28 +222,175 @@ public class QuizTable {
 	}
 
 	/**
-	 * Returns a QuizSummaryInfo object for the given quizID
+	 * Returns a QuizSummaryInfo including all information about a quiz to 
+	 * be shown in its summary page visited by a [username]
 	 * @param quizID
-	 * @return QuizSummaryInfo, null is exception occurs
+	 * @param username user name of the user who is visiting this quiz
+	 * @param recentTime Timestamp of a time after which is considered recent 
+	 * @param lastDayTime Timestamp of a time exactly one day before now
+	 * @param n maximum number of results for performance lists
+	 * @return
 	 */
-	public QuizSummaryInfo getQuizSummaryInfo( int quizID ) {
+	public QuizSummaryInfo getQuizSummaryInfo( int quizID, String username,
+			Timestamp recentTime, Timestamp lastDayTime, int n) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM quizes WHERE quizid = ?");
+			////////////////////////////
+			// get user's performance //
+			////////////////////////////
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM results "
+					+ "WHERE quizid = ? AND username = ? "
+					+ "ORDER BY date DESC LIMIT ?");
 			pstmt.setInt(1, quizID);
+			pstmt.setString(2, username);
+			pstmt.setInt(3, n);			
 			ResultSet rs = pstmt.executeQuery();
-			while( rs.next() ) {
-				QuizSummaryInfo quiz = new QuizSummaryInfo( quizID, rs.getString("name"),
-						rs.getString("description"), rs.getString("creatorUsername"), 
-						rs.getTimestamp("modifiedDate"), rs.getInt("numOfTimesTaken") );
-				return quiz;
+
+			List<Performance> myPerformances = new ArrayList<Performance>();
+
+			while ( rs.next() ) {
+				Performance userPerformance = new Performance(username, rs.getFloat("score"), 
+						rs.getLong("time"), rs.getTimestamp("date"));
+				myPerformances.add( userPerformance );		
 			}
+
+			/////////////////////////////////////
+			// get all time highest Performers //
+			/////////////////////////////////////
+			pstmt = db.getPreparedStatement("SELECT * FROM results "
+					+ "WHERE quizid = ? "
+					+ "ORDER BY score DESC, time ASC LIMIT ?");
+			pstmt.setInt(1, quizID);
+			pstmt.setInt(2, n);			
+			rs = pstmt.executeQuery();
+
+			List<Performance> highestPerformers = new ArrayList<Performance>();
+
+			while ( rs.next() ) {
+				Performance highPerformance = new Performance( rs.getString("username"), rs.getFloat("score"), 
+						rs.getLong("time"), rs.getTimestamp("date"));
+				highestPerformers.add( highPerformance );
+			}
+			
+			//////////////////////
+			// get top last day //
+			//////////////////////
+			pstmt = db.getPreparedStatement("SELECT * FROM results "
+					+ "WHERE quizid = ? AND date > ? "
+					+ "ORDER BY score DESC, time ASC LIMIT ?");
+			pstmt.setInt(1, quizID);
+			pstmt.setTimestamp(2, lastDayTime);
+			pstmt.setInt(3, n);			
+			rs = pstmt.executeQuery();
+
+			List<Performance> topLastDayPerformers = new ArrayList<Performance>();
+
+			while ( rs.next() ) {
+				Performance highPerformance = new Performance( rs.getString("username"), rs.getFloat("score"), 
+						rs.getLong("time"), rs.getTimestamp("date"));
+				topLastDayPerformers.add( highPerformance );
+			}
+
+			///////////////////////
+			// recent performers //
+			///////////////////////
+			pstmt = db.getPreparedStatement("SELECT * FROM results "
+					+ "WHERE quizid = ? AND date > ? "
+					+ "ORDER BY date DESC LIMIT ?");
+			pstmt.setInt(1, quizID);
+			pstmt.setTimestamp(2, recentTime);
+			pstmt.setInt(3, n);			
+			rs = pstmt.executeQuery();
+
+			List<Performance> recentPerformers = new ArrayList<Performance>();
+
+			while ( rs.next() ) {
+				Performance performance = new Performance( rs.getString("username"), rs.getFloat("score"), 
+						rs.getLong("time"), rs.getTimestamp("date"));
+				recentPerformers.add( performance );
+			}
+
+			////////////////////////////
+			// get user summary stats //
+			////////////////////////////
+			SummaryStat mySummaryStat = new SummaryStat();
+			// first get count
+			pstmt = db.getPreparedStatement("SELECT COUNT(username) AS num_taken FROM results "
+					+ "WHERE quizid = ? AND username = ?");
+			pstmt.setInt(1, quizID);
+			pstmt.setString(2, username);
+			rs = pstmt.executeQuery();
+			if ( rs.next() ) {
+				mySummaryStat.numberTaken = rs.getInt("num_taken");
+			}
+			// get other stats
+			pstmt = db.getPreparedStatement("SELECT MIN(score) AS minScore, MAX(score) AS maxScore, "
+					+ "AVG(score) AS meanScore, MIN(time) as minTime, MAX(time) AS maxTime, "
+					+ "AVG(time) AS meanTime FROM results WHERE quizid = ? AND username = ?");
+			pstmt.setInt(1, quizID);
+			pstmt.setString(2, username);		
+			rs = pstmt.executeQuery();
+			if ( rs.next() ) {
+				mySummaryStat.minScore = rs.getFloat("minScore");
+				mySummaryStat.maxScore = rs.getFloat("maxScore");
+				mySummaryStat.meanScore = rs.getFloat("meanScore");
+				mySummaryStat.minTime = rs.getLong("minTime");
+				mySummaryStat.maxTime = rs.getLong("maxTime");
+				mySummaryStat.meanTime = rs.getDouble("meanTime");
+			}
+			
+			///////////////////////////
+			// get all summary stats //
+			///////////////////////////
+			SummaryStat allSummaryStat = new SummaryStat();
+			// first get count
+			pstmt = db.getPreparedStatement("SELECT COUNT(quizid) AS num_taken FROM results "
+					+ "WHERE quizid = ?");
+			pstmt.setInt(1, quizID);
+			rs = pstmt.executeQuery();
+			if ( rs.next() ) {
+				allSummaryStat.numberTaken = rs.getInt("num_taken");
+			}
+			// get other stats
+			pstmt = db.getPreparedStatement("SELECT MIN(score) AS minScore, MAX(score) AS maxScore, "
+					+ "AVG(score) AS meanScore, MIN(time) as minTime, MAX(time) AS maxTime, "
+					+ "AVG(time) AS meanTime FROM results WHERE quizid = ?");
+			pstmt.setInt(1, quizID);
+			rs = pstmt.executeQuery();
+			if ( rs.next() ) {
+				allSummaryStat.minScore = rs.getFloat("minScore");
+				allSummaryStat.maxScore = rs.getFloat("maxScore");
+				allSummaryStat.meanScore = rs.getFloat("meanScore");
+				allSummaryStat.minTime = rs.getLong("minTime");
+				allSummaryStat.maxTime = rs.getLong("maxTime");
+				allSummaryStat.meanTime = rs.getDouble("meanTime");
+			}
+			
+			///////////////////////////
+			// get general quiz info //
+			///////////////////////////			
+			pstmt = db.getPreparedStatement("SELECT * FROM quizes WHERE quizid = ?");
+			pstmt.setInt(1, quizID);
+			rs = pstmt.executeQuery();
+			
+			QuizSummaryInfo quizSummaryInfo = null;			
+			
+			if ( rs.next() ) {
+				quizSummaryInfo = new QuizSummaryInfo(quizID, rs.getString("name"), rs.getString("description"),
+						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), 
+						rs.getBoolean("practiceMode"), rs.getInt("numOfTimesTaken"), 
+						rs.getBoolean("randomOrder"), rs.getBoolean("onePage"), 
+						rs.getBoolean("immediateCorrection"), mySummaryStat, allSummaryStat, myPerformances, 
+						highestPerformers, topLastDayPerformers, recentPerformers);
+			}
+			return quizSummaryInfo;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	/* helper functions */
-	
+
 	private void setString(int quizid, String field, String value) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ?  WHERE quizid = ?");
@@ -253,7 +401,7 @@ public class QuizTable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String getString(int quizid, String field) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
@@ -266,7 +414,7 @@ public class QuizTable {
 		}
 		return null; /* indicates database error */
 	}
-	
+
 	private void setInt(int quizid, String field, int value) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ? WHERE quizid = ?");
@@ -277,7 +425,7 @@ public class QuizTable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private int getInt(int quizid, String field) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
@@ -290,7 +438,7 @@ public class QuizTable {
 		}
 		return -1; /* indicates database error */
 	}
-	
+
 	private void setDate(int quizid, String field, Timestamp value) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ? WHERE quizid = ?");
@@ -301,7 +449,7 @@ public class QuizTable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private Timestamp getDate(int quizid, String field) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
@@ -314,6 +462,6 @@ public class QuizTable {
 		}
 		return null; /* indicates database error */
 	}
-	
+
 }
 

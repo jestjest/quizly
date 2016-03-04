@@ -108,7 +108,8 @@ public class HomePageServlet extends HttpServlet {
 					quizTable.getRecentQuizzesCreated(username, resultNumLimit, recentTime));
 			friendsRecentQuizzesTaken.addAll( 
 					quizResultTable.getRecentQuizzesTaken(username, resultNumLimit, recentTime));
-			friendsRecentAchievements.addAll( achievementsTable.getAllUserAchievementsLinkList(username) );
+			friendsRecentAchievements.addAll( 
+					achievementsTable.getRecentUserAchievements(username, resultNumLimit, recentTime) );
 		}
 		
 		request.setAttribute("friendsRecentQuizzesCreated", friendsRecentQuizzesCreated );

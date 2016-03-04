@@ -11,22 +11,23 @@ import quizme.DBConnection;
 import quizme.links.AchievementLink;
 
 public class AchievementsTable {
-private DBConnection db;
-	
+	private DBConnection db;
+
 	public AchievementsTable(DBConnection db) {
 		this.db = db;
 		createAchievementTable();
 	}
-	
+
 	private void createAchievementTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS achievements (username VARCHAR(128), achievement VARCHAR(128), date DATETIME)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
+					+ "achievements (username VARCHAR(128), achievement VARCHAR(128), date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int addAchievement(String username, String achievement, Timestamp date) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO achievements VALUES(?, ?, ?)");
@@ -39,7 +40,7 @@ private DBConnection db;
 		}
 		return -1; /* indicates database error */
 	}
-	
+
 	public void removeAchievement(String username, String achievement) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM achievements WHERE username = ? AND achievement = ?");
@@ -50,7 +51,7 @@ private DBConnection db;
 			e.printStackTrace();
 		}
 	}
-	
+
 	/* ONLY USE FOR TESTING */
 	public void clearAllAchievements() {
 		try {
@@ -60,7 +61,7 @@ private DBConnection db;
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean hasAchievement(String username, String achievement) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements WHERE username = ? and achievement = ?");
@@ -73,7 +74,7 @@ private DBConnection db;
 		}
 		return false;
 	}
-	
+
 	public ResultSet getAllUserAchievements(String username) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements WHERE username = ? ORDER BY date DESC");
@@ -84,10 +85,11 @@ private DBConnection db;
 		}
 		return null;
 	}
-	
+
 	public ResultSet getRecentUserAchievements(String username, int numOfResults) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements WHERE username = ? ORDER BY date DESC LIMIT ? ");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements "
+					+ "WHERE username = ? ORDER BY date DESC LIMIT ? ");
 			pstmt.setString(1, username);
 			pstmt.setInt(2, numOfResults);
 			return pstmt.executeQuery();
@@ -96,7 +98,7 @@ private DBConnection db;
 		}
 		return null;
 	}
-	
+
 	/* HomePage related functions */
 	/**
 	 * Provide chronologically ordered list of all achievements of a user
@@ -118,5 +120,37 @@ private DBConnection db;
 		}
 		return null;
 	}
+
+	/**
+	 * Provide chronologically ordered list of recent achievements of a user
+	 * @param username
+	 * @param n maximum number of results
+	 * @param t a time (Timestamp) after which is considered as recent
+	 * @return List<AchievementLink>
+	 */
+	public List<AchievementLink>getRecentUserAchievements( 
+			String username, int n, Timestamp t) {
+		try {
+			PreparedStatement pstmt = 
+					db.getPreparedStatement("SELECT * FROM achievements "
+							+ "WHERE username = ? AND date > ? ORDER BY date DESC LIMIT ?");
+			pstmt.setString(1, username);
+			pstmt.setTimestamp(2, t);
+			pstmt.setInt(3, n);
+			ResultSet rs = pstmt.executeQuery(); // Query
+
+			List<AchievementLink> achieveList = new ArrayList<AchievementLink>();
+			while ( rs.next() ) {
+				AchievementLink achieveLink = new AchievementLink( rs.getString("achievement"), 
+						rs.getString("username"), rs.getTimestamp("date") );
+				achieveList.add( achieveLink );
+			}
+			return achieveList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }
 
