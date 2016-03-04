@@ -5,6 +5,11 @@ import java.sql.Timestamp;
 public class MessageLink {
 	
 	/**
+	 * Message ID
+	 */
+	private int messageID;
+	
+	/**
 	 * User name of the person sent the message.
 	 */
 	private String senderUsername;
@@ -50,14 +55,23 @@ public class MessageLink {
 	 * @param date
 	 * @param type
 	 */
-	public MessageLink( String senderUsername, String subject, Timestamp date, String content,
+	public MessageLink( int messageID, String senderUsername, String subject, Timestamp date, String content,
 			Boolean seen, MType type) {
+		this.messageID = messageID;
 		this.senderUsername = senderUsername;
 		this.subject = subject;
 		this.date = date;
 		this.content = content;
 		this.seen = seen;
 		this.type = type;
+	}
+	
+	/**
+	 * Returns message ID
+	 * @return
+	 */
+	public int messageID() {
+		return messageID;
 	}
 	
 	/**

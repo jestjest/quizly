@@ -25,7 +25,10 @@ public static int REQUEST = 3;
 	
 	private void createMessagesTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT, toUsername VARCHAR(128), fromUsername VARCHAR(128), date Timestamp, content TEXT, subject VARCHAR(128), type INT, seen BOOL)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
+					+ "messages (messageid INT, toUsername VARCHAR(128), "
+					+ "fromUsername VARCHAR(128), date Timestamp, content TEXT, "
+					+ "subject VARCHAR(128), type INT, seen BOOL)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,7 +143,7 @@ public static int REQUEST = 3;
 			ResultSet rs = pstmt.executeQuery(); // Query
 			List<MessageLink> messageLinks = new ArrayList<MessageLink>();
 			while( rs.next() ) {				
-				MessageLink messageLink = new MessageLink( rs.getString("fromUsername"),
+				MessageLink messageLink = new MessageLink( rs.getInt("messageid"), rs.getString("fromUsername"),
 						rs.getString("subject"), rs.getTimestamp("date"), rs.getString("content"), 
 						rs.getBoolean("seen"), MessageLink.MType.values()[rs.getInt("type")-1]);
 				messageLinks.add(messageLink);
@@ -168,7 +171,7 @@ public static int REQUEST = 3;
 			ResultSet rs = pstmt.executeQuery(); // Query
 			List<MessageLink> messageLinks = new ArrayList<MessageLink>();
 			while( rs.next() ) {				
-				MessageLink messageLink = new MessageLink( rs.getString("fromUsername"),
+				MessageLink messageLink = new MessageLink( rs.getInt("messageid"), rs.getString("fromUsername"),
 						rs.getString("subject"), rs.getTimestamp("date"), rs.getString("content"), 
 						rs.getBoolean("seen"), MessageLink.MType.values()[rs.getInt("type")-1]);
 				messageLinks.add(messageLink);
