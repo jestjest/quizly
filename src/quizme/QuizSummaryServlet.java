@@ -3,6 +3,8 @@ package quizme;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import quizme.database.QuizTable;
 import quizme.links.QuizSummaryInfo;
+import quizme.links.Performance;;
 
 /**
  * Servlet implementation class QuizSummaryServlet
@@ -40,25 +43,90 @@ public class QuizSummaryServlet extends HttpServlet {
 
 	/**
 	 * Assume quizID is sent through request as an Integer field "quizID"
+	 * Also we assume an integer is sent through a field "order" which shows the order of by
+	 * which user performance should be sorted.
+	 * 0/null (default) : by date descending
+	 * 1 : by date ascending
+	 * 2 : by score descending
+	 * 3 : by score ascending
+	 * 4 : by time descending
+	 * 5 : by time ascending
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// get the user
 		User user = (User) request.getSession().getAttribute("user");
-		
+
 		// get the quiz ID from request
 		int quizID = Integer.parseInt(request.getParameter("quizID"));
-		
-		// Get quiz summary info
-		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
-		QuizSummaryInfo quizSummaryInfo = quizTable.getQuizSummaryInfo(quizID);
-		request.setAttribute("quizSummaryInfo", quizSummaryInfo);
+
+		// get order
+		int order = 0; // default
+		try {
+			order = Integer.parseInt(request.getParameter("order"));
+		} catch (Exception e) {}
 
 		// determine the time after which is considered "recent" or "next day"
 		Calendar calendar = Calendar.getInstance();		
 		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() + recentDuration );
 		Timestamp lastDayTime = new Timestamp( calendar.getTime().getTime() + dayDuration );
+
+
+		// Get quiz summary info
+		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
+		QuizSummaryInfo quizSummaryInfo = quizTable.getQuizSummaryInfo(quizID, user.getName(),
+				recentTime, lastDayTime, resultNumLimit);
+
+		// sort myPerformances based on the given order
+
+		if ( order == 0 || order == 1) {		
+			// sort by date
+			Collections.sort(quizSummaryInfo.myPerformances, new Comparator<Performance>(){
+				public int compare(Performance o1, Performance o2){
+					if(o1.dateTaken == o2.dateTaken) {
+						return 0;
+					}
+					return o1.dateTaken.getTime() < o2.dateTaken.getTime() ? -1 : 1;
+				}
+			});
+
+		}
+
+		if ( order == 2 || order == 3 ) {
+			// sort by score
+			Collections.sort(quizSummaryInfo.myPerformances, new Comparator<Performance>(){
+				public int compare(Performance o1, Performance o2){
+					if(o1.score == o2.score) {
+						if(o1.time == o2.time) {
+							return 0;
+						}
+						else {
+							return o1.time > o2.time ? -1 : 1;
+						}
+					}
+					return o1.score < o2.score ? -1 : 1;
+				}
+			});
+		}
 		
+		if ( order == 4 || order == 5 ) {
+			// sort by time
+			Collections.sort(quizSummaryInfo.myPerformances, new Comparator<Performance>(){
+				public int compare(Performance o1, Performance o2){
+					if(o1.time == o2.time) {
+						return 0;
+					}
+					return o1.time < o2.time ? -1 : 1;
+				}
+			});
+		}
+
+		if ( order%2 == 0) {
+			Collections.reverse(quizSummaryInfo.myPerformances);
+		}
+
+		request.setAttribute("quizSummaryInfo", quizSummaryInfo);
+
 	}
 
 }

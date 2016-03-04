@@ -1,8 +1,10 @@
 package quizme.links;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class QuizSummaryInfo {
+	
 	/**
 	 * The quiz ID.
 	 */
@@ -26,22 +28,71 @@ public class QuizSummaryInfo {
 	/**
 	 * The date quiz is created.
 	 */
-	private Timestamp dateCreated;
+	private Timestamp modifiedDate;
+		
+	/**
+	 * A boolean that shows if this quiz has a practice mode.
+	 */
+	private boolean hasPractice;
 	
 	/**
-	 * How many times people have taken this quiz.
+	 * number of questions
 	 */
-	private int numberTaken;
+	private int numOfQuestions;
 	
+	/**
+	 * Is the ordering random?
+	 */
+	private boolean randomOrder;
+	
+	/**
+	 * Is this a one-page quiz?
+	 */
+	private boolean onePage;
+	
+	/**
+	 * Does user immediately see the correct asnwers?
+	 */
+	private boolean immediateCorrection;
+	
+	/**
+	 * Summary statistics of the visiting user.
+	 */
+	private SummaryStat mySummaryStat;
+	
+	/**
+	 * Summary statistics of all users.
+	 */
+	private SummaryStat allSummaryStat;
+
 	public QuizSummaryInfo( int quizID, String name, String description, 
-			String creatorUsername, Timestamp dateCreated, int numberTaken) {
+			String creatorUsername, Timestamp modifiedDate, boolean hasPractice, int numOfQuestions,
+			boolean randomOrder, boolean onePage, boolean immediateCorrection,
+			SummaryStat mySummaryStat, SummaryStat allSummaryStat,
+			List<Performance> myPerformance, List<Performance> highestPerformers, 
+			List<Performance> topLastDayPerformers, List<Performance> recentPerformers) {
 		this.quizID = quizID;
 		this.name = name;
 		this.description = description;
 		this.creatorUsername = creatorUsername;
-		this.dateCreated = dateCreated;
-		this.numberTaken = numberTaken;
+		this.modifiedDate = modifiedDate;
+		this.hasPractice = hasPractice;
+		this.numOfQuestions = numOfQuestions;
+		this.randomOrder = randomOrder;
+		this.onePage = onePage;
+		this.immediateCorrection = immediateCorrection;
+		this.mySummaryStat = mySummaryStat;
+		this.allSummaryStat = allSummaryStat;
+		this.myPerformances = myPerformance;
+		this.highestPerformers = highestPerformers;
+		this.topLastDayPerformers = topLastDayPerformers;
+		this.recentPerformers = recentPerformers;
 	}
+	
+	public List<Performance> myPerformances;
+	public List<Performance> highestPerformers;
+	public List<Performance> topLastDayPerformers;
+	public List<Performance> recentPerformers;
 	
 	/**
 	 * Returns quiz ID
@@ -79,17 +130,64 @@ public class QuizSummaryInfo {
 	 * Returns the time that quiz is created
 	 * @return a Timestamp object
 	 */
-	public Timestamp getDateCreated() {
-		return dateCreated;
+	public Timestamp getModifiedDate() {
+		return modifiedDate;
 	}
 	
 	/**
-	 * Returns number of times this quiz has been taken
+	 * Returns true if this quiz has a practice mode
 	 * @return
 	 */
-	public int getNumberTaken() {
-		return numberTaken;
+	public boolean hasPractice() {
+		return hasPractice;
 	}
 	
 	
+	/**
+	 * Returns a SummaryStat object containing users' minimal stat.
+	 * @return
+	 */
+	public SummaryStat mySummaryStat() {
+		return mySummaryStat;
+	}
+	
+	/**
+	 * Returns a SummaryStat object containing all users' minimal stat.
+	 * @return
+	 */
+	public SummaryStat allSummaryStat() {
+		return allSummaryStat;
+	}
+	
+	/**
+	 * Returns number of questions of this quiz.
+	 * @return
+	 */
+	public int numOfQuestions() {
+		return numOfQuestions;
+	}
+	
+	/**
+	 * Returns true if the order of questions is random.
+	 * @return
+	 */
+	public boolean randomOrder() {
+		return randomOrder;
+	}
+	
+	/**
+	 * Returns true if this is a single-page quiz.
+	 * @return
+	 */
+	public boolean onePage() {
+		return onePage;
+	}
+	
+	/**
+	 * Returns true if user sees immediately the correct responses.
+	 * @return
+	 */
+	public boolean immediateCorrection() {
+		return immediateCorrection;
+	}
 }
