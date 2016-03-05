@@ -1,12 +1,12 @@
-package quizme.database;
+package src.quizme.database;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import quizme.DBConnection;
-import quizme.links.QuizLink;
+import src.quizme.DBConnection;
+import src.quizme.links.QuizLink;
 
 public class QuizResultsTable {
 	private DBConnection db;
@@ -18,9 +18,7 @@ public class QuizResultsTable {
 	
 	private void createQuizResultsTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results "
-					+ "(resultid INT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), "
-					+ "time BIGINT, date DATETIME)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -59,6 +57,16 @@ public class QuizResultsTable {
 		}
 	}
 	
+	public void removeAllQuizResults(int quizid) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM results WHERE quizid = ?");
+			pstmt.setInt(1, quizid);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String getUsername(int resultid) {
 		return getString(resultid, "username");
 	}
@@ -80,6 +88,38 @@ public class QuizResultsTable {
 	}
 	
 	/* HomePage related functions */
+	
+	
+	public ResultSet getRecentQuizzesTakenHelper(String username, int n, Timestamp t ) {
+		try {
+			PreparedStatement pstmt =  db.getPreparedStatement("SELECT * FROM results INNER JOIN quizes USING(quizid)"
+					+ "WHERE date > ? AND username = ? ORDER BY date DESC LIMIT ?");
+			
+			pstmt.setTimestamp(1, t);
+			pstmt.setString(2, username);
+			pstmt.setInt(3, n);
+			return pstmt.executeQuery();
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ResultSet getPopularQuizzesHelper( String username, int n, Timestamp t ) {
+		try {
+			PreparedStatement pstmt = 
+					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results INNER JOIN quizes USING(quizid) "
+							+ "WHERE date > ? GROUP BY quizid ORDER BY quiz_count DESC LIMIT ?");
+			pstmt.setTimestamp(1, t);
+			pstmt.setInt(2, n);
+			return pstmt.executeQuery(); 
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+
 	/**
 	 * Quarry list of most popular quizzes among the recently taken quizzes
 	 * @param n an integer determining maximum number of quizzes to be returned
