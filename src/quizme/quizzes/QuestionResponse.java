@@ -2,6 +2,8 @@ package quizme.quizzes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class QuestionResponse extends Question {
 
@@ -16,7 +18,12 @@ public class QuestionResponse extends Question {
 	private String responseText;
 
 	/**
-	 * A String that stores the correct response text.
+	 * A list that stores all correct text answers.
+	 */
+	private List<String> correctAnswers;
+	
+	/**
+	 * A string that stores the preferred correct response text.
 	 */
 	private String correctResponseText;
 	
@@ -24,10 +31,11 @@ public class QuestionResponse extends Question {
 	 * List of column names in the corresponding data base.
 	 */
 	private static final String[] columnNames = {
-			"quizID",
-			"order",
-			"questionText",
-			"correctResponseText"
+			"quizid",
+			"questionOrder",
+			"question",
+			"correctAnswers",
+			"preferredAnswer"
 	};
 	
 	/**
@@ -37,7 +45,8 @@ public class QuestionResponse extends Question {
 			"INT",
 			"INT",
 			"TEXT",
-			"TEXT"
+			"TEXT",
+			"INT"
 	};
 	
 	/**
@@ -61,7 +70,10 @@ public class QuestionResponse extends Question {
 		quizID = rs.getInt( columnNames[0] );
 		order = rs.getInt( columnNames[1] );
 		questionText = rs.getString( columnNames[2] );
-		correctResponseText = rs.getString( columnNames[3] );
+		String answers = rs.getString(columnNames[3]);
+		correctAnswers = Arrays.asList(answers.split("\\s*~~~\\s*"));
+		int preferredResponse = rs.getInt( columnNames[4] );
+		correctResponseText = correctAnswers.get(preferredResponse);
 		responseText = "";
 	}
 	
@@ -72,10 +84,11 @@ public class QuestionResponse extends Question {
 	 * @param QT
 	 * @param CRT
 	 */
-	public QuestionResponse( int QID, int ORD, String QT, String CRT) {
+	public QuestionResponse( int QID, int ORD, String QT, List<String> answers, String CRT) {
 		quizID = QID;
 		order = ORD;
 		questionText = QT;
+		correctAnswers = answers;
 		correctResponseText = CRT;
 		responseText = "";
 	}
@@ -102,9 +115,7 @@ public class QuestionResponse extends Question {
 		out.append("<b>Correct answer: </b>");
 		out.append(correctResponseText);
 		out.append("<br>");
-		if ( correctResponseText.equals( responseText ) ) {
-			points = 1;
-		}
+
 		out.append("<b>Your points: </b>");
 		out.append( Integer.toString( points) );
 		out.append("<br>");
@@ -128,5 +139,17 @@ public class QuestionResponse extends Question {
 	@Override
 	public int maxPoints() {
 		return maxPoints;
+	}
+
+	@Override
+	public void setReponse(String response) {
+		responseText = response;
+		if ( correctAnswers.contains(responseText) ) {
+			points = 1;
+		}
+		else {
+			points = 0;
+		}
+		
 	}
 }

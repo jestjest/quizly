@@ -1,12 +1,12 @@
-package src.quizme.database;
+package quizme.database;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import src.quizme.DBConnection;
-import src.quizme.links.QuizLink;
+import quizme.DBConnection;
+import quizme.links.QuizLink;
 
 public class QuizResultsTable {
 	private DBConnection db;

@@ -1,4 +1,4 @@
-package src.quizme.database;
+package quizme.database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import src.quizme.DBConnection;
-import src.quizme.links.MessageLink;
+import quizme.DBConnection;
+import quizme.links.MessageLink;
 
 public class MessagesTable {
 private DBConnection db;
@@ -152,7 +152,7 @@ public static int REQUEST = 3;
 			ResultSet rs = pstmt.executeQuery(); // Query
 			List<MessageLink> messageLinks = new ArrayList<MessageLink>();
 			while( rs.next() ) {				
-				MessageLink messageLink = new MessageLink( rs.getString("fromUsername"),
+				MessageLink messageLink = new MessageLink( rs.getInt("messageid"), rs.getString("fromUsername"),
 						rs.getString("subject"), rs.getTimestamp("date"), rs.getString("content"), 
 						rs.getBoolean("seen"), MessageLink.MType.values()[rs.getInt("type")-1]);
 				messageLinks.add(messageLink);
@@ -180,7 +180,7 @@ public static int REQUEST = 3;
 			ResultSet rs = pstmt.executeQuery(); // Query
 			List<MessageLink> messageLinks = new ArrayList<MessageLink>();
 			while( rs.next() ) {				
-				MessageLink messageLink = new MessageLink( rs.getString("fromUsername"),
+				MessageLink messageLink = new MessageLink( rs.getInt("messageid"), rs.getString("fromUsername"),
 						rs.getString("subject"), rs.getTimestamp("date"), rs.getString("content"), 
 						rs.getBoolean("seen"), MessageLink.MType.values()[rs.getInt("type")-1]);
 				messageLinks.add(messageLink);

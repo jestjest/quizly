@@ -62,6 +62,14 @@ public abstract class Question {
 	 * @return an integer representing the maximum achievable points.
 	 */
 	public abstract int maxPoints();
+	
+	/**
+	 * Every question class should implement this function. This function
+	 * gets the user response as a string, and updates the ivar (including points)
+	 * accordingly.
+	 * @param response
+	 */
+	public abstract void setReponse( String response );
 
 	/**
 	 * show the points user earned on this question.

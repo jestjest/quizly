@@ -2,18 +2,20 @@ package quizme.quizzes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class PictureQuestion extends Question {
-
-	/**
-	 * A string showing the question text.
-	 */
-	private String questionText;
 	
 	/**
 	 * A String that stores a URL pointing to a picture.
 	 */
 	private String pictureURL;
+	
+	/**
+	 * A list that stores all correct text answers.
+	 */
+	private List<String> correctAnswers;
 	
 	/**
 	 * A String that stores the correct response text.
@@ -29,11 +31,11 @@ public class PictureQuestion extends Question {
 	 * List of column names in the corresponding data base.
 	 */
 	private static final String[] columnNames = {
-			"quizID",
-			"order",
-			"questionText",
+			"quizid",
+			"questionOrder",
+			"correctAnswers",
+			"preferredAnswer",
 			"pictureURL",
-			"correctResponseText"
 	};
 	
 	/**
@@ -43,7 +45,7 @@ public class PictureQuestion extends Question {
 			"INT",
 			"INT",
 			"TEXT",
-			"TEXT",
+			"INT",
 			"TEXT"
 	};
 	
@@ -67,9 +69,11 @@ public class PictureQuestion extends Question {
 		super( rs );
 		quizID = rs.getInt( columnNames[0] );
 		order = rs.getInt( columnNames[1] );
-		questionText = rs.getString( columnNames[2] );
-		pictureURL = rs.getString( columnNames[3] );
-		correctResponseText = rs.getString( columnNames[4] );
+		String answers = rs.getString(columnNames[2]);
+		correctAnswers = Arrays.asList(answers.split("\\s*~~~\\s*"));
+		int preferredAnswer = rs.getInt( columnNames[3] );
+		correctResponseText = correctAnswers.get(preferredAnswer);
+		pictureURL = rs.getString( columnNames[4] );
 		responseText = "";
 	}
 	
@@ -81,20 +85,17 @@ public class PictureQuestion extends Question {
 	 * @param PURL
 	 * @param CRT
 	 */
-	public PictureQuestion( int QID, int ORD, String QT, String PURL, String CRT) {
+	public PictureQuestion( int QID, int ORD, String PURL, List<String> answers, String CRT) {
 		quizID = QID;
 		order = ORD;
-		questionText = QT;
 		pictureURL = PURL;
+		correctAnswers = answers;
 		correctResponseText = CRT;
 		responseText = "";
 	}
 
 	@Override
 	public void show( StringBuilder out ) {
-		out.append("<b>");
-		out.append(questionText);
-		out.append("</b>");
 		out.append("<br>");
 		out.append("<img src=\""+ pictureURL+"\" alt=\"Sorry! Image not found.\"><br>");
 		out.append("Please eneter your response here:<br>");
@@ -104,9 +105,6 @@ public class PictureQuestion extends Question {
 
 	@Override
 	public void answer( StringBuilder out ) {
-		out.append("<b>Question: </b>");
-		out.append(questionText);
-		out.append("<br>");
 		out.append("<img src=\""+ pictureURL+"\" alt=\"Sorry! Image not found.\"><br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
@@ -114,9 +112,7 @@ public class PictureQuestion extends Question {
 		out.append("<b>Correct answer: </b>");
 		out.append(correctResponseText);
 		out.append("<br>");
-		if ( correctResponseText.equals( responseText ) ) {
-			points = 1;
-		}
+
 		out.append("<b>Your points: </b>");
 		out.append( Integer.toString( points) );
 		out.append("<br>");
@@ -140,5 +136,17 @@ public class PictureQuestion extends Question {
 	@Override
 	public int maxPoints() {
 		return maxPoints;
+	}
+
+	@Override
+	public void setReponse(String response) {
+		responseText = response;
+		if ( correctAnswers.contains( responseText ) ) {
+			points = 1;
+		}
+		else {
+			points = 0;
+		}
+		
 	}
 }

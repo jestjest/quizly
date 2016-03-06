@@ -1,4 +1,4 @@
-package src.quizme;
+package quizme;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -13,8 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
-import src.quizme.database.*;
-import src.quizme.quizzes.*;
+import quizme.database.*;
+import quizme.quizzes.*;
 
 /**
  * Servlet implementation class AdminServlet

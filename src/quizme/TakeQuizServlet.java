@@ -1,4 +1,4 @@
-package src.quizme;
+package quizme;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,13 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.sql.*;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ArrayList;
 
-import src.quizme.database.*;
-import src.quizme.quizzes.*;
-import src.quizme.links.*;
+import quizme.database.*;
+import quizme.quizzes.*;
+import quizme.links.*;
 
 /**
  * Servlet implementation class TakeQuizServlet
@@ -41,7 +38,7 @@ public class TakeQuizServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		QuizInfoSummary quizInfoSummary = (QuizInfoSummary) request.getSession().getAttribute("QuizInfoSummary");
+		QuizSummaryInfo quizInfoSummary = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");
 		int quizid = quizInfoSummary.getQuizID();
 		int numOfQuestions = quizInfoSummary.numOfQuestions();
 		boolean randomOrder = quizInfoSummary.randomOrder();

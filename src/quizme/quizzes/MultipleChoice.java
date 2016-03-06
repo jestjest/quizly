@@ -36,11 +36,11 @@ public class MultipleChoice extends Question {
 	 * List of column names in the corresponding data base.
 	 */
 	private static final String[] columnNames = {
-			"quizID",
-			"order",
-			"questionText",
-			"choicesText",
-			"correctChoice"
+			"quizid",
+			"questionOrder",
+			"question",
+			"answerChoices",
+			"correctAnswer"
 	};
 	
 	/**
@@ -121,9 +121,7 @@ public class MultipleChoice extends Question {
 			}
 			out.append("<br>");
 		}
-		if ( response == correctChoice ) {
-			points = 1;
-		}
+
 		out.append("<b>Your points: </b>");
 		out.append( Integer.toString( points) );
 		out.append("<br>");
@@ -133,7 +131,7 @@ public class MultipleChoice extends Question {
 	 * Use choicesText and create the array of choice texts.
 	 */
 	private void parseText() {
-		choices = choicesText.split("\n");
+		choices = choicesText.split("\\s*~~~\\s*");
 	}
 	
 	private String makeRadioButton( String name, String value, String title, Boolean check) {
@@ -161,5 +159,17 @@ public class MultipleChoice extends Question {
 	@Override
 	public int maxPoints() {
 		return maxPoints;
+	}
+
+	@Override
+	public void setReponse(String response) {
+		this.response = Integer.parseInt(response);
+		if ( this.response == correctChoice ) {
+			points = 1;
+		}
+		else {
+			points = 0;
+		}
+		
 	}
 }

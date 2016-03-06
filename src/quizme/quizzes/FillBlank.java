@@ -2,6 +2,8 @@ package quizme.quizzes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class FillBlank extends Question {
 
@@ -27,6 +29,11 @@ public class FillBlank extends Question {
 	private String responseText;
 
 	/**
+	 * A list that stores all correct text answers.
+	 */
+	private List<String> correctAnswers;
+	
+	/**
 	 * A String that stores the correct response text.
 	 */
 	private String correctResponseText;
@@ -35,10 +42,12 @@ public class FillBlank extends Question {
 	 * List of column names in the corresponding data base.
 	 */
 	private static final String[] columnNames = {
-			"quizID",
-			"order",
-			"questionText",
-			"correctResponseText"
+			"quizid",
+			"questionOrder",
+			"preQuestion",
+			"postQuestion",
+			"correctAnswers",
+			"preferredAnswer"
 	};
 
 	/**
@@ -48,7 +57,9 @@ public class FillBlank extends Question {
 			"INT",
 			"INT",
 			"TEXT",
-			"TEXT"
+			"TEXT",
+			"TEXT",
+			"INT"
 	};
 
 	/**
@@ -71,10 +82,13 @@ public class FillBlank extends Question {
 		super( rs );
 		quizID = rs.getInt( columnNames[0] );
 		order = rs.getInt( columnNames[1] );
-		questionText = rs.getString( columnNames[2] );
-		correctResponseText = rs.getString( columnNames[3] );
+		leftText = rs.getString( columnNames[2] );
+		rightText = rs.getString(columnNames[3]);
+		String answers = rs.getString( columnNames[4] );
+		correctAnswers = Arrays.asList(answers, "\\s*~~~\\s*");
+		int preferredAnswer = rs.getInt(columnNames[5]);
+		correctResponseText = correctAnswers.get(preferredAnswer);
 		responseText = "";
-		parseText();
 	}
 
 	/**
@@ -84,10 +98,11 @@ public class FillBlank extends Question {
 	 * @param QT
 	 * @param CRT
 	 */
-	public FillBlank( int QID, int ord, String QT, String CRT) {
+	public FillBlank( int QID, int ord, String QT, List<String> answers, String CRT) {
 		quizID = QID;
 		order = ord;
 		questionText = QT;
+		correctAnswers = answers;
 		correctResponseText = CRT;
 		responseText = "";
 		parseText();
@@ -113,9 +128,6 @@ public class FillBlank extends Question {
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
 		out.append("<br>");
-		if ( correctResponseText.equals( responseText ) ) {
-			points = 1;
-		}
 		out.append("<b>Your points: </b>");
 		out.append( Integer.toString( points) );
 		out.append("<br>");
@@ -160,5 +172,17 @@ public class FillBlank extends Question {
 	@Override
 	public int maxPoints() {
 		return maxPoints;
+	}
+
+	@Override
+	public void setReponse(String response) {
+		responseText = response;
+		if ( correctAnswers.contains( responseText ) ) {
+			points = 1;
+		}
+		else {
+			points = 0;
+		}
+		
 	}
 }
