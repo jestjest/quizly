@@ -1,8 +1,11 @@
 package quizme.quizzes;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+
+import javax.servlet.jsp.JspWriter;
 
 public class MultipleChoice extends Question {
 
@@ -93,13 +96,14 @@ public class MultipleChoice extends Question {
 	}
 
 	@Override
-	public void show( StringBuilder out ) {
+	public void show( JspWriter out ) throws IOException {
 		out.append("<b>");
 		out.append(questionText);
 		out.append("</b>");
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-			out.append( makeRadioButton( "choice", Integer.toString(i), choices[i], false) );
+			String buttonName = "response_" + order + "_" + i;
+			out.append( makeRadioButton( buttonName, choices[i], false) );
 			out.append("<br>");
 		}
 	}
@@ -110,7 +114,8 @@ public class MultipleChoice extends Question {
 		out.append(questionText);
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-			out.append( makeRadioButton( "choice", Integer.toString(i), choices[i], i == correctChoice ) );
+			String buttonName = "response_" + order + "_" + i;
+			out.append( makeRadioButton( buttonName, choices[i], i == correctChoice ) );
 			if ( (i == response) && ( i == correctChoice ) ) {
 				out.append(" (answered correctly) ");
 			}
@@ -135,10 +140,10 @@ public class MultipleChoice extends Question {
 		choices = choicesText.split("\\s*~~~\\s*");
 	}
 	
-	private String makeRadioButton( String name, String value, String title, Boolean check) {
-		String checkString = check? "checked":"";
-		String s = "<input type=\"radio\" name=\"" + name +
-				"\" value=\""+value+"\" "+checkString+"> "+title;
+	private String makeRadioButton( String name, String value, Boolean check) {
+		String checkString = check ? "checked" : "";
+		String s = "<input type='radio' name='" + name +
+				"' value='" + value+"' "+ checkString + "> " + value;
 		return s;
 	}
 	

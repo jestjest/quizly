@@ -1,9 +1,12 @@
 package quizme.quizzes;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.jsp.JspWriter;
 
 public class FillBlank extends Question {
 
@@ -109,15 +112,14 @@ public class FillBlank extends Question {
 	}
 	
 	@Override
-	public void show( StringBuilder out ) {
+	public void show( JspWriter out ) throws IOException {
 		out.append("<b>");
 		out.append(leftText);
 		out.append("</b>");
-		out.append("<input type=\"text\" name=\"responseText_" + Integer.toString(order) 
-		+ "\" value=\""	+ responseText + "\">");
+		out.append("<input type='text' name='response_" + order + "'>");
 		out.append("<b>");
 		out.append(rightText);
-		out.append("</b><br>");
+		out.append("</b>");
 	}
 
 	@Override

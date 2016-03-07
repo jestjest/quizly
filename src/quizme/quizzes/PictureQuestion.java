@@ -1,9 +1,12 @@
 package quizme.quizzes;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.jsp.JspWriter;
 
 public class PictureQuestion extends Question {
 	
@@ -95,17 +98,16 @@ public class PictureQuestion extends Question {
 	}
 
 	@Override
-	public void show( StringBuilder out ) {
+	public void show( JspWriter out ) throws IOException {
+		out.append("<img src='"+ pictureURL+"' alt='Error. Image not found.'><br>");
 		out.append("<br>");
-		out.append("<img src=\""+ pictureURL+"\" alt=\"Sorry! Image not found.\"><br>");
-		out.append("Please eneter your response here:<br>");
-		out.append("<input type=\"text\" name=\"responseText_" + Integer.toString(order) 
-		+ "\" value=\""	+ responseText + "\"><br>");
+		out.append("Please enter your response here:<br>");
+		out.append("<input type='text' name='response_" + order+ "'>");
 	}
 
 	@Override
 	public void answer( StringBuilder out ) {
-		out.append("<img src=\""+ pictureURL+"\" alt=\"Sorry! Image not found.\"><br>");
+		out.append("<img src='"+ pictureURL+"' alt='Sorry! Image not found.'><br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
 		out.append("<br>");

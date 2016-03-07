@@ -38,10 +38,10 @@ public class TakeQuizServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		QuizSummaryInfo quizInfoSummary = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");
-		int quizid = quizInfoSummary.getQuizID();
-		int numOfQuestions = quizInfoSummary.numOfQuestions();
-		boolean randomOrder = quizInfoSummary.randomOrder();
+		QuizSummaryInfo quizSummaryInfo = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");
+		int quizid = quizSummaryInfo.getQuizID();
+		int numOfQuestions = quizSummaryInfo.numOfQuestions();
+		boolean randomOrder = quizSummaryInfo.randomOrder();
 		
 		Quiz quiz = new Quiz(numOfQuestions, randomOrder);
 		addQuestionResponseQuestions(request, quizid, quiz);
@@ -51,7 +51,13 @@ public class TakeQuizServlet extends HttpServlet {
 			
 		quiz.beginTiming();
 		request.getSession().setAttribute("quiz", quiz);
-		request.getRequestDispatcher("take-quiz.jsp").forward(request, response); /* confirm the name */
+		
+		if (quizSummaryInfo.onePage()) {
+			request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response);
+		} else {
+			request.setAttribute("questionIndex", new Integer(1));
+			request.getRequestDispatcher("take-multi-page-quiz.jsp").forward(request, response);
+		}
 	}
 
 	private void addQuestionResponseQuestions(HttpServletRequest request, int quizid, Quiz quiz) {

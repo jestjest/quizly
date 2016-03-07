@@ -3,8 +3,8 @@
     
 <%@page import="quizme.links.*"%> 
 <%@page import="java.util.List" %>
-<%@page import="java.text.SimpleDateFormat" %>
-<%@page import="quizme.User"  %>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="quizme.User"%>
 <% QuizSummaryInfo quizSummary = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo"); %>
 <% User user = (User) request.getSession().getAttribute("user"); %>
 

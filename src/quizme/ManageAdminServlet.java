@@ -17,9 +17,9 @@ import quizme.database.*;
 import quizme.quizzes.*;
 
 /**
- * Servlet implementation class AdminServlet
+ * Servlet implementation class ManageAdminServlet
  */
-@WebServlet("/AdminServlet")
+@WebServlet("/ManageAdminServlet")
 public class ManageAdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

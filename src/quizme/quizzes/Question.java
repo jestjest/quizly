@@ -1,6 +1,9 @@
 package quizme.quizzes;
 
+import java.io.IOException;
 import java.sql.ResultSet;
+
+import javax.servlet.jsp.JspWriter;
 
 /**
  * An abstract class used as a framework to implement different types
@@ -101,7 +104,7 @@ public abstract class Question {
 	 * question contents on. We assume header info, etc. are already
 	 * written to the PrintWriter object, and it is in the <body> section.
 	 */
-	public void show( StringBuilder out ) {
+	public void show( JspWriter out ) throws IOException {
 		out.append("<h1>Super question</h1>");
 	}
 
