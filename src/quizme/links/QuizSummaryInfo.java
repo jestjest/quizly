@@ -89,10 +89,10 @@ public class QuizSummaryInfo {
 		this.recentPerformers = recentPerformers;
 	}
 	
-	public List<Performance> myPerformances;
-	public List<Performance> highestPerformers;
-	public List<Performance> topLastDayPerformers;
-	public List<Performance> recentPerformers;
+	private List<Performance> myPerformances;
+	private List<Performance> highestPerformers;
+	private List<Performance> topLastDayPerformers;
+	private List<Performance> recentPerformers;
 	
 	/**
 	 * Returns quiz ID
@@ -189,5 +189,21 @@ public class QuizSummaryInfo {
 	 */
 	public boolean immediateCorrection() {
 		return immediateCorrection;
+	}
+	
+	public List<Performance> getMyPerformances() {
+		return myPerformances;
+	}
+	
+	public List<Performance> getBestPerformances() {
+		return highestPerformers;
+	}
+	
+	public List<Performance> getTopDayPerformances() {
+		return topLastDayPerformers;
+	}
+	
+	public List<Performance> getRecentPerformances() {
+		return recentPerformers;
 	}
 }

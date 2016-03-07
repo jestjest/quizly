@@ -86,7 +86,7 @@ public class MessageLink {
 	 * Returns an HTML link for a message's sender page
 	 */
 	public String getSenderLink() {
-		return "<a href='UserPageServlet?name=" + senderUsername + "' class='btn'>" + senderUsername + "</a>";
+		return "<a href='UserPageServlet?username=" + senderUsername + "' class='btn'>" + senderUsername + "</a>";
 	}
 	
 	/**

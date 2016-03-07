@@ -115,7 +115,6 @@ public class QuestionResponse extends Question {
 		out.append("<b>Correct answer: </b>");
 		out.append(correctResponseText);
 		out.append("<br>");
-
 		out.append("<b>Your points: </b>");
 		out.append( Integer.toString( points) );
 		out.append("<br>");

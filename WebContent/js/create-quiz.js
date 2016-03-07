@@ -42,7 +42,7 @@ $quizSubmission.submit(function (event) {
 			 })
 		.done(function() {
 			alert('Success!');
-			window.location.href = "/QuizMe/HomepageServlet";
+			window.location.href = "/QuizMe/HomePageServlet";
 		});
 });
 

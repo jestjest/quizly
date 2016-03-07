@@ -60,21 +60,21 @@ public class QuizLink {
 	 * Returns an HTML link element for the quiz link.
 	 */
 	public String getQuizLink() {
-		return "<a href='QuizSummaryServlet?id=" + quizID + "' class='btn'>" + name + "</a>";
+		return "<a href='QuizSummaryServlet?quizID=" + quizID + "' class='btn'>" + name + "</a>";
 	}
 	
 	/**
 	 * Returns an HTML link element for the creator.
 	 */
 	public String getCreatorLink() {
-		return "<a href='UserPageServlet?name=" + creatorUsername + "' class='btn'>" + creatorUsername + "</a>";
+		return "<a href='UserPageServlet?username=" + creatorUsername + "' class='btn'>" + creatorUsername + "</a>";
 	}
 	
 	/**
 	 * Return an HTML link element for the quiz-taker
 	 */
 	public String getTakerLink() {
-		return "<a href='UserPageServlet?name=" + takenUsername + "' class='btn'>" + takenUsername + "</a>";
+		return "<a href='UserPageServlet?username=" + takenUsername + "' class='btn'>" + takenUsername + "</a>";
 	}
 	
 	/**

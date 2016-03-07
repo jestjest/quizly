@@ -20,7 +20,7 @@
 	<jsp:include page="header.jsp"/>
 
     <div class="jumbotron">
-      <div class="container">
+      <div class="container text-center">
         <h1>Announcements</h1>
         <%
         List<AnnouncementLink> announcements = (List<AnnouncementLink>) request.getAttribute("announcements");
@@ -152,16 +152,14 @@
 		    	
 				for (MessageLink message : messages) {
 					String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(message.getDate());
-					
 					if (message.getType() == MessageLink.MType.TEXT)
 						out.println(date + ": " + message.getSenderLink() + " has sent you a note: '" + message.getSubject() + "'");
 					else if (message.getType() == MessageLink.MType.FRIENDSHIP)
 						out.println(date + ": " + message.getSenderLink() + "wants to be friends!");
 					else if (message.getType() == MessageLink.MType.CHALLENGE) {
 						out.println(date + ": " + message.getSenderLink() + " is challenging you to take this quiz: " + message.getSubject());
-						out.println("The challenger has a best score of " + message.content() + ".");
+						out.println("The challenger has a best score of " + message.getContent() + ".");
 					}
-						
 					out.println("<br>");
 				}
 			%>
@@ -179,7 +177,7 @@
 						out.println("No quizzes created by friends.");
 					
 					for (QuizLink quiz : friendsCreatedQuizzes) {
-						String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateTaken());
+						String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateCreated());
 						out.println(quiz.getQuizLink() + " created on " + date + " by " + quiz.getCreatorLink() +
 								" has been taken " + quiz.getNumTaken() + " times.");
 						out.println("<br>");

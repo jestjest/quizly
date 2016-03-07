@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.sql.*;
-import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,7 +21,7 @@ import quizme.links.*;
 public class HomePageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static final long recentDuration = 30 * 60 * 1000; // recent mean last 30mins
+	private static final long recentDuration = 30 * 60 * 10000000; // recent mean last 30mins
 	private static final int resultNumLimit = 5;
 
 	/**
@@ -48,9 +47,8 @@ public class HomePageServlet extends HttpServlet {
 		// get the user
 		User user = (User) request.getSession().getAttribute("user");
 		
-		// determine the time atter which is considered "recent"
-		Calendar calendar = Calendar.getInstance();		
-		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() + recentDuration );
+		// determine the time after which is considered "recent"
+		Timestamp recentTime = new Timestamp(System.currentTimeMillis() - recentDuration );
 		
 		// recently created quizzes by everyone
 		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");

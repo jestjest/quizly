@@ -13,9 +13,9 @@ import quizme.links.MessageLink;
 public class MessagesTable {
 private DBConnection db;
 
-public static int NOTE = 1;
-public static int CHALLENGE = 2;
-public static int REQUEST = 3;
+public static final int NOTE = 1;
+public static final int CHALLENGE = 2;
+public static final int REQUEST = 3;
 	
 	public MessagesTable(DBConnection db) {
 		this.db = db;
@@ -24,7 +24,10 @@ public static int REQUEST = 3;
 	
 	private void createMessagesTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT, toUsername VARCHAR(128), fromUsername VARCHAR(128), date Timestamp, content TEXT, subject VARCHAR(128), type INT, seen BOOL)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
+					+ "messages (messageid INT, toUsername VARCHAR(128), "
+					+ "fromUsername VARCHAR(128), date Timestamp, content TEXT, "
+					+ "subject VARCHAR(128), type INT, seen BOOL)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -63,19 +66,6 @@ public static int REQUEST = 3;
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM messages WHERE messageid = ?");
 			pstmt.setInt(1, messageid);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void removeRequestMessage(String toUsername, String fromUsername) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM messages WHERE toUsername = ? AND fromUsername = ? "
-					+ "AND type = ?");
-			pstmt.setString(1, toUsername);
-			pstmt.setString(2, fromUsername);
-			pstmt.setInt(3, REQUEST);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -193,30 +183,34 @@ public static int REQUEST = 3;
 	}
 	
 	/**
-	 * Check if username1 has requested to be friend with username2
-	 * @param username1
-	 * @param username2
-	 * @return true/false, null if exception occurs.
+	 * Removes a friend request message send from one user to another.
 	 */
-	public Boolean hasRequested( String username1, String username2 ) {
+	public void removeRequestMessage(String toUsername, String fromUsername) {
 		try {
-			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM messages "
-							+ "WHERE fromUsername = ? AND toUsername = ? AND type = 3");
-			pstmt.setString(1, username1);
-			pstmt.setString(1, username2);
-			ResultSet rs = pstmt.executeQuery(); // Query
-			rs.last();
-			if ( rs.getRow() > 0 ) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		} catch( SQLException e) {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ?");
+			pstmt.setString(1, toUsername);
+			pstmt.setString(2, fromUsername);
+			pstmt.setInt(3, REQUEST);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+	}
+	
+	/**
+	 * Returns whether a user has set a challenge request to another user for a specific quiz.
+	 */
+	public void removeChallenge(String toUsername, String fromUsername, String quizLink) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ? AND subject = ?");
+			pstmt.setString(1, toUsername);
+			pstmt.setString(2, fromUsername);
+			pstmt.setInt(3, CHALLENGE);
+			pstmt.setString(4, quizLink);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/* helper functions */

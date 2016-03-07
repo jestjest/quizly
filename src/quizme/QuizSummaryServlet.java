@@ -2,7 +2,6 @@ package quizme;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -54,22 +53,15 @@ public class QuizSummaryServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// get the user
 		User user = (User) request.getSession().getAttribute("user");
-
-		// get the quiz ID from request
-		int quizID = Integer.parseInt( (String) request.getSession().getAttribute("quizID") );
-
-		// get order
-		int order = 0; // default
-		try {
-			order = Integer.parseInt(request.getParameter("order"));
-		} catch (Exception e) {}
-
+		int quizID = Integer.parseInt(request.getParameter("quizID"));
+		
+		String ordering = request.getParameter("order");
+		int order = (ordering == null) ? 0 : Integer.parseInt(ordering); // default ordering
+		
 		// determine the time after which is considered "recent" or "next day"
-		Calendar calendar = Calendar.getInstance();		
-		Timestamp recentTime = new Timestamp( calendar.getTime().getTime() + recentDuration );
-		Timestamp lastDayTime = new Timestamp( calendar.getTime().getTime() + dayDuration );
+		Timestamp recentTime = new Timestamp(System.currentTimeMillis() - recentDuration );
+		Timestamp lastDayTime = new Timestamp(System.currentTimeMillis() - dayDuration );
 
 
 		// Get quiz summary info
@@ -78,10 +70,8 @@ public class QuizSummaryServlet extends HttpServlet {
 				recentTime, lastDayTime, resultNumLimit);
 
 		// sort myPerformances based on the given order
-
-		if ( order == 0 || order == 1) {		
-			// sort by date
-			Collections.sort(quizSummaryInfo.myPerformances, new Comparator<Performance>(){
+		if ( order == 0 || order == 1) {		// sort by date
+			Collections.sort(quizSummaryInfo.getMyPerformances(), new Comparator<Performance>(){
 				public int compare(Performance o1, Performance o2){
 					if(o1.dateTaken == o2.dateTaken) {
 						return 0;
@@ -89,12 +79,10 @@ public class QuizSummaryServlet extends HttpServlet {
 					return o1.dateTaken.getTime() < o2.dateTaken.getTime() ? -1 : 1;
 				}
 			});
-
 		}
 
-		if ( order == 2 || order == 3 ) {
-			// sort by score
-			Collections.sort(quizSummaryInfo.myPerformances, new Comparator<Performance>(){
+		if ( order == 2 || order == 3 ) {		// sort by score
+			Collections.sort(quizSummaryInfo.getMyPerformances(), new Comparator<Performance>(){
 				public int compare(Performance o1, Performance o2){
 					if(o1.score == o2.score) {
 						if(o1.time == o2.time) {
@@ -109,9 +97,8 @@ public class QuizSummaryServlet extends HttpServlet {
 			});
 		}
 		
-		if ( order == 4 || order == 5 ) {
-			// sort by time
-			Collections.sort(quizSummaryInfo.myPerformances, new Comparator<Performance>(){
+		if ( order == 4 || order == 5 ) {		// sort by time taken
+			Collections.sort(quizSummaryInfo.getMyPerformances(), new Comparator<Performance>(){
 				public int compare(Performance o1, Performance o2){
 					if(o1.time == o2.time) {
 						return 0;
@@ -121,12 +108,12 @@ public class QuizSummaryServlet extends HttpServlet {
 			});
 		}
 
-		if ( order%2 == 0) {
-			Collections.reverse(quizSummaryInfo.myPerformances);
+		if (order%2 == 0) {		// support increasing/decreasing sorting.
+			Collections.reverse(quizSummaryInfo.getMyPerformances());
 		}
 
-		request.setAttribute("quizSummaryInfo", quizSummaryInfo);
-
+		request.getSession().setAttribute("quizSummaryInfo", quizSummaryInfo);
+		request.getRequestDispatcher("quiz-summary.jsp").forward(request, response);
 	}
 
 }

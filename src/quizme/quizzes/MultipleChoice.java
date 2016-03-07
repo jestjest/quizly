@@ -2,6 +2,7 @@ package quizme.quizzes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class MultipleChoice extends Question {
 

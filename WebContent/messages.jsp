@@ -19,13 +19,13 @@
 	<jsp:include page="header.jsp"/>
 	
 	<div class="jumbotron">
-		<div class="container">
-			<h2>Messages</h2>
+		<div class="container text-center">
+			<h1>Your Messages</h2>
 		</div>
 	</div>
 
-	<div id="wrapper">
-		<div id="messages">
+	<div class="container">
+		<div id="messages" class="row">
 			<%
 			List<MessageLink> messages = (List<MessageLink>) request.getAttribute("myMessages");
 			if (messages.isEmpty()) {
@@ -38,8 +38,8 @@
 				for (MessageLink message : messages) {
 					String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(message.getDate());
 					
-					out.println("div class='message-info' id='" + message.getID() + "'>");
-					out.println("<p>From: " + message.getSenderLink() + " on " + date + "</p>");
+					out.println("<div class='message-info' id='" + message.getID() + "'>");
+					out.println("<p>From: <b>" + message.getSenderLink() + "</b> on " + date + "</p>");
 					
 					if (message.getType() == MessageLink.MType.TEXT) {
 						out.println("<h3>" + message.getSubject() + "</h3>");
@@ -49,7 +49,7 @@
 						out.println("<h3><b>" + message.getSenderLink() + "</b> wants to be friends with you!</h3>");
 						out.println("<form role='form' action='FriendRequestServlet' method='POST'>");
 			        	out.println("<div class='form-group'>");
-			        	out.println("<input type='hidden' name='target-user' value='" + request.getParameter("username") + "'>");
+			        	out.println("<input type='hidden' name='target-user' value='" + message.getSenderUsername() + "'>");
 			        	out.println("<input type='submit' name='accept-request' value='Accept friend' class='btn btn-success'>");
 			        	out.println("<input type='submit' name='reject-request' value='Reject friend' class='btn btn-danger'>");
 			        	out.println("</div>");
@@ -60,14 +60,21 @@
 						out.println("My score is " + message.getContent() + "%.");
 					}
 					
+					out.println("<form role='form' action='DeleteMessageServlet' method='POST'>");
+		        	out.println("<div class='form-group'>");
+		        	out.println("<input type='hidden' name='messageID' value='" + message.getID() + "'>");
+		        	out.println("<input type='submit' name='delete-message' value='Delete message' class='btn btn-danger'>");
+		        	out.println("</div>");
+		        	out.println("</form>");
+					
 					out.println("</div>");
+					out.println("<hr>");
 				}
+					
 				out.println("</div>");
 			}
 			%>
-		</div>    	
-		
-		<div id="right-pane"></div>
+		</div>
 	</div>
 	
     <script type="text/javascript" src="js/templates.js"></script>

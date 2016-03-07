@@ -62,7 +62,7 @@ public class FriendRequestServlet extends HttpServlet {
 			friendTable.removeFriends(user, targetUser);
 		}
 		
-		request.getRequestDispatcher("HomePageServlet").forward(request, response);
+		request.getRequestDispatcher("UserPageServlet?username=" + targetUser).forward(request, response);
 	}
 
 }

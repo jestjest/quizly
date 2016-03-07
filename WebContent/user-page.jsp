@@ -18,7 +18,7 @@
 	<jsp:include page="header.jsp"/>
     
     <div class="jumbotron">
-      <div class="container">
+      <div class="container text-center">
         <h1>Welcome to <%=request.getParameter("username")%>'s page!</h1>
         <%
         int friendStatus = (int) request.getAttribute("friendStatus");
@@ -50,11 +50,22 @@
         	out.println("</form>");
         }
         %>
+        
+        <form class='send-message' action='SendMessageServlet' method='POST'>
+			<div class="form-group">
+				<label>Send a message to this user</label>
+				<label>Subject</label>
+				<input type="text" name="subject" value="">
+				<label>Message</label>
+				<textarea class="form-control" rows="5" name="message"></textarea>
+			    <input type='submit' name='send-message' value='Send Message' class='btn btn-success'>
+			    <input type='hidden' name='target-user' value='<%=request.getParameter("username")%>'>");
+			</div>
+		</form>
+		
       </div>
     </div>
-    
-    <hr>
-    
+   
     <div class="container">
     	<h2>Created quizzes</h2>
     	<div class="row">
