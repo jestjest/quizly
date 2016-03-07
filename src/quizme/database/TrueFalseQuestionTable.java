@@ -3,24 +3,25 @@ package quizme.database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import quizme.DBConnection;
 
-public class MultipleChoiceQuestionTable {
+public class TrueFalseQuestionTable {
 	private DBConnection db;
 	
-	public MultipleChoiceQuestionTable(DBConnection db) {
+	public TrueFalseQuestionTable(DBConnection db) {
 		this.db = db;
-		createMultipleChoiceQuestionTable();
+		createTrueFalseQuestionTable();
 	}
 	
-	private void createMultipleChoiceQuestionTable() {
+	private void createTrueFalseQuestionTable() {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
-					+ "multiplechoice (quizid INT, questionOrder INT, "
-					+ "question TEXT, answerChoices TEXT, correctAnswer INT)");
+					+ "truefalse (quizid INT, questionOrder INT, "
+					+ "question TEXT, answerChoices TEXT, correctAnswers TEXT)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -35,14 +36,24 @@ public class MultipleChoiceQuestionTable {
 		return sb.toString();
 	}
 	
-	public void addQuestion(int quizid, int questionOrder, String question, List<String> answerChoices, int correctAnswer) {
+	private String intsToString(List<Integer> answers) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < answers.size(); i++) {
+			sb.append(answers.get(i).toString() + "~~~ ");
+		}
+		return sb.toString();
+	}
+	
+	public void addQuestion(int quizid, int questionOrder, String question, 
+			List<String> answerChoices, List<Integer> correctAnswers) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO multiplechoice VALUES (?, ?, ?, ?, ?)");
+			PreparedStatement pstmt = db.getPreparedStatement("INSERT INTO truefalse "
+					+ "VALUES (?, ?, ?, ?, ?)");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			pstmt.setString(3, question);
 			pstmt.setString(4, answersToString(answerChoices));
-			pstmt.setInt(5, correctAnswer);
+			pstmt.setString(5, intsToString(correctAnswers));
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -51,7 +62,8 @@ public class MultipleChoiceQuestionTable {
 	
 	public void removeQuestion(int quizid, int questionOrder) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM multiplechoice WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM truefalse WHERE "
+					+ "quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			pstmt.executeUpdate();
@@ -89,17 +101,22 @@ public class MultipleChoiceQuestionTable {
 		return Arrays.asList(answers.split("\\s*~~~\\s*"));
 	}
 	
-	public void setCorrectAnswer(int quizid, int questionOrder, int correctAnswer) {
-		setInt(quizid, questionOrder, "correctAnswer", correctAnswer);
+	public void setCorrectAnswers(int quizid, int questionOrder, List<Integer> correctAnswers) {
+		setString(quizid, questionOrder, "correctAnswers", intsToString(correctAnswers));
 	}
 	
-	public int getCorrectAnswer(int quizid, int questionOrder) {
-		return getInt(quizid, questionOrder, "correctAnswer");
+	public List<Integer> getCorrectAnswers(int quizid, int questionOrder) {
+		String[] answers = getString(quizid, questionOrder, "correctAnswers").split("\\s*~~~\\s*");
+		List<Integer> correctAnswers = new ArrayList<Integer>();
+		for ( int i = 0; i < answers.length; i++ ) {
+			correctAnswers.add( Integer.parseInt(answers[i]) );
+		}
+		return correctAnswers;
 	}
 	
 	public ResultSet getAllQuizEntries(int quizid) {
 		try {
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT * FROM multiplechoice WHERE quizid = ?");
+			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT * FROM truefalse WHERE quizid = ?");
 			pstmt1.setInt(1, quizid);
 			return pstmt1.executeQuery();
 		} catch (SQLException e) {
@@ -112,7 +129,8 @@ public class MultipleChoiceQuestionTable {
 	
 	private void setString(int quizid, int questionOrder, String field, String value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE multiplechoice SET " + field + " = ? WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE truefalse SET " + field + " = ? "
+					+ "WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setString(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.setInt(3, questionOrder);
@@ -124,7 +142,8 @@ public class MultipleChoiceQuestionTable {
 	
 	private String getString(int quizid, int questionOrder, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM multiplechoice WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM truefalse "
+					+ "WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			ResultSet rs = pstmt.executeQuery();
@@ -138,7 +157,8 @@ public class MultipleChoiceQuestionTable {
 	
 	private void setInt(int quizid, int questionOrder, String field, int value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE multiplechoice SET " + field + " = ? WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE truefalse SET " + field + " = ? "
+					+ "WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.setInt(3, questionOrder);
@@ -150,7 +170,8 @@ public class MultipleChoiceQuestionTable {
 	
 	private int getInt(int quizid, int questionOrder, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM multiplechoice WHERE quizid = ? AND questionOrder = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM truefalse "
+					+ "WHERE quizid = ? AND questionOrder = ?");
 			pstmt.setInt(1, quizid);
 			pstmt.setInt(2, questionOrder);
 			ResultSet rs = pstmt.executeQuery();

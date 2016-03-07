@@ -11,7 +11,7 @@ public class MultipleChoice extends Question {
 	private String questionText;
 	
 	/**
-	 * A string consists of all choices separated by '\n'.
+	 * A string consists of all choices separated by '~~~'.
 	 */
 	private String choicesText;
 

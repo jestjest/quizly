@@ -13,7 +13,7 @@ public abstract class Question {
 	 * This is the list of all Question types extending this class.
 	 */
 	public static enum TYPE {
-		QR, BLANK, MC, PICTURE
+		QR, BLANK, MC, PICTURE, TF, MA
 	}		
 
 	/**
