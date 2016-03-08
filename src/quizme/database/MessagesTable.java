@@ -24,7 +24,7 @@ public static final int REQUEST = 3;
 	
 	private void createMessagesTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT 
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT "
 															+ "AUTO_INCREMENT, toUsername VARCHAR(128), fromUsername VARCHAR(128), "
 															+ "date Timestamp, content TEXT, subject VARCHAR(128), type INT, seen BOOL)");
 			pstmt.executeUpdate();
