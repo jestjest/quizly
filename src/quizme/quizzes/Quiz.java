@@ -9,39 +9,31 @@ import java.util.Collections;
  */
 public class Quiz {
 	private int numOfQuestions;
-	private boolean randomOrder; 
 	private ArrayList<Question> questions;
-	private ArrayList<Integer> questionIndexes;
 
-	private long startTime; /* may not use this timing approach */
+	private long startTime; 
 	private long endTime;
 	
 	private float score; // the total score
 
-	public Quiz(int numOfQuestions, boolean randomOrder) {
+	public Quiz(int numOfQuestions) {
 		this.numOfQuestions = numOfQuestions;
-		this.randomOrder = randomOrder;
-
 		this.questions = new ArrayList<Question>(numOfQuestions);
-		this.questionIndexes = new ArrayList<Integer>(numOfQuestions);
 		setQuestionOrder();
 	}
 
-	private void setQuestionOrder() {
-		for (int i = 0; i < numOfQuestions; i++)
-			questionIndexes.set(i, i);
-		if (randomOrder) Collections.shuffle(questionIndexes);
-	}
-
 	public void setQuestion(Integer order, Question question) {
-		int index = questionIndexes.indexOf(order);
-		questions.set(index, question);
+		questions.set(order, question);
 	}
 
 	public Question getQuestion(int index) {
 		return questions.get(index);
 	}
 
+	public randomizeQuestionOrder() {
+		Collections.shuffle(questions);
+	}
+	
 	public void beginTiming() {
 		startTime = System.currentTimeMillis();
 	}
