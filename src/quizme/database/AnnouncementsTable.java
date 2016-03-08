@@ -21,7 +21,7 @@ public class AnnouncementsTable {
 	private void createAnnouncementTable() {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
-					+ "announcements (announcementid INT, message TEXT, "
+					+ "announcements (announcementid INT AUTO_INCREMENT, message TEXT, "
 					+ "subject VARCHAR(128), date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -31,18 +31,16 @@ public class AnnouncementsTable {
 	
 	public int addAnnouncement(String message, String subject, Timestamp date) {
 		try {
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT announcementid FROM announcements");
-			ResultSet rs = pstmt1.executeQuery();
-			rs.last();
-			int announcementid = rs.getRow() + 1;
+			PreparedStatement pstmt1 = db.getPreparedStatement("INSERT INTO announcements (message, subject, date) VALUES (?, ?, ?)");
+			pstmt1.setString(1, message);
+			pstmt1.setString(2, subject);
+			pstmt1.setTimestamp(3, date);
+			pstmt1.executeUpdate();
 			
-			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO announcements VALUES(?, ?, ?, ?)");
-			pstmt2.setInt(1, announcementid);
-			pstmt2.setString(2, message);
-			pstmt2.setString(3, subject);
-			pstmt2.setTimestamp(4, date);
-			pstmt2.executeUpdate();
-			return announcementid;
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT announcementid FROM announcements ORDER BY announcementid ASC");
+			ResultSet rs = pstmt2.executeQuery();
+			rs.last();
+			return rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

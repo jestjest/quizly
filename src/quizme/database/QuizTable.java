@@ -17,9 +17,8 @@ public class QuizTable {
 
 	private void createQuizTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizes"
-					+ " (quizid INT, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, "
-					+ "randomOrder BOOL, "
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizzes"
+					+ " (quizid INT AUTO_INCREMENT, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
 					+ "onePage BOOL, immediateCorrection BOOL, practiceMode BOOL, "
 					+ "creatorUsername VARCHAR(128), modifiedDate DATETIME, numOfTimesTaken INT)");
 			pstmt.executeUpdate();
@@ -31,27 +30,25 @@ public class QuizTable {
 	public int addQuiz(String name, String description, int numOfQuestions, String creatorUsername, Timestamp modifiedDate, boolean randomOrder, 
 			boolean immediateCorrection, boolean onePage, boolean practiceMode, int numOfTimesTaken) {
 		try{
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT quizid FROM quizes");
-			ResultSet rs = pstmt1.executeQuery();
+			PreparedStatement pstmt1 = db.getPreparedStatement("INSERT INTO quizzes (name, description, numOfQuestions, randomOrder, "
+					+ "onePage, immediateCorrection, practiceMode, creatorUsername, modifiedDate, numOfTimesTaken) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			pstmt1.setString(1, name);
+			pstmt1.setString(2, description);
+			pstmt1.setInt(3, numOfQuestions);
+			pstmt1.setInt(4, (randomOrder) ? 1 : 0);
+			pstmt1.setInt(5, (onePage) ? 1 : 0);
+			pstmt1.setInt(6, (immediateCorrection) ? 1 : 0);
+			pstmt1.setInt(7, (practiceMode) ? 1 : 0); 
+			pstmt1.setString(8, creatorUsername);
+			pstmt1.setTimestamp(9, modifiedDate);
+			pstmt1.setInt(10, numOfTimesTaken);
+			pstmt1.executeUpdate();
+
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT quizid FROM quizzes SORT BY quizid ASC");
+			ResultSet rs = pstmt2.executeQuery();
 			rs.last();
-			int quizid = rs.getRow() + 1;
-
-
-			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO quizes VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			pstmt2.setInt(1, quizid);
-			pstmt2.setString(2, name);
-			pstmt2.setString(3, description);
-			pstmt2.setInt(4, numOfQuestions);
-			pstmt2.setInt(5, (randomOrder) ? 1 : 0);
-			pstmt2.setInt(6, (onePage) ? 1 : 0);
-			pstmt2.setInt(7, (immediateCorrection) ? 1 : 0);
-			pstmt2.setInt(8, (practiceMode) ? 1 : 0); 
-			pstmt2.setString(9, creatorUsername);
-			pstmt2.setTimestamp(10, modifiedDate);
-			pstmt2.setInt(11, numOfTimesTaken);
-			pstmt2.executeUpdate();
-
-			return quizid;
+			return rs.getRow() + 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -60,8 +57,18 @@ public class QuizTable {
 
 	public void removeQuiz(int quizid) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM quizes WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM quizzes WHERE quizid = ?");
 			pstmt.setInt(1, quizid);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeQuizByName(String name) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM quizzes WHERE name = ?");
+			pstmt.setString(1, name);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -70,7 +77,7 @@ public class QuizTable {
 
 	public ResultSet getEntry(int quizid) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM quizes where quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM quizzes where quizid = ?");
 			pstmt.setInt(1, quizid);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
@@ -158,6 +165,35 @@ public class QuizTable {
 		return getDate(quizid, "modifiedDate");
 	}
 
+	public int numOfQuizzesCreatedHelper(Timestamp t) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(quizid) FROM quizzes " 
+				+ "WHERE modifiedDate > t");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	private static final long dayDuration = 24 * 60 * 60 * 1000;
+	private static final long weekDuration = 7 * 24 * 60 * 60 * 1000;
+	public int[] numOfQuizzesCreated() {
+		int[] numOfQuizzesCreated = new int[3];
+		
+		Timestamp lastDay = new Timestamp(System.currentTimeMillis() - dayDuration);
+		numOfQuizzesCreated[0] = numOfQuizzesCreatedHelper(lastDay); 
+		
+		Timestamp lastWeek = new Timestamp(System.currentTimeMillis() - weekDuration);
+		numOfQuizzesCreated[1] = numOfQuizzesCreatedHelper(lastWeek);  
+		
+		Timestamp allTime = new Timestamp(0);
+		numOfQuizzesCreated[2] = numOfQuizzesCreatedHelper(allTime); 
+		return numOfQuizzesCreated;
+	}
+	
 	/* HomePage related functions */
 	/**
 	 * Query list of recently created quizzes
@@ -168,7 +204,7 @@ public class QuizTable {
 	public List<QuizLink> getRecentQuizzesCreated( int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM quizes "
+					db.getPreparedStatement("SELECT * FROM quizzes "
 							+ "WHERE modifiedDate > ? ORDER BY modifiedDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setInt(2, n);
@@ -199,7 +235,7 @@ public class QuizTable {
 	public List<QuizLink> getRecentQuizzesCreated( String username, int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM quizes "
+					db.getPreparedStatement("SELECT * FROM quizzes "
 							+ "WHERE modifiedDate > ? AND creatorUsername = ? "
 							+ "ORDER BY modifiedDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
@@ -368,7 +404,7 @@ public class QuizTable {
 			///////////////////////////
 			// get general quiz info //
 			///////////////////////////			
-			pstmt = db.getPreparedStatement("SELECT * FROM quizes WHERE quizid = ?");
+			pstmt = db.getPreparedStatement("SELECT * FROM quizzes WHERE quizid = ?");
 			pstmt.setInt(1, quizID);
 			rs = pstmt.executeQuery();
 			
@@ -393,7 +429,7 @@ public class QuizTable {
 
 	private void setString(int quizid, String field, String value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ?  WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizzes SET " + field + " = ?  WHERE quizid = ?");
 			pstmt.setString(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.executeUpdate();
@@ -404,7 +440,7 @@ public class QuizTable {
 
 	private String getString(int quizid, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizzes WHERE quizid = ?");
 			pstmt.setInt(1, quizid);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
@@ -417,7 +453,7 @@ public class QuizTable {
 
 	private void setInt(int quizid, String field, int value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ? WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizzes SET " + field + " = ? WHERE quizid = ?");
 			pstmt.setInt(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.executeUpdate();
@@ -428,7 +464,7 @@ public class QuizTable {
 
 	private int getInt(int quizid, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizzes WHERE quizid = ?");
 			pstmt.setInt(1, quizid);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();
@@ -441,7 +477,7 @@ public class QuizTable {
 
 	private void setDate(int quizid, String field, Timestamp value) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizes SET " + field + " = ? WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("UPDATE quizzes SET " + field + " = ? WHERE quizid = ?");
 			pstmt.setTimestamp(1, value);
 			pstmt.setInt(2, quizid);
 			pstmt.executeUpdate();
@@ -452,7 +488,7 @@ public class QuizTable {
 
 	private Timestamp getDate(int quizid, String field) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizes WHERE quizid = ?");
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM quizzes WHERE quizid = ?");
 			pstmt.setInt(1, quizid);
 			ResultSet rs = pstmt.executeQuery();
 			rs.first();

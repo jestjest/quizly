@@ -2,7 +2,6 @@ package quizme.database;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import quizme.DBConnection;
@@ -18,7 +17,7 @@ public class QuizResultsTable {
 	
 	private void createQuizResultsTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date DATETIME)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT AUTO_INCREMENT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -27,20 +26,18 @@ public class QuizResultsTable {
 	
 	public int addResult(int quizid, String username, double score, long time, Timestamp date) {
 		try {
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT resultid FROM results");
-			ResultSet rs = pstmt1.executeQuery();
-			rs.last();
-			int resultid = rs.getRow() + 1;
+			PreparedStatement pstmt1 = db.getPreparedStatement("INSERT INTO results (quizid, username, score, time, date) VALUES (?, ?, ?, ?, ?)");
+			pstmt1.setInt(1, quizid);
+			pstmt1.setString(2, username);
+			pstmt1.setDouble(3, score);
+			pstmt1.setFloat(4, time);
+			pstmt1.setTimestamp(5, date); 
+			pstmt1.executeUpdate();
 			
-			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO results VALUES (?, ?, ?, ?, ?, ?)");
-			pstmt2.setInt(1, resultid);
-			pstmt2.setInt(2, quizid);
-			pstmt2.setString(3, username);
-			pstmt2.setDouble(4, score);
-			pstmt2.setFloat(5, time);
-			pstmt2.setTimestamp(6, date); 
-			pstmt2.executeUpdate();
-			return resultid;
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT resultid FROM results SORT BY resultid ASC");
+			ResultSet rs = pstmt2.executeQuery();
+			rs.last();
+			return rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -57,11 +54,16 @@ public class QuizResultsTable {
 		}
 	}
 	
-	public void removeAllQuizResults(int quizid) {
+	public void removeAllQuizResultsByName(String quizName) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM results WHERE quizid = ?");
-			pstmt.setInt(1, quizid);
-			pstmt.executeUpdate();
+			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT quizid FROM quizzes WHERE name = ?");
+			pstmt1.setString(1, quizName);
+			ResultSet rs = pstmt1.executeQuery();
+			rs.next();
+			int quizid = rs.getInt(1); 
+			PreparedStatement pstmt2 = db.getPreparedStatement("DELETE FROM results WHERE quizid = ?");
+			pstmt2.setInt(1, quizid);
+			pstmt2.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -87,12 +89,52 @@ public class QuizResultsTable {
 		return getDate(resultid, "date");
 	}
 	
+	public int numOfQuizzesTakenHelper(Timestamp t) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(resultid) FROM results " 
+				+ "WHERE date > t");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	private static final long dayDuration = 24 * 60 * 60 * 1000;
+	private static final long weekDuration = 7 * 24 * 60 * 60 * 1000;
+	public int[] numOfQuizzesTaken() {
+		int[] numOfQuizzesTaken = new int[3];
+		
+		Timestamp lastDay = new Timestamp(System.currentTimeMillis() - dayDuration);
+		numOfQuizzesTaken[0] = numOfQuizzesTakenHelper(lastDay); 
+		
+		Timestamp lastWeek = new Timestamp(System.currentTimeMillis() - weekDuration);
+		numOfQuizzesTaken[1] = numOfQuizzesTakenHelper(lastWeek);  
+		
+		Timestamp allTime = new Timestamp(0);
+		numOfQuizzesTaken[2] = numOfQuizzesTakenHelper(allTime); 
+		return numOfQuizzesTaken;
+	}
+	
+	public double getHighScore(int quizid) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT score FROM results WHERE quizid = ? ORDER BY score DESC");
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) return rs.getDouble("score");
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		} 
+		return -1;
+	}
+	
 	/* HomePage related functions */
 	
 	
 	public ResultSet getRecentQuizzesTakenHelper(String username, int n, Timestamp t ) {
 		try {
-			PreparedStatement pstmt =  db.getPreparedStatement("SELECT * FROM results INNER JOIN quizes USING(quizid)"
+			PreparedStatement pstmt =  db.getPreparedStatement("SELECT * FROM results INNER JOIN quizzes USING(quizid)"
 					+ "WHERE date > ? AND username = ? ORDER BY date DESC LIMIT ?");
 			
 			pstmt.setTimestamp(1, t);
@@ -108,7 +150,7 @@ public class QuizResultsTable {
 	public ResultSet getPopularQuizzesHelper( String username, int n, Timestamp t ) {
 		try {
 			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results INNER JOIN quizes USING(quizid) "
+					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results INNER JOIN quizzes USING(quizid) "
 							+ "WHERE date > ? GROUP BY quizid ORDER BY quiz_count DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setInt(2, n);
@@ -130,7 +172,7 @@ public class QuizResultsTable {
 		try {
 			PreparedStatement pstmt = 
 					db.getPreparedStatement("SELECT *, COUNT(quizid) AS quiz_count FROM results "
-							+ "INNER JOIN quizes USING(quizid) "
+							+ "INNER JOIN quizzes USING(quizid) "
 							+ "WHERE date > ? GROUP BY quizid ORDER BY quiz_count DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
 			pstmt.setInt(2, n);
@@ -163,7 +205,7 @@ public class QuizResultsTable {
 		try {
 			PreparedStatement pstmt = 
 					db.getPreparedStatement("SELECT * FROM results "
-							+ "INNER JOIN quizes USING(quizid) "
+							+ "INNER JOIN quizzes USING(quizid) "
 							+ "WHERE date > ? AND username = ? "
 							+ "ORDER BY modifiedDate DESC LIMIT ?");
 			pstmt.setTimestamp(1, t);
