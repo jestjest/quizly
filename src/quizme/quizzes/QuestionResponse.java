@@ -97,13 +97,13 @@ public class QuestionResponse extends Question {
 	}
 
 	@Override
-	public void show( JspWriter out ) throws IOException {
+	public void show( JspWriter out, int questionIndex ) throws IOException {
 		out.append("<b>");
 		out.append(questionText);
 		out.append("</b>");
 		out.append("<br>");
 		out.append("Please enter your response here:<br>");
-		out.append("<input type='text' name='response_" + order + "'>");
+		out.append("<input type='text' name='response_" + questionIndex + "_0'>");
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class QuestionResponse extends Question {
 	}
 
 	@Override
-	public void setReponse(String response) {
+	public void setResponse(String response) {
 		responseText = response;
 		if ( correctAnswers.contains(responseText) ) {
 			points = 1;

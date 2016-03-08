@@ -22,7 +22,7 @@ public class FillBlank extends Question {
 
 	/**
 	 * Unprocessed string question.
-	 * It should include the "___" determining a blank space.
+	 * It should include the "_" determining a blank space.
 	 */
 	private String questionText;
 
@@ -112,11 +112,11 @@ public class FillBlank extends Question {
 	}
 	
 	@Override
-	public void show( JspWriter out ) throws IOException {
+	public void show( JspWriter out, int questionIndex ) throws IOException {
 		out.append("<b>");
 		out.append(leftText);
 		out.append("</b>");
-		out.append("<input type='text' name='response_" + order + "'>");
+		out.append("<input type='text' name='response_" + order + "_0'>");
 		out.append("<b>");
 		out.append(rightText);
 		out.append("</b>");
@@ -140,7 +140,7 @@ public class FillBlank extends Question {
 	 * [leftText] and [rightText].
 	 */
 	private void parseText() {
-		String[] output = questionText.split("___");
+		String[] output = questionText.split("_");
 		switch ( output.length ) {
 		case 0:
 			leftText = "";
@@ -177,7 +177,7 @@ public class FillBlank extends Question {
 	}
 
 	@Override
-	public void setReponse(String response) {
+	public void setResponse(String response) {
 		responseText = response;
 		if ( correctAnswers.contains( responseText ) ) {
 			points = 1;

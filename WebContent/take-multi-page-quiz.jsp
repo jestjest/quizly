@@ -27,20 +27,23 @@
 		</div>
 	</div>
 	
-	
-	INTERMEDIATE SERVLET 
-	
-	<form action='QuizResultsServlet' method='POST'>
+	<form action='UpdateQuizServlet' method='POST'>
 		<%
-			int questionIndex = (int) request.getAttribute("questionIndex"); %>
-			Question question = quiz.getQuestion(i);
-			out.println("Question " + (i+1) + ". ");
-			question.show(out);
+			int questionIndex = Integer.parseInt(request.getParameter("questionIndex")); %>
+			Question question = quiz.getQuestion(questionIndex - 1);
+			out.println("Question " + questionIndex + "). ");
+			question.show(out, questionIndex);
 		%>
-	
-		IF NOT LAST QUESTION, CHANGE BUTTON NAME AND VALUE	
-
-        <input type="submit" name="submit-quiz" value="I'm done!" class="btn btn-primary">
+		
+       	<input type='hidden' name='questionIndex' value='" + questionIndex + "'>
+		
+		<%
+		if (questionIndex == quiz.numOfQuestions() - 1) {
+        	out.println("<input type='submit' name='submit-quiz' value='Finish' class='btn btn-success'>");
+		} else {
+			out.println("<input type='submit' name='next-question' value='Next question' class='btn btn-primary'>");
+		}
+		%>
 	</form>
 
 </body>

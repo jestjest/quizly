@@ -34,7 +34,7 @@ public class Quiz {
 	}
 
 	public void setQuestion(Integer order, Question question) {
-		int index = questionIndexes.get(order);
+		int index = questionIndexes.indexOf(order);
 		questions.set(index, question);
 	}
 

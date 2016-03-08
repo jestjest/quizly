@@ -96,13 +96,14 @@ public class MultipleChoice extends Question {
 	}
 
 	@Override
-	public void show( JspWriter out ) throws IOException {
+	public void show( JspWriter out, int questionIndex ) throws IOException {
+		
 		out.append("<b>");
 		out.append(questionText);
 		out.append("</b>");
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-			String buttonName = "response_" + order + "_" + i;
+			String buttonName = "response_" + questionIndex + "_" + i;
 			out.append( makeRadioButton( buttonName, choices[i], false) );
 			out.append("<br>");
 		}
@@ -168,7 +169,7 @@ public class MultipleChoice extends Question {
 	}
 
 	@Override
-	public void setReponse(String response) {
+	public void setResponse(String response) {
 		this.response = Integer.parseInt(response);
 		if ( this.response == correctChoice ) {
 			points = 1;

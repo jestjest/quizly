@@ -47,7 +47,7 @@ public class QuizResultsServlet extends HttpServlet {
 		
 		// Stop the timer.
 		quiz.endTiming();
-		
+	
 		/* Should it be here ? */
 //		List<String> responses = (List<String>) request.getSession().getAttribute("responses");
 //		// corrects questions

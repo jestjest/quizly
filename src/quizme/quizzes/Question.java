@@ -72,7 +72,7 @@ public abstract class Question {
 	 * accordingly.
 	 * @param response
 	 */
-	public abstract void setReponse( String response );
+	public abstract void setResponse( String response );
 
 	/**
 	 * show the points user earned on this question.
@@ -104,7 +104,7 @@ public abstract class Question {
 	 * question contents on. We assume header info, etc. are already
 	 * written to the PrintWriter object, and it is in the <body> section.
 	 */
-	public void show( JspWriter out ) throws IOException {
+	public void show( JspWriter out, int questionIndex ) throws IOException {
 		out.append("<h1>Super question</h1>");
 	}
 

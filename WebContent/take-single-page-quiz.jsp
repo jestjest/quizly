@@ -31,8 +31,8 @@
 		<%
 		for (int i = 0; i < quiz.numOfQuestions(); i++) {
 			Question question = quiz.getQuestion(i);
-			out.println("Question " + (i+1) + ". ");
-			question.show(out);
+			out.println("Question " + (i+1) + "). ");
+			question.show(out, i+1);
 			out.println("<hr>");
 		}
 		%>
