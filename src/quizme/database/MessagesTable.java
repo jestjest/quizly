@@ -13,9 +13,9 @@ import quizme.links.MessageLink;
 public class MessagesTable {
 private DBConnection db;
 
-public static int NOTE = 1;
-public static int CHALLENGE = 2;
-public static int REQUEST = 3;
+public static final int NOTE = 1;
+public static final int CHALLENGE = 2;
+public static final int REQUEST = 3;
 	
 	public MessagesTable(DBConnection db) {
 		this.db = db;
@@ -24,7 +24,9 @@ public static int REQUEST = 3;
 	
 	private void createMessagesTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT AUTO_INCREMENT, toUsername VARCHAR(128), fromUsername VARCHAR(128), date Timestamp, content TEXT, subject VARCHAR(128), type INT, seen BOOL)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT 
+															+ "AUTO_INCREMENT, toUsername VARCHAR(128), fromUsername VARCHAR(128), "
+															+ "date Timestamp, content TEXT, subject VARCHAR(128), type INT, seen BOOL)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -79,6 +81,19 @@ public static int REQUEST = 3;
 			e.printStackTrace();
 		}
 	}
+	
+	public void removeChallenge(String toUsername, String fromUsername, String quizLink) {
+ 		try {
+ 			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ? AND subject = ?");
+ 			pstmt.setString(1, toUsername);
+ 			pstmt.setString(2, fromUsername);
+ 			pstmt.setInt(3, CHALLENGE);
+ 			pstmt.setString(4, quizLink);
+ 			pstmt.executeUpdate();
+ 		} catch (SQLException e) {
+  			e.printStackTrace();
+  		}
+  	}
 	
 	/* ONLY USE FOR TESTING */
 	public void clearAllMessages() {
