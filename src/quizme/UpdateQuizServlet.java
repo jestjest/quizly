@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import quizme.links.QuizSummaryInfo;
 import quizme.quizzes.*;
 
 
@@ -44,10 +45,10 @@ public class UpdateQuizServlet extends HttpServlet {
 		Question question = quiz.getQuestion(currentIndex - 1); 
 		/* adjust from 1-based indexing for questions in the jsp and
 		   zero-based indexing for questions in the quiz object */
-		question.setReponse(answer);
+		question.setResponse(answer);
 		
 		QuizSummaryInfo quizSummaryInfo = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");
-		bool immediateFeedback = quizSummaryInfo.immediateCorrection();
+		boolean immediateFeedback = quizSummaryInfo.immediateCorrection();
 		if (currentIndex < quiz.numOfQuestions()) {
 			if (immediateFeedback) {
 				request.getRequestDispatcher("question-feedback.jsp").forward(request, response);

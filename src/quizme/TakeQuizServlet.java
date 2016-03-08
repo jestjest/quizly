@@ -10,11 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import quizme.database.*;
 import quizme.links.*;
 import quizme.quizzes.*;
-
 import java.sql.*;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Servlet implementation class TakeQuizServlet
@@ -46,7 +42,7 @@ public class TakeQuizServlet extends HttpServlet {
 		int numOfQuestions = quizSummaryInfo.numOfQuestions();
 		boolean randomOrder = quizSummaryInfo.randomOrder();
 		
-		Quiz quiz = new Quiz(numOfQuestions, randomOrder);
+		Quiz quiz = new Quiz(numOfQuestions);
 		addQuestionResponseQuestions(request, quizid, quiz);
 		addFillBlankQuestions(request, quizid, quiz);
 		addMultipleChoiceQuestions(request, quizid, quiz);
