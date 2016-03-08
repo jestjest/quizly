@@ -7,11 +7,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.sql.*;
-
 import quizme.database.*;
-import quizme.quizzes.*;
 import quizme.links.*;
+import quizme.quizzes.*;
+
+import java.sql.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Servlet implementation class TakeQuizServlet
@@ -48,15 +51,16 @@ public class TakeQuizServlet extends HttpServlet {
 		addFillBlankQuestions(request, quizid, quiz);
 		addMultipleChoiceQuestions(request, quizid, quiz);
 		addPictureResponseQuestions(request, quizid, quiz);
+		/* TO DO: add new question types */
 			
+		if (randomOrder) quiz.randomizeQuestionOrder();
 		quiz.beginTiming();
 		request.getSession().setAttribute("quiz", quiz);
 		
 		if (quizSummaryInfo.onePage()) {
-			request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response);
+			request.getRequestDispatcher("take-quiz-single.jsp").forward(request, response); 
 		} else {
-			request.setAttribute("questionIndex", new Integer(1));
-			request.getRequestDispatcher("take-multi-page-quiz.jsp").forward(request, response);
+			request.getRequestDispatcher("take-quiz-multi.jsp?questionIndex=1").forward(request, response); 
 		}
 	}
 
