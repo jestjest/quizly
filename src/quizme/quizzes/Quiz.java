@@ -19,18 +19,17 @@ public class Quiz {
 	public Quiz(int numOfQuestions) {
 		this.numOfQuestions = numOfQuestions;
 		this.questions = new ArrayList<Question>(numOfQuestions);
-		setQuestionOrder();
 	}
 
-	public void setQuestion(Integer order, Question question) {
-		questions.set(order, question);
+	public void setQuestion(int index, Question question) {
+		questions.set(index, question);
 	}
 
 	public Question getQuestion(int index) {
 		return questions.get(index);
 	}
 
-	public randomizeQuestionOrder() {
+	public void randomizeQuestionOrder() {
 		Collections.shuffle(questions);
 	}
 	
