@@ -1,9 +1,12 @@
-package quizme.quizzes;
+package quizzes;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.jsp.JspWriter;
 
 
 public class TrueFalse extends Question {
@@ -108,6 +111,18 @@ public class TrueFalse extends Question {
 		maxPoints = choices.length; // Is this fair?
 	}
 	
+	public void show( JspWriter out ) throws IOException {
+		out.append("<b>");
+		out.append(questionText);
+		out.append("</b>");
+		out.append("<br>");
+		for ( int i = 0; i < choices.length; i++) {
+			String chechBoxName = "response_" + order + "_" + i;
+			out.append(makeCheckBox(chechBoxName,i));
+			out.append("<br>");
+		}
+	}
+	
 	@Override
 	public void answer( StringBuilder out ) {
 		out.append("<b>Question: </b>");
@@ -134,6 +149,11 @@ public class TrueFalse extends Question {
 		out.append("<br>");
 	}
 	
+	private String makeCheckBox( String name, int value) {
+		String s = "<input type='checkbox' name='" + name +
+				"' value='" + Integer.toString( value )+"'> " + choices[value];
+		return s;
+	}
 	@Override
 	public String[] columnNames() {
 		return columnNames;

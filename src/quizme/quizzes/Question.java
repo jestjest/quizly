@@ -1,4 +1,4 @@
-package quizme.quizzes;
+package quizzes;
 
 import java.io.IOException;
 import java.sql.ResultSet;

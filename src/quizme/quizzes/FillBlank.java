@@ -1,4 +1,4 @@
-package quizme.quizzes;
+package quizzes;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -116,7 +116,8 @@ public class FillBlank extends Question {
 		out.append("<b>");
 		out.append(leftText);
 		out.append("</b>");
-		out.append("<input type='text' name='response_" + order + "'>");
+		String name = "response_" + order + "_0";
+		out.append("<input type='text' name='"+name+"'>");
 		out.append("<b>");
 		out.append(rightText);
 		out.append("</b>");
