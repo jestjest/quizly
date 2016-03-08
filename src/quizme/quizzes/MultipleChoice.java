@@ -1,4 +1,4 @@
-package quizme.quizzes;
+package quizzes;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -103,8 +103,13 @@ public class MultipleChoice extends Question {
 		out.append("</b>");
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
+<<<<<<< HEAD
 			String buttonName = "response_" + questionIndex + "_" + i;
 			out.append( makeRadioButton( buttonName, choices[i], false) );
+=======
+			String buttonName = "response_" + order + "_0";
+			out.append( makeRadioButton( buttonName, i, false) );
+>>>>>>> 172aa24af794e0e466ad468ed5146faeff69891a
 			out.append("<br>");
 		}
 	}
@@ -115,8 +120,8 @@ public class MultipleChoice extends Question {
 		out.append(questionText);
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-			String buttonName = "response_" + order + "_" + i;
-			out.append( makeRadioButton( buttonName, choices[i], i == correctChoice ) );
+			String buttonName = "response_" + order + "_0";
+			out.append( makeRadioButton( buttonName, i, i == correctChoice ) );
 			if ( (i == response) && ( i == correctChoice ) ) {
 				out.append(" (answered correctly) ");
 			}
@@ -141,10 +146,10 @@ public class MultipleChoice extends Question {
 		choices = choicesText.split("\\s*~~~\\s*");
 	}
 	
-	private String makeRadioButton( String name, String value, Boolean check) {
+	private String makeRadioButton( String name, int value, Boolean check) {
 		String checkString = check ? "checked" : "";
 		String s = "<input type='radio' name='" + name +
-				"' value='" + value+"' "+ checkString + "> " + value;
+				"' value='" + Integer.toString(value)+"' "+ checkString + "> " + choices[value];
 		return s;
 	}
 	

@@ -1,10 +1,13 @@
 package quizme.quizzes;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.jsp.JspWriter;
 
 public class MultipleAnswers extends Question {
 
@@ -125,6 +128,29 @@ public class MultipleAnswers extends Question {
 		maxPoints = answerSlotsNum;
 	}
 
+	@Override
+	public void show( JspWriter out, int questionIndex ) throws IOException {
+		out.append("<b>");
+		out.append(questionText);
+		out.append("</b>");
+		out.append("<br>");
+		if ( ordered ) {
+			out.append("<ol>");
+		}
+		else {
+			out.append("<ul>");
+		}
+		for ( int i = 0; i < answerSlotsNum; i++) {
+			String name = "response_" + questionIndex + "_" + i;
+			out.append("<li><input type='text' name='"+ name + "'></li>");
+		}
+		if ( ordered ) {
+			out.append("</ol><br>");
+		}
+		else {
+			out.append("</ul><br>");
+		}
+	}
 
 	@Override
 	public void answer( StringBuilder out ) {
@@ -176,7 +202,7 @@ public class MultipleAnswers extends Question {
 	}
 
 	@Override
-	public void setReponse(String responseText) {
+	public void setResponse(String responseText) {
 		responses = Arrays.asList( responseText.split("\\s*|||\\s*") );
 		points = 0;
 		if ( ordered ) {
