@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import quizme.database.*;
 import quizme.links.WebsiteStats;
 
-
 /**
  * Servlet implementation class AdminServlet
  */

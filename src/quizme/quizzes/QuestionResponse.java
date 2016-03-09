@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.servlet.jsp.JspWriter;
 
 public class QuestionResponse extends Question {

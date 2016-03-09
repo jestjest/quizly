@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-
 import javax.servlet.jsp.JspWriter;
 
 public class MultipleChoice extends Question {

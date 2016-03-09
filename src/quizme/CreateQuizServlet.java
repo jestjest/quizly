@@ -67,7 +67,7 @@ public class CreateQuizServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		CHECK ACHIEVEMENTS
+		//CHECK ACHIEVEMENTS
 		
 	}
 	
