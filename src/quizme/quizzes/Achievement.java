@@ -19,9 +19,8 @@ public class Achievement {
 	private static final int MAX_NUM_OF_QUIZZES_CREATED = 10;
 	private static final int MAX_NUM_OF_QUIZZES_TAKEN = 20;
 	
-	/* Check for new achievements after a user has created a quiz
-	   and the quiz table has been updated */
-	public List<AchievementGuidelinesData> checkForCreateAchievements(String username, QuizTable quizTable, 
+	/* Check for new achievements after a user has created a quiz and the quiz table has been updated */
+	public static List<AchievementGuidelinesData> checkForCreateAchievements(String username, QuizTable quizTable, 
 													AchievementsTable achievementsTable, 
 													AchievementGuidelinesTable guidelinesTable) {
 		List<AchievementGuidelinesData> list = new ArrayList<AchievementGuidelinesData>();
@@ -45,7 +44,8 @@ public class Achievement {
 		return list;
 	}
 	
-	public List<AchievementGuidelinesData> checkForTakeAchievements(String username, QuizResultsTable resultsTable,
+	/* Check for new achievements after a user has finished the quiz and the quiz results table has been updated */
+	public static List<AchievementGuidelinesData> checkForTakeAchievements(String username, QuizResultsTable resultsTable,
 									AchievementsTable achievementsTable, AchievementGuidelinesTable guidelinesTable) {
 		List<AchievementGuidelinesData> list = new ArrayList<AchievementGuidelinesData>();
 		Timestamp allTime = new Timestamp(0);
@@ -68,7 +68,7 @@ public class Achievement {
 	}
 	
 	private static final String HIGH_SCORE_ACHIEVEMENT_NAME = "I Am The Greatest!";
-	public AchievementGuidelinesData checkForHighScore(String username, double score, int quizid, QuizResultsTable resultsTable,
+	public AchievementGuidelinesData checkForHighScoreAchievement(String username, double score, int quizid, QuizResultsTable resultsTable,
 													   AchievementsTable achievementsTable, AchievementGuidelinesTable guidelinesTable) {
 		if (!achievementsTable.hasAchievement(username, HIGH_SCORE_ACHIEVEMENT_NAME) && 
 			score >= resultsTable.getHighScore(quizid)) {
@@ -80,8 +80,8 @@ public class Achievement {
 		}
 	}
 	
-	private String PRACTICE_ACHIEVEMENT_NAME = "Practice Makes Perfect";
-	public AchievementGuidelinesData checkForPracticeMode(String username, AchievementsTable achievementsTable,
+	private static final String PRACTICE_ACHIEVEMENT_NAME = "Practice Makes Perfect";
+	public static AchievementGuidelinesData checkForPracticeModeAchievement(String username, AchievementsTable achievementsTable,
 														  AchievementGuidelinesTable guidelinesTable) {
 		if (!achievementsTable.hasAchievement(username, PRACTICE_ACHIEVEMENT_NAME)) {
 			Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -92,7 +92,7 @@ public class Achievement {
 		}
 	}
 	
-	public AchievementGuidelinesData getAchievementGuidelinesData(String name, AchievementGuidelinesTable guidelinesTable) {
+	public static AchievementGuidelinesData getAchievementGuidelinesData(String name, AchievementGuidelinesTable guidelinesTable) {
 		ResultSet rs = guidelinesTable.getAchievementGuidelineByName(name);
 		try {
 			AchievementGuidelinesData data = new AchievementGuidelinesData(name, rs.getString("pictureURL"), rs.getString("description"));
@@ -103,7 +103,7 @@ public class Achievement {
 		return null;
 	}
 	
-	public class AchievementGuidelinesData {
+	public static class AchievementGuidelinesData {
 		public final String name;
 		public final String pictureURL;
 		public final String description;

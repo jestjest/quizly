@@ -29,6 +29,10 @@ public class Quiz {
 		return questions.get(index);
 	}
 
+	public void removeQuestion(Question question) {
+		questions.remove(question);	
+	}
+	
 	public void randomizeQuestionOrder() {
 		Collections.shuffle(questions);
 	}
@@ -70,6 +74,12 @@ public class Quiz {
 	 */
 	public int numOfQuestions() {
 		return numOfQuestions;
+	}
+	
+	/* accounts for questions that have been removed from the quiz
+	  in practice mode */
+	public int numOfQuestionsRemaining() {
+		return questions.size();
 	}
 	
 }
