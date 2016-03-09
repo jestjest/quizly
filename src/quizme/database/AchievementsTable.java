@@ -99,6 +99,35 @@ public class AchievementsTable {
 		return null;
 	}
 
+	public int numOfAchievementsHelper(Timestamp t) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(username) FROM achievements " 
+				+ "WHERE date > t");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	private static final long dayDuration = 24 * 60 * 60 * 1000;
+	private static final long weekDuration = 7 * 24 * 60 * 60 * 1000;
+	public int[] numOfAchievements() {
+		int[] numOfAchievements = new int[3];
+		
+		Timestamp lastDay = new Timestamp(System.currentTimeMillis() - dayDuration);
+		numOfAchievements[0] = numOfAchievementsHelper(lastDay); 
+		
+		Timestamp lastWeek = new Timestamp(System.currentTimeMillis() - weekDuration);
+		numOfAchievements[1] = numOfAchievementsHelper(lastWeek);  
+		
+		Timestamp allTime = new Timestamp(0);
+		numOfAchievements[2] = numOfAchievementsHelper(allTime); 
+		return numOfAchievements;
+	}
+	
 	/* HomePage related functions */
 	/**
 	 * Provide chronologically ordered list of all achievements of a user

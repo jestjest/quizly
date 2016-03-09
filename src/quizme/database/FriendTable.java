@@ -83,6 +83,18 @@ private DBConnection db;
 		return false; /* indicates database error */
 	}
 	
+	public int numOfFriendRelationships() {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(username1) FROM friends");
+			ResultSet rs = pstmt.executeQuery();
+			rs.first();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
 	public List<String> friendsList(String username) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM friends WHERE username1 = ? UNION ALL "

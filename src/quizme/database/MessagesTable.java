@@ -24,10 +24,9 @@ public static final int REQUEST = 3;
 	
 	private void createMessagesTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
-					+ "messages (messageid INT, toUsername VARCHAR(128), "
-					+ "fromUsername VARCHAR(128), date Timestamp, content TEXT, "
-					+ "subject VARCHAR(128), type INT, seen BOOL)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS messages (messageid INT AUTO_INCREMENT "
+															+ "primary key NOT NULL, toUsername VARCHAR(128), fromUsername VARCHAR(128), "
+															+ "date Timestamp, content TEXT, subject VARCHAR(128), type INT, seen BOOL)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -41,21 +40,19 @@ public static final int REQUEST = 3;
 				return -1;
 			}
 			
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT messageid FROM messages");
-			ResultSet rs = pstmt1.executeQuery();
-			rs.last();
-			int messageid = rs.getRow() + 1;
+			PreparedStatement pstmt1 = db.getPreparedStatement("INSERT INTO messages (toUsername, fromUsername, date, content, subject, type, seen) VALUES(?, ?, ?, ?, ?, ?, 0)");
+			pstmt1.setString(1, toUsername);
+			pstmt1.setString(2, fromUsername);
+			pstmt1.setTimestamp(3, date);
+			pstmt1.setString(4, content);
+			pstmt1.setString(5, subject);
+			pstmt1.setInt(6, type);
+			pstmt1.executeUpdate();
 			
-			PreparedStatement pstmt2 = db.getPreparedStatement("INSERT INTO messages VALUES(?, ?, ?, ?, ?, ?, ?, 0)");
-			pstmt2.setInt(1, messageid);
-			pstmt2.setString(2, toUsername);
-			pstmt2.setString(3, fromUsername);
-			pstmt2.setTimestamp(4, date);
-			pstmt2.setString(5, content);
-			pstmt2.setString(6, subject);
-			pstmt2.setInt(7, type);
-			pstmt2.executeUpdate();
-			return messageid;
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT messageid FROM messages SORT BY messageid ASC");
+			ResultSet rs = pstmt2.executeQuery();
+			rs.last();
+			return rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -71,6 +68,32 @@ public static final int REQUEST = 3;
 			e.printStackTrace();
 		}
 	}
+	
+	public void removeRequestMessage(String toUsername, String fromUsername) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM messages WHERE toUsername = ? AND fromUsername = ? "
+					+ "AND type = ?");
+			pstmt.setString(1, toUsername);
+			pstmt.setString(2, fromUsername);
+			pstmt.setInt(3, REQUEST);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeChallenge(String toUsername, String fromUsername, String quizLink) {
+ 		try {
+ 			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ? AND subject = ?");
+ 			pstmt.setString(1, toUsername);
+ 			pstmt.setString(2, fromUsername);
+ 			pstmt.setInt(3, CHALLENGE);
+ 			pstmt.setString(4, quizLink);
+ 			pstmt.executeUpdate();
+ 		} catch (SQLException e) {
+  			e.printStackTrace();
+  		}
+  	}
 	
 	/* ONLY USE FOR TESTING */
 	public void clearAllMessages() {
@@ -123,6 +146,35 @@ public static final int REQUEST = 3;
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public int numOfMessagesHelper(Timestamp t) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(messageid) FROM messages" 
+				+ "WHERE date > t");
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	private static final long dayDuration = 24 * 60 * 60 * 1000;
+	private static final long weekDuration = 7 * 24 * 60 * 60 * 1000;
+	public int[] numOfMessages() {
+		int[] numOfMessages = new int[3];
+		
+		Timestamp lastDay = new Timestamp(System.currentTimeMillis() - dayDuration);
+		numOfMessages[0] = numOfMessagesHelper(lastDay); 
+		
+		Timestamp lastWeek = new Timestamp(System.currentTimeMillis() - weekDuration);
+		numOfMessages[1] = numOfMessagesHelper(lastWeek);  
+		
+		Timestamp allTime = new Timestamp(0);
+		numOfMessages[2] = numOfMessagesHelper(allTime); 
+		return numOfMessages;
 	}
 	
 	/* HomePage related functions */
@@ -183,34 +235,30 @@ public static final int REQUEST = 3;
 	}
 	
 	/**
-	 * Removes a friend request message send from one user to another.
+	 * Check if username1 has requested to be friend with username2
+	 * @param username1
+	 * @param username2
+	 * @return true/false, null if exception occurs.
 	 */
-	public void removeRequestMessage(String toUsername, String fromUsername) {
+	public Boolean hasRequested( String username1, String username2 ) {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ?");
-			pstmt.setString(1, toUsername);
-			pstmt.setString(2, fromUsername);
-			pstmt.setInt(3, REQUEST);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
+			PreparedStatement pstmt = 
+					db.getPreparedStatement("SELECT * FROM messages "
+							+ "WHERE fromUsername = ? AND toUsername = ? AND type = 3");
+			pstmt.setString(1, username1);
+			pstmt.setString(1, username2);
+			ResultSet rs = pstmt.executeQuery(); // Query
+			rs.last();
+			if ( rs.getRow() > 0 ) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch( SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Returns whether a user has set a challenge request to another user for a specific quiz.
-	 */
-	public void removeChallenge(String toUsername, String fromUsername, String quizLink) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE from messages WHERE toUsername = ? AND fromUsername = ? AND type = ? AND subject = ?");
-			pstmt.setString(1, toUsername);
-			pstmt.setString(2, fromUsername);
-			pstmt.setInt(3, CHALLENGE);
-			pstmt.setString(4, quizLink);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		return null;
 	}
 	
 	/* helper functions */

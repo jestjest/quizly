@@ -7,14 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
-
 import quizme.database.*;
-import quizme.quizzes.*;
+import java.sql.*;
+
 
 /**
  * Servlet implementation class ManageAdminServlet
@@ -56,7 +51,7 @@ public class ManageAdminServlet extends HttpServlet {
 		} else if (request.getParameter("remove-quiz-results") != null) {
 			removeQuizResults(request);
 		}
-		request.getRequestDispatcher("admin.jsp").forward(request, response); /* confirm jsp name */
+		request.getRequestDispatcher("admin.jsp").forward(request, response); 
 	}
 
 	private void addAnnouncement(HttpServletRequest request) {
@@ -90,13 +85,13 @@ public class ManageAdminServlet extends HttpServlet {
 	
 	private void removeQuiz(HttpServletRequest request) {
 		QuizTable quizTable = (QuizTable) request.getServletContext().getAttribute("quizTable");
-		int quizid = Integer.parseInt(request.getParameter("quizid"));
-		quizTable.removeQuiz(quizid);
+		String quizName = request.getParameter("quizName");
+		quizTable.removeQuizByName(quizName);
 	}
 	
 	private void removeQuizResults(HttpServletRequest request) {
 		QuizResultsTable resultsTable = (QuizResultsTable) request.getServletContext().getAttribute("resultsTable");
-		int quizid = Integer.parseInt(request.getParameter("quizid"));
-		resultsTable.removeAllQuizResults(quizid);
+		String quizName = request.getParameter("quizName");
+		resultsTable.removeAllQuizResultsByName(quizName);
 	}
 }

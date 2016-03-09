@@ -2,6 +2,7 @@ package quizme.database;
 
 import java.sql.*;
 import java.util.*;
+
 import quizme.DBConnection;
 
 public class UsersTable {
@@ -104,6 +105,18 @@ public class UsersTable {
 		}
 		return null; /* indicates a database error */
 		
+	}
+	
+	public int numOfUsers() {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(username) FROM users");
+			ResultSet rs = pstmt.executeQuery();
+			rs.first();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	/* helper functions */
