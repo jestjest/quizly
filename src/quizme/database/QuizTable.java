@@ -18,7 +18,7 @@ public class QuizTable {
 	private void createQuizTable() {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS quizzes"
-					+ " (quizid INT AUTO_INCREMENT, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
+					+ " (quizid INT AUTO_INCREMENT primary key NOT NULL, name VARCHAR(128), description VARCHAR(128), numOfQuestions INT, randomOrder BOOL, "
 					+ "onePage BOOL, immediateCorrection BOOL, practiceMode BOOL, "
 					+ "creatorUsername VARCHAR(128), modifiedDate DATETIME, numOfTimesTaken INT)");
 			pstmt.executeUpdate();
@@ -45,7 +45,7 @@ public class QuizTable {
 			pstmt1.setInt(10, numOfTimesTaken);
 			pstmt1.executeUpdate();
 
-			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT quizid FROM quizzes SORT BY quizid ASC");
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT quizid FROM quizzes ORDER BY quizid ASC");
 			ResultSet rs = pstmt2.executeQuery();
 			rs.last();
 			return rs.getRow() + 1;

@@ -21,7 +21,7 @@ public class AnnouncementsTable {
 	private void createAnnouncementTable() {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS "
-					+ "announcements (announcementid INT AUTO_INCREMENT, message TEXT, "
+					+ "announcements (announcementid INT AUTO_INCREMENT primary key NOT NULL, message TEXT, "
 					+ "subject VARCHAR(128), date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {

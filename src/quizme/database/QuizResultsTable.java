@@ -17,7 +17,8 @@ public class QuizResultsTable {
 	
 	private void createQuizResultsTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT AUTO_INCREMENT, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date DATETIME)");
+			PreparedStatement pstmt = db.getPreparedStatement("CREATE TABLE IF NOT EXISTS results (resultid INT AUTO_INCREMENT primary key "
+											+ "NOT NULL	, quizid INT, username VARCHAR(128), score DECIMAL(6, 3), time BIGINT, date DATETIME)");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
