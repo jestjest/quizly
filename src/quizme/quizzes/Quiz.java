@@ -62,7 +62,7 @@ public class Quiz {
 		int sTot = 0;
 		for ( Question q: questions ) {
 			s += q.points();
-			sTot += q.points();
+			sTot += q.maxPoints();
 		}
 		score = ((float) s)/((float) sTot) * 100;
 	}

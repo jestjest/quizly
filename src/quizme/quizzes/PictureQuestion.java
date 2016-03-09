@@ -106,16 +106,21 @@ public class PictureQuestion extends Question {
 	}
 
 	@Override
-	public void answer( StringBuilder out ) {
-		out.append("<img src='"+ pictureURL+"' alt='Sorry! Image not found.'><br>");
+	public void answerSummary ( JspWriter out, int questionIndex ) throws IOException {
+		if (points == maxPoints) {
+			out.append("<p>Good job! You got it right!</p>");
+		}
+		
+		out.append("<b>Question" + questionIndex + ": </b>");
+		out.append("<img src='"+ pictureURL + "' alt='Sorry! Image not found.'><br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
 		out.append("<br>");
-		out.append("<b>Correct answer: </b>");
+		out.append("<b>Preferred answer: </b>");
 		out.append(correctResponseText);
 		out.append("<br>");
-		out.append("<b>Your points: </b>");
-		out.append( Integer.toString( points) );
+		out.append("<b>Points: </b>");
+		out.append( Integer.toString(points) + " out of " + maxPoints);
 		out.append("<br>");
 	}
 

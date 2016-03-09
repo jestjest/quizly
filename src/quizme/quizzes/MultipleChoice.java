@@ -1,4 +1,4 @@
-package quizzes;
+package quizme.quizzes;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -103,24 +103,23 @@ public class MultipleChoice extends Question {
 		out.append("</b>");
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-<<<<<<< HEAD
 			String buttonName = "response_" + questionIndex + "_" + i;
-			out.append( makeRadioButton( buttonName, choices[i], false) );
-=======
-			String buttonName = "response_" + order + "_0";
 			out.append( makeRadioButton( buttonName, i, false) );
->>>>>>> 172aa24af794e0e466ad468ed5146faeff69891a
 			out.append("<br>");
 		}
 	}
 	
 	@Override
-	public void answer( StringBuilder out ) {
-		out.append("<b>Question: </b>");
+	public void answerSummary( JspWriter out, int questionIndex) throws IOException {
+		if (points == maxPoints) {
+			out.append("<p>Good job! You got it right!</p>");
+		}
+		
+		out.append("<b>Question" + questionIndex + ": </b>");
 		out.append(questionText);
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-			String buttonName = "response_" + order + "_0";
+			String buttonName = "response_" + questionIndex + i;
 			out.append( makeRadioButton( buttonName, i, i == correctChoice ) );
 			if ( (i == response) && ( i == correctChoice ) ) {
 				out.append(" (answered correctly) ");
@@ -133,11 +132,10 @@ public class MultipleChoice extends Question {
 			}
 			out.append("<br>");
 		}
-
-		out.append("<b>Your points: </b>");
-		out.append( Integer.toString( points) );
-		out.append("<br>");
-	}
+		
+		out.append("<b>Points: </b>");
+		out.append( Integer.toString(points) + " out of " + maxPoints);
+		out.append("<br>");	}
 	
 	/**
 	 * Use choicesText and create the array of choice texts.

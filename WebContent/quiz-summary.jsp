@@ -121,6 +121,8 @@
 		out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + performance.time + " seconds.</p>");
 	}
 	%>
+	
+	<hr>
 
 </body>
 </html>

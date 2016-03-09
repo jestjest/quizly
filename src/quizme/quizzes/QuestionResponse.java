@@ -107,21 +107,27 @@ public class QuestionResponse extends Question {
 	}
 
 	@Override
-	public void answer( StringBuilder out ) {
-		out.append("<b>Question: </b>");
+	public void answerSummary( JspWriter out, int questionIndex) throws IOException  {
+		if (points == maxPoints) {
+			out.append("<p>Good job! You got it right!</p>");
+		} else {
+			out.append("<p>Looks like you didn't get question " + questionIndex + "completely right.</p>");
+		}
+		
+		out.append("<b>Question" + questionIndex + ": </b>");
 		out.append(questionText);
 		out.append("<br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
 		out.append("<br>");
-		out.append("<b>Correct answer: </b>");
+		out.append("<b>Preferred answer: </b>");
 		out.append(correctResponseText);
 		out.append("<br>");
-		out.append("<b>Your points: </b>");
-		out.append( Integer.toString( points) );
+		out.append("<b>Points: </b>");
+		out.append( Integer.toString(points) + " out of " + maxPoints);
 		out.append("<br>");
 	}
-
+	
 	@Override
 	public String[] columnNames() {
 		return columnNames;

@@ -123,15 +123,20 @@ public class FillBlank extends Question {
 	}
 
 	@Override
-	public void answer( StringBuilder out ) {
-		out.append("<b>Question filled with correct answer: </b><br>");
+	public void answerSummary( JspWriter out, int questionIndex) throws IOException  {
+		if (points == maxPoints) {
+			out.append("<p>Good job! You got it right!</p>");
+		}
+		
+		out.append("<b>Question" + questionIndex + ": </b>");
+		out.append("Question filled with preferred answer: <br>");
 		out.append(leftText+" <b>"+correctResponseText+"</b> " + rightText);
 		out.append("<br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
 		out.append("<br>");
-		out.append("<b>Your points: </b>");
-		out.append( Integer.toString( points) );
+		out.append("<b>Points: </b>");
+		out.append( Integer.toString(points) + " out of " + maxPoints);
 		out.append("<br>");
 	}
 

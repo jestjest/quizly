@@ -66,9 +66,12 @@ public class CreateQuizServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		CHECK ACHIEVEMENTS
+		
 	}
 	
-	private void addQuestions(int quizID, NodeList questions, ServletContext context) {
+	public void addQuestions(int quizID, NodeList questions, ServletContext context) {
 		QuestionResponseTable qrTable = (QuestionResponseTable) context.getAttribute("qrTable");
 		FillInTheBlankTable blankTable = (FillInTheBlankTable) context.getAttribute("blankTable");
 		MultipleChoiceQuestionTable mcTable = (MultipleChoiceQuestionTable) context.getAttribute("mcTable");

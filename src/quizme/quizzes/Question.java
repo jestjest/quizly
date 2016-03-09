@@ -131,9 +131,10 @@ public abstract class Question {
 	/**
 	 * Present a summary of the question and user answer.
 	 * @param out a StringBuilder used to write contents.
+	 * @throws IOException 
 	 * @see #answer(java.io.PrintWriter)
 	 */
-	public void answerSummary( StringBuilder out ) {
+	public void answerSummary( JspWriter out, int questionIndex) throws IOException {
 		out.append("Super answer summary");
 	}
 
