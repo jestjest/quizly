@@ -68,7 +68,7 @@ public class Achievement {
 	}
 	
 	private static final String HIGH_SCORE_ACHIEVEMENT_NAME = "I Am The Greatest!";
-	public AchievementGuidelinesData checkForHighScoreAchievement(String username, double score, int quizid, QuizResultsTable resultsTable,
+	public static AchievementGuidelinesData checkForHighScoreAchievement(String username, double score, int quizid, QuizResultsTable resultsTable,
 													   AchievementsTable achievementsTable, AchievementGuidelinesTable guidelinesTable) {
 		if (!achievementsTable.hasAchievement(username, HIGH_SCORE_ACHIEVEMENT_NAME) && 
 			score >= resultsTable.getHighScore(quizid)) {
