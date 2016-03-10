@@ -95,6 +95,7 @@ public class Achievement {
 	public static AchievementGuidelinesData getAchievementGuidelinesData(String name, AchievementGuidelinesTable guidelinesTable) {
 		ResultSet rs = guidelinesTable.getAchievementGuidelineByName(name);
 		try {
+			rs.first();
 			AchievementGuidelinesData data = new AchievementGuidelinesData(name, rs.getString("pictureURL"), rs.getString("description"));
 			return data;
 		} catch (SQLException e) {

@@ -61,7 +61,12 @@ public class Quiz {
 			s += q.points();
 			sTot += q.maxPoints();
 		}
-		score = ((float) s)/((float) sTot) * 100;
+		if ( sTot!=0 ) {
+			score = ((float) s)/((float) sTot) * 100;
+		}
+		else {
+			score = 0;
+		}
 	}
 	
 	/**
