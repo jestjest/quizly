@@ -19,8 +19,8 @@ import quizme.links.*;
 @WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Timestamp fromTime = new Timestamp(1970, 1, 1, 0, 0, 0, 0);
-	private static final int limit = 10000;  
+	private static final Timestamp fromTime = new Timestamp(0);
+	private static final int limit = Integer.MAX_VALUE;  
 	
 	/**
 	 * @see HttpServlet#HttpServlet()

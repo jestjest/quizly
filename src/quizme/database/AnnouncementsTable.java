@@ -78,7 +78,7 @@ public class AnnouncementsTable {
         List<AnnouncementLink> announcementLinks = new ArrayList<AnnouncementLink>();
         try {
             while ( rs.next() ) {
-                AnnouncementLink announcementLink = new AnnouncementLink( rs.getString("subject"),
+                AnnouncementLink announcementLink = new AnnouncementLink(rs.getInt("announcementid"), rs.getString("subject"),
                         rs.getString("message"), rs.getTimestamp("date") );
                 announcementLinks.add( announcementLink );
             }

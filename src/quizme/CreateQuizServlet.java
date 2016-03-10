@@ -77,7 +77,7 @@ public class CreateQuizServlet extends HttpServlet {
 		}
 	}
 	
-	public void addQuestions(int quizID, NodeList questions, ServletContext context) {
+	public static void addQuestions(int quizID, NodeList questions, ServletContext context) {
 		QuestionResponseTable qrTable = (QuestionResponseTable) context.getAttribute("qrTable");
 		FillInTheBlankTable blankTable = (FillInTheBlankTable) context.getAttribute("blankTable");
 		MultipleChoiceQuestionTable mcTable = (MultipleChoiceQuestionTable) context.getAttribute("mcTable");
@@ -108,7 +108,7 @@ public class CreateQuizServlet extends HttpServlet {
 		}
 	}
 
-	private void addPictureResponse(int quizID, int questionOrder, Element questionElem, PictureResponseQuestionTable pictureTable) {
+	private static void addPictureResponse(int quizID, int questionOrder, Element questionElem, PictureResponseQuestionTable pictureTable) {
 		String imageLocation = questionElem.getElementsByTagName("image-location").item(0).getTextContent();
 		NodeList answerList = questionElem.getElementsByTagName("answer");
 		
@@ -118,7 +118,7 @@ public class CreateQuizServlet extends HttpServlet {
 		pictureTable.addQuestion(quizID, questionOrder, answers, preferred, imageLocation);
 	}
 	
-	private void addMultipleChoice(int quizID, int questionOrder, Element questionElem, MultipleChoiceQuestionTable mcTable) {
+	private static void addMultipleChoice(int quizID, int questionOrder, Element questionElem, MultipleChoiceQuestionTable mcTable) {
 		String question = questionElem.getElementsByTagName("query").item(0).getTextContent();
 		NodeList choiceList = questionElem.getElementsByTagName("option");
 		
@@ -128,7 +128,7 @@ public class CreateQuizServlet extends HttpServlet {
 		mcTable.addQuestion(quizID, questionOrder, question, choices, correctAnswer);
 	}
 
-	private void addFillInBlank(int quizID, int questionOrder, Element questionElem, FillInTheBlankTable blankTable) {
+	private static void addFillInBlank(int quizID, int questionOrder, Element questionElem, FillInTheBlankTable blankTable) {
 		String preQuestion = questionElem.getElementsByTagName("pre").item(0).getTextContent();
 		String postQuestion = questionElem.getElementsByTagName("post").item(0).getTextContent();
 		NodeList answerList = questionElem.getElementsByTagName("answer");
@@ -139,7 +139,7 @@ public class CreateQuizServlet extends HttpServlet {
 		blankTable.addQuestion(quizID, questionOrder, preQuestion, postQuestion, answers, preferred);
 	}
 
-	private void addQuestionResponse(int quizID, int questionOrder, Element questionElem, QuestionResponseTable qrTable) {
+	private static void addQuestionResponse(int quizID, int questionOrder, Element questionElem, QuestionResponseTable qrTable) {
 		String question = questionElem.getElementsByTagName("query").item(0).getTextContent();
 		NodeList answerList = questionElem.getElementsByTagName("answer");
 		
@@ -149,7 +149,7 @@ public class CreateQuizServlet extends HttpServlet {
 		qrTable.addQuestion(quizID, questionOrder, question, answers, preferred);
 	}
 
-	private int addQuiz(Document quiz, int numQuestions, String creator, QuizTable quizTable) {
+	public static int addQuiz(Document quiz, int numQuestions, String creator, QuizTable quizTable) {
 		boolean random = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("random"));
 		boolean immediateCorrection = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("immediate-correction"));
 		boolean onePage = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("one-page"));
@@ -167,7 +167,7 @@ public class CreateQuizServlet extends HttpServlet {
 				random, immediateCorrection, onePage, practiceMode, 0);
 	}
 	
-	private int populateAnswers(ArrayList<String> answers, NodeList answerList) {
+	private static int populateAnswers(ArrayList<String> answers, NodeList answerList) {
 		int preferred = 0;
 		for (int i = 0; i < answerList.getLength(); i++) {
 			Element answer = (Element) answerList.item(i);
@@ -178,7 +178,7 @@ public class CreateQuizServlet extends HttpServlet {
 		return preferred;
 	}
 	
-	private int populateChoices(ArrayList<String> choices, NodeList choiceList) {
+	private static int populateChoices(ArrayList<String> choices, NodeList choiceList) {
 		int correct = 0;
 		for (int i = 0; i < choiceList.getLength(); i++) {
 			Element choice = (Element) choiceList.item(i);

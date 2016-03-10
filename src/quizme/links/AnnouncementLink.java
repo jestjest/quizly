@@ -3,6 +3,10 @@ package quizme.links;
 import java.sql.Timestamp;
 
 public class AnnouncementLink {
+	/**
+	 * The id of the announcement.
+	 */
+	private int announcementID;
 	
 	/**
 	 * The subject of the announcement.
@@ -19,14 +23,23 @@ public class AnnouncementLink {
 	 */
 	private Timestamp date;
 	
-	public AnnouncementLink( String subject, String content, Timestamp date) {
+	public AnnouncementLink( int id, String subject, String content, Timestamp date) {
+		this.announcementID = id;
 		this.subject = subject;
 		this.content = content;
 		this.date = date;
 	}
 	
 	/**
-	 * Returns the subject of announcement/
+	 * Returns the id of announcement.
+	 * @return
+	 */
+	public int announcementID() {
+		return announcementID;
+	}
+	
+	/**
+	 * Returns the subject of announcement.
 	 * @return
 	 */
 	public String subject() {
