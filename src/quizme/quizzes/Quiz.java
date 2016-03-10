@@ -18,7 +18,9 @@ public class Quiz {
 
 	public Quiz(int numOfQuestions) {
 		this.numOfQuestions = numOfQuestions;
-		this.questions = new ArrayList<Question>(numOfQuestions);
+		this.questions = new ArrayList<Question>();
+		for (int i = 0; i < numOfQuestions; i++)
+			questions.add(null);
 	}
 
 	public void setQuestion(int index, Question question) {

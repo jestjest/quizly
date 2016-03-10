@@ -6,6 +6,7 @@ import java.util.List;
 
 import quizme.DBConnection;
 import quizme.links.QuizLink;
+import quizme.links.SummaryStat;
 
 public class QuizResultsTable {
 	private DBConnection db;
@@ -35,7 +36,7 @@ public class QuizResultsTable {
 			pstmt1.setTimestamp(5, date); 
 			pstmt1.executeUpdate();
 			
-			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT resultid FROM results SORT BY resultid ASC");
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT resultid FROM results ORDER BY resultid ASC");
 			ResultSet rs = pstmt2.executeQuery();
 			rs.last();
 			return rs.getInt(1);

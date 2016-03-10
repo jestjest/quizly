@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import database.QuizTable;
-import links.QuizLink;
+import quizme.database.QuizTable;
+import quizme.links.QuizLink;
 
 /**
  * Servlet implementation class QuizDirectoryServlet

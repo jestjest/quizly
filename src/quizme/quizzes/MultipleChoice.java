@@ -102,7 +102,7 @@ public class MultipleChoice extends Question {
 		out.append("</b>");
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
-			String buttonName = "response_" + questionIndex + "_" + i;
+			String buttonName = "response_" + questionIndex + "_" + 0;
 			out.append( makeRadioButton( buttonName, i, false) );
 			out.append("<br>");
 		}
@@ -112,6 +112,8 @@ public class MultipleChoice extends Question {
 	public void answerSummary( JspWriter out, int questionIndex) throws IOException {
 		if (points == maxPoints) {
 			out.append("<p>Good job! You got it right!</p>");
+		} else {
+			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
 		out.append("<b>Question" + questionIndex + ": </b>");

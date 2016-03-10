@@ -2,6 +2,7 @@ package quizme;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class UpdateQuizServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Integer currentIndex = Integer.getInteger(request.getParameter("questionIndex")); 
+		Integer currentIndex = Integer.parseInt(request.getParameter("questionIndex")); 
 		Quiz quiz = (Quiz) request.getSession().getAttribute("quiz");
 		Question question = quiz.getQuestion(currentIndex - 1); 
 		/* adjust from 1-based indexing for questions in the jsp and

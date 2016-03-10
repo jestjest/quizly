@@ -87,7 +87,7 @@ public class FillBlank extends Question {
 		leftText = rs.getString( columnNames[2] );
 		rightText = rs.getString(columnNames[3]);
 		String answers = rs.getString( columnNames[4] );
-		correctAnswers = Arrays.asList(answers, "\\s*~~~\\s*");
+		correctAnswers = Arrays.asList(answers.split("\\s*~~~\\s*"));
 		int preferredAnswer = rs.getInt(columnNames[5]);
 		correctResponseText = correctAnswers.get(preferredAnswer);
 		responseText = "";
@@ -125,6 +125,8 @@ public class FillBlank extends Question {
 	public void answerSummary( JspWriter out, int questionIndex) throws IOException  {
 		if (points == maxPoints) {
 			out.append("<p>Good job! You got it right!</p>");
+		} else {
+			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
 		out.append("<b>Question" + questionIndex + ": </b>");

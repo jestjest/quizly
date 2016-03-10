@@ -60,9 +60,9 @@ public class TakeQuizServlet extends HttpServlet {
 		quiz.beginTiming();
 		request.getSession().setAttribute("quiz", quiz);
 		if (quizSummaryInfo.onePage()) {
-			request.getRequestDispatcher("take-quiz-single.jsp").forward(request, response); 
+			request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response); 
 		} else {
-			request.getRequestDispatcher("take-quiz-multi.jsp?questionIndex=1").forward(request, response); 
+			request.getRequestDispatcher("take-multi-page-quiz.jsp?questionIndex=1").forward(request, response); 
 		}
 	}
 

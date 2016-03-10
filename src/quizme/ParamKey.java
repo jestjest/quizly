@@ -12,7 +12,7 @@ public class ParamKey {
 	public boolean parseKey( String key ) {
 		try {
 			String[] output = key.split("_");
-			if ( output[0] != "response" ) {
+			if (! output[0].equals("response") ) {
 				return false;
 			}
 			questionOrder = Integer.parseInt(output[1]);

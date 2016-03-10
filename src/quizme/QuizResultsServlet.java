@@ -47,6 +47,7 @@ public class QuizResultsServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get quiz object that is stored on the session.
+		System.out.println("#");
 		Quiz quiz = (Quiz) request.getSession().getAttribute("quiz");
 
 		// Stop the timer.
@@ -116,6 +117,7 @@ public class QuizResultsServlet extends HttpServlet {
 
 		// Achievement table
 
+		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
 	
 	private String concatStrings( String[] S ) {

@@ -110,7 +110,7 @@ public class QuestionResponse extends Question {
 		if (points == maxPoints) {
 			out.append("<p>Good job! You got it right!</p>");
 		} else {
-			out.append("<p>Looks like you didn't get question " + questionIndex + "completely right.</p>");
+			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
 		out.append("<b>Question" + questionIndex + ": </b>");

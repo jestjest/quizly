@@ -48,7 +48,7 @@ public class QuizTable {
 			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT quizid FROM quizzes ORDER BY quizid ASC");
 			ResultSet rs = pstmt2.executeQuery();
 			rs.last();
-			return rs.getRow() + 1;
+			return 2 * rs.getRow() - 1;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

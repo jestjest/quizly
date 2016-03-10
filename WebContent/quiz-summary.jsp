@@ -105,7 +105,7 @@
 	} else {
 		for (Performance performance : myPerformance) {
 			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-			out.println("<p>On " + date + ", you scored " + performance.score + "% in " + performance.time + " seconds.</p>");
+			out.println("<p>On " + date + ", you scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
 		}
 	}
 	%>
@@ -122,7 +122,7 @@
 	} else {
 		for (Performance performance : bestPerformances) {
 			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-			out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + performance.time + " seconds.</p>");
+			out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
 		}
 	}
 	%>
@@ -137,9 +137,9 @@
 		if (topDayPerformances.isEmpty()) {
 			out.println("No one has taken this quiz today yet.");
 		} else {
-			for (Performance performance : myPerformance) {
+			for (Performance performance : topDayPerformances) {
 				String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-				out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + performance.time + " seconds.</p>");
+				out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
 			}
 		}
 		%>
@@ -156,7 +156,7 @@
 		} else {
 			for (Performance performance : recentPerformances) {
 				String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-				out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + performance.time + " seconds.</p>");
+				out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
 			}
 		}
 		%>
