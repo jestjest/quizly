@@ -13,7 +13,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>QuizMe</title>
+	<title>QuizMe Home</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 
@@ -42,12 +42,15 @@
         
         <%
         	List<AchievementGuidelinesData> newAchievements = (List<AchievementGuidelinesData>) request.getSession().getAttribute("newAchievements");        
-        	if (newAchievements != null &&  newAchievements.size() == 0) {
+        	if (newAchievements != null &&  newAchievements.size() != 0) {
 	        	out.println("<h2>New achievements!</h2>");
 	        	
-	        	for (AchievementGuidelinesData achievement : newAchievements) {
-	        		out.println("img src='" + achievement.pictureURL + "'>/");
+	        	for (int i = 0; i < newAchievements.size(); i++) {
+	        		AchievementGuidelinesData achievement = newAchievements.get(i);
+	        		out.println("<img style='max-height: 100px; max-width: 100px;' src='" + achievement.pictureURL + "'>");
+	        		out.println("<br>");
 	        		out.println("<b>Name</b>: " + achievement.name);
+	        		out.println("<br>");
 	        		out.println("<b>Description</b>: " + achievement.description);
 	        		out.println("<br><br>");
 	        	}
@@ -57,9 +60,17 @@
         %>
       </div>
     </div>
-    
-    <hr>
 
+	<%
+	int[] correctAnswerCounts = (int[]) request.getSession().getAttribute("correctAnswerCounts");
+	if (correctAnswerCounts != null) {
+		out.println("<div class='container text-center'>");
+		out.println("<p class='bg-success'>Thanks for practicing!</p>");
+		out.println("</div>");
+		request.getSession().setAttribute("correctAnswerCounts", null);
+	}
+	%>
+    
 	<div class="container">
 		<h2>Popular quizzes</h2>
 			<div class="row">

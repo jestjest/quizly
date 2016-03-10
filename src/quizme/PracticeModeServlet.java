@@ -48,13 +48,13 @@ public class PracticeModeServlet extends HttpServlet {
 			AchievementsTable achievementsTable = (AchievementsTable) request.getServletContext().getAttribute("achievementsTable");
 			AchievementGuidelinesTable guidelinesTable = (AchievementGuidelinesTable) request.getServletContext().getAttribute("achievementGuidelinesTable");
 			Achievement.checkForPracticeModeAchievement(user.getName(), achievementsTable, guidelinesTable);
-			request.getRequestDispatcher("HomePageServlet").forward(request, response); /* or forward to a congrats! practice mode is over page? */
+			request.getRequestDispatcher("HomePageServlet").forward(request, response);
 		} else { /* take the quiz again */
 			quiz.randomizeQuestionOrder();
 			if (quizSummaryInfo.onePage()) {
-				request.getRequestDispatcher("take-quiz-single.jsp").forward(request, response); 
+				request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response); 
 			} else {
-				request.getRequestDispatcher("take-quiz-multi.jsp?questionIndex=1").forward(request, response); 
+				request.getRequestDispatcher("take-multi-page-quiz.jsp?questionIndex=1").forward(request, response); 
 			}
 		}
 	}

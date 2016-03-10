@@ -63,7 +63,8 @@ public class MainLoginServlet extends HttpServlet {
 
 		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
 		if (usersTable.correctPassword(username, hashed)) {
-			forwardLoginSuccess(username, request, response);
+			boolean isAdmin = usersTable.getAdmin(username);
+			forwardLoginSuccess(username, isAdmin, request, response);
 		} else {
 			displayError("Username/password combination was wrong.", request, response);
 		}
@@ -92,7 +93,7 @@ public class MainLoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		boolean success = usersTable.addUser(username, hashed);
 		if (success) {
-			forwardLoginSuccess(username, request, response);
+			forwardLoginSuccess(username, false, request, response);
 		} else {
 			displayError("Something went wrong adding account.", request, response);
 		}
@@ -102,10 +103,10 @@ public class MainLoginServlet extends HttpServlet {
 	 * Creates a new User object to be attached to a specific session. Forwards the request to the home
 	 * page after a successful login.
 	 */
-	private void forwardLoginSuccess(String username, 
+	private void forwardLoginSuccess(String username, boolean isAdmin,
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		User user = new User(username);
+		User user = new User(username, isAdmin);
 		request.getSession().setAttribute("user",  user);
 		request.getRequestDispatcher("HomePageServlet").forward(request, response);
 	}

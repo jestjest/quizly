@@ -6,7 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>QuizMe</title>
+	<title>QuizMe Quiz Creation</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/create-quiz.css">
 </head>
@@ -34,7 +34,7 @@
 		    <div class="form-group">
 			      <div class="checkbox"><input type="checkbox" name="random" value="random">Random order<br></div>
 			      <div class="checkbox"><input type="checkbox" name="one-page" value="one-age">One page<br></div>
-			      <div class="checkbox"><input type="checkbox" name="immediate-correction" value="immediate-correction">Immediate correction<br></div>
+			      <div class="checkbox"><input type="checkbox" name="immediate-correction" value="immediate-correction">Immediate correction (only for multi-page)<br></div>
 			      <div class="checkbox"><input type="checkbox" name="practice-mode" value="practice-mode">Practice mode<br></div>
 	        </div>
 	        

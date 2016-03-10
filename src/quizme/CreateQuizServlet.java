@@ -155,6 +155,9 @@ public class CreateQuizServlet extends HttpServlet {
 		boolean onePage = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("one-page"));
 		boolean practiceMode = Boolean.parseBoolean(quiz.getDocumentElement().getAttribute("practice-mode"));
 		
+		// immediate feedback only for multi page
+		if (onePage) immediateCorrection = false;
+		
 		String title = quiz.getElementsByTagName("title").item(0).getTextContent();
 		String desc = quiz.getElementsByTagName("description").item(0).getTextContent();
 

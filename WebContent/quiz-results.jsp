@@ -3,6 +3,8 @@
     
 <%@ page import="quizme.quizzes.*" %>
 <%@ page import="quizme.links.*" %>
+<%@ page import="java.util.List" %>
+<%@ page import="quizme.quizzes.Achievement.AchievementGuidelinesData" %>
 
 <% Quiz quiz = (Quiz) request.getSession().getAttribute("quiz"); %>    
 <% QuizSummaryInfo quizSummaryInfo = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");%>
@@ -12,7 +14,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>QuizMe</title>
+	<title>QuizMe Quiz Results</title>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body>
@@ -23,6 +25,23 @@
 			<h2>Quiz Results for Quiz '<%=quizSummaryInfo.getName() %>'</h2>
 			<h3>Score: <%=quiz.getScore() %>%</h3>
 			<h3>Time: <%=quiz.getTime() / 1000.0 %> seconds</h3>
+			
+			 <%
+        	List<AchievementGuidelinesData> newAchievements = (List<AchievementGuidelinesData>) request.getAttribute("achievements");        
+        	if (newAchievements != null &&  newAchievements.size() != 0) {
+	        	out.println("<h2>New achievements!</h2>");
+	        	
+	        	for (int i = 0; i < newAchievements.size(); i++) {
+	        		AchievementGuidelinesData achievement = newAchievements.get(i);
+	        		out.println("<img style='max-height: 100px; max-width: 100px;' src='" + achievement.pictureURL + "'>");
+	        		out.println("<br>");
+	        		out.println("<b>Name</b>: " + achievement.name);
+	        		out.println("<br>");
+	        		out.println("<b>Description</b>: " + achievement.description);
+	        		out.println("<br><br>");
+	        	}
+        	}
+        	%>
 			
 		</div>
 	</div>
@@ -80,7 +99,7 @@
 		
 		double timeDifference = (quiz.getTime() - userStats.minTime) / 1000.0;
 		if (timeDifference < 0) {
-			out.println("Good job! You set a personal best by " + timeDifference + " seconds.");
+			out.println("Good job! You set a personal best by " + (-1 * timeDifference) + " seconds.");
 			
 		} else if (quiz.getTime() - userStats.maxTime < 0) {
 			out.println("Keep trying, at least this wasn't a personal worst time!");

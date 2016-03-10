@@ -98,6 +98,7 @@ public class QuizResultsServlet extends HttpServlet {
 		// if in practiceMode forward to PracticeModeServlet
 		if ( (boolean) request.getSession().getAttribute("practiceMode")) {
 			request.getRequestDispatcher("PracticeModeServlet").forward(request, response);
+			return;
 		}
 		
 		// Compute score;

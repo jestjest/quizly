@@ -15,6 +15,12 @@
 			<a href="UserPageServlet?username=<%=user.getName()%>" class="btn btn-success" style="color: white">Hi <%=user.getName()%>!</a> &nbsp;&nbsp;&nbsp;
 		 	<a href="create-quiz.jsp" class="btn btn-primary">Create a Quiz</a>
 		 	<a href="MessagesServlet" class="btn btn-primary">See Messages</a>
+		 	<a href="HistoryServlet" class="btn btn-primary">History</a>
+		 	<%
+		 	if (user.isAdmin()) {
+		 		out.println("<a href='AdminServlet' class='btn btn-primary'>Admin Panel</a>");
+		 	}
+		 	%>
 		 	<a href="LogoutServlet" class="btn btn-danger">Logout</a>
 			</div>
 		</div><!--/.navbar-collapse -->
