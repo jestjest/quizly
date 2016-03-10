@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 
 import quizme.DBConnection;
+import quizme.User; 
 
 public class UsersTable {
 	private DBConnection db;
@@ -117,6 +118,23 @@ public class UsersTable {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+	
+	public List<User> usersList() {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM users");
+			ResultSet rs = pstmt.executeQuery();
+		
+			List<User> users = new ArrayList<User>();
+			while(rs.next()) {			
+				User user = new User(rs.getString("username"), rs.getBoolean("admin"));
+				users.add(user);
+			}
+			return users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/* helper functions */
