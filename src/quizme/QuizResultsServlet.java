@@ -15,10 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import quizme.database.QuizResultsTable;
-import quizme.database.QuizTable;
+import quizme.database.*;
 import quizme.links.QuizSummaryInfo;
-import quizme.quizzes.Quiz;
+import quizme.quizzes.*;
 
 /**
  * Servlet implementation class QuizResultsServlet
@@ -116,7 +115,17 @@ public class QuizResultsServlet extends HttpServlet {
 				new Timestamp( calendar.getTime().getTime() ) );
 
 		// Achievement table
-
+//		AchievementsTable achievementsTable = (AchievementsTable) 
+//				request.getServletContext().getAttribute("achievementsTable");
+//		AchievementGuidelinesTable guidelinesTable = (AchievementGuidelinesTable) 
+//				request.getServletContext().getAttribute("guidelinesTable");
+//		List<Achievement.AchievementGuidelinesData> achievements = Achievement.checkForTakeAchievements(
+//				user.getName(), quizResultTable, achievementsTable, guidelinesTable);
+//		Achievement.AchievementGuidelinesData highScoreAchievement = Achievement.checkForHighScoreAchievement(
+//				user.getName(), quiz.getScore(), quizID, quizResultTable, achievementsTable, guidelinesTable);
+//		achievements.add(highScoreAchievement);
+//		request.setAttribute("achievements", achievements);
+		
 		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
 	
