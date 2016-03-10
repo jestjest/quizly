@@ -229,6 +229,38 @@ public class QuizResultsTable {
 		return null;
 	}
 	
+	public SummaryStat getUserSummaryStat( String username ) {
+		try {
+			SummaryStat mySummaryStat = new SummaryStat();
+			// first get count
+			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(username) AS num_taken FROM results "
+					+ "WHERE username = ?");
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+			if ( rs.next() ) {
+				mySummaryStat.numberTaken = rs.getInt("num_taken");
+			}
+			// get other stats
+			pstmt = db.getPreparedStatement("SELECT MIN(score) AS minScore, MAX(score) AS maxScore, "
+					+ "AVG(score) AS meanScore, MIN(time) as minTime, MAX(time) AS maxTime, "
+					+ "AVG(time) AS meanTime FROM results WHERE username = ?");
+			pstmt.setString(1, username);		
+			rs = pstmt.executeQuery();
+			if ( rs.next() ) {
+				mySummaryStat.minScore = rs.getFloat("minScore");
+				mySummaryStat.maxScore = rs.getFloat("maxScore");
+				mySummaryStat.meanScore = rs.getFloat("meanScore");
+				mySummaryStat.minTime = rs.getLong("minTime");
+				mySummaryStat.maxTime = rs.getLong("maxTime");
+				mySummaryStat.meanTime = rs.getDouble("meanTime");
+			}
+			return mySummaryStat;
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/* helper functions */
 	
 	private String getString(int resultid, String field) {
