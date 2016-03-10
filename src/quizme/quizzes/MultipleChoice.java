@@ -103,7 +103,12 @@ public class MultipleChoice extends Question {
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {
 			String buttonName = "response_" + questionIndex + "_" + 0;
-			out.append( makeRadioButton( buttonName, i, false) );
+			if ( i > 0 ) {
+				out.append( makeRadioButton( buttonName, i, false) );
+			}
+			else {
+				out.append( makeRadioButton( buttonName, i, true) );
+			}
 			out.append("<br>");
 		}
 	}
