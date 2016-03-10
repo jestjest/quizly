@@ -84,7 +84,7 @@ public class QuizResultsServlet extends HttpServlet {
 			}
 			
 			// convert list of Strings to one String for each question and send it to the question
-			for ( int i = 0; i < quiz.numOfQuestions(); i++ ) {
+			for ( int i = 0; i < quiz.numOfQuestionsRemaining(); i++ ) {
 				List<String> responses = responseTextMap.get(i + 1);
 				List<Integer> orders = responseOrderMap.get(i + 1);
 				String[] orderedResponses = new String[ responses.size() ];
@@ -130,9 +130,12 @@ public class QuizResultsServlet extends HttpServlet {
 				user.getName(), quizResultTable, achievementsTable, guidelinesTable);
 		Achievement.AchievementGuidelinesData highScoreAchievement = Achievement.checkForHighScoreAchievement(
 				user.getName(), quiz.getScore(), quizID, quizResultTable, achievementsTable, guidelinesTable);
-		achievements.add(highScoreAchievement);
+		if ( highScoreAchievement != null ) { 
+			achievements.add(highScoreAchievement);
+		}
 		request.setAttribute("achievements", achievements);
 		
+
 		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
 	

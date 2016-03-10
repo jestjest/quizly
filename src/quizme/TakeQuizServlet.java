@@ -41,7 +41,7 @@ public class TakeQuizServlet extends HttpServlet {
 		int quizid = quizSummaryInfo.getQuizID();
 		int numOfQuestions = quizSummaryInfo.numOfQuestions();
 		boolean randomOrder = quizSummaryInfo.randomOrder();
-		boolean practiceMode = (request.getAttribute("practice-mode") != null);
+		boolean practiceMode = (request.getParameter("practice-mode") != null);
 		
 		Quiz quiz = new Quiz(numOfQuestions);
 		addQuestionResponseQuestions(request, quizid, quiz);
@@ -59,6 +59,7 @@ public class TakeQuizServlet extends HttpServlet {
 		}
 		quiz.beginTiming();
 		request.getSession().setAttribute("quiz", quiz);
+		request.getSession().setAttribute("practiceMode", practiceMode);
 		if (quizSummaryInfo.onePage()) {
 			request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response); 
 		} else {

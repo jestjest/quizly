@@ -42,7 +42,6 @@ public class PracticeModeServlet extends HttpServlet {
 		int[] correctAnswerCounts = (int[]) request.getSession().getAttribute("correctAnswerCounts");
 		
 		updateCorrectAnswerCounts(quiz, correctAnswerCounts);	
-		
 		if (quiz.numOfQuestionsRemaining() == 0) { /* done with practice mode */
 			User user = (User) request.getSession().getAttribute("user");
 			AchievementsTable achievementsTable = (AchievementsTable) request.getServletContext().getAttribute("achievementsTable");
@@ -63,7 +62,7 @@ public class PracticeModeServlet extends HttpServlet {
 	/* once a question is answered correctly the required number of times, the question is removed from the quiz */
 	private void updateCorrectAnswerCounts(Quiz quiz, int[] correctAnswerCounts) {
 		int numOfQuestionsRemaining = quiz.numOfQuestionsRemaining();
-		for (int i = numOfQuestionsRemaining - 1; i >= 0; i++) {
+		for (int i = numOfQuestionsRemaining - 1; i >= 0; i--) {
 			Question q = quiz.getQuestion(i);
 			if (q.maxPoints() == q.points()) {
 				/* must win all points for the answer 
