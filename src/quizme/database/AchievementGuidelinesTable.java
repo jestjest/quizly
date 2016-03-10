@@ -8,12 +8,12 @@ public class AchievementGuidelinesTable {
 
 	public AchievementGuidelinesTable(DBConnection db) {
 		this.db = db;
-		createAchievementTable();
+		// createAchievementTable();
 	}
 
 	private void createAchievementTable() {
 		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SOURCE achievement-guidelines.sql");
+			PreparedStatement pstmt = db.getPreparedStatement("SOURCE 'achievement-guidelines.sql");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

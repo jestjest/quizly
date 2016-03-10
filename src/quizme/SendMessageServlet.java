@@ -45,7 +45,7 @@ public class SendMessageServlet extends HttpServlet {
 		MessagesTable messagesTable = (MessagesTable) request.getServletContext().getAttribute("messagesTable");
 		messagesTable.addMessage(targetUser, user.getName(), new Timestamp(System.currentTimeMillis()), message, subject, MessagesTable.NOTE);
 		messagesTable.addMessage(user.getName(), targetUser, new Timestamp(System.currentTimeMillis()), "", "Auto-generated: I received your message.", MessagesTable.NOTE);
-		request.getRequestDispatcher("user-page.jsp?username=" + targetUser);
+		request.getRequestDispatcher("UserPageServlet?username=" + targetUser).forward(request, response);
 	}
 
 }

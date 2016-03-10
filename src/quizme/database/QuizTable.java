@@ -413,7 +413,7 @@ public class QuizTable {
 			if ( rs.next() ) {
 				quizSummaryInfo = new QuizSummaryInfo(quizID, rs.getString("name"), rs.getString("description"),
 						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), 
-						rs.getBoolean("practiceMode"), rs.getInt("numOfTimesTaken"), 
+						rs.getBoolean("practiceMode"), rs.getInt("numOfQuestions"), 
 						rs.getBoolean("randomOrder"), rs.getBoolean("onePage"), 
 						rs.getBoolean("immediateCorrection"), mySummaryStat, allSummaryStat, myPerformances, 
 						highestPerformers, topLastDayPerformers, recentPerformers);

@@ -94,6 +94,6 @@ public class UserPageServlet extends HttpServlet {
 		}
 
 		request.setAttribute("friendStatus", friendStatus );
-		request.getRequestDispatcher("user-page.jsp").forward(request, response);
+		request.getRequestDispatcher("user-page.jsp?username=" + pageUsername).forward(request, response);
 	}
 }

@@ -24,7 +24,7 @@ function renderQuestionForm(type) {
 		return tag("form", 
 				{ id: type, class: "question-form", role: "form"},
 				[tag("h3", {}, "Complete the form for a new question:"),
-				 tag("p", {}, "Denote the blank as a single underscore, _"),
+				 tag("p", {}, "Denote the blank as a single underscore _"),
 				 questionTag()].concat(answerAndSubmitTags())
 				 );
 		

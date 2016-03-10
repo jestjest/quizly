@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<% User user = (User) request.getSession().getAttribute("user"); %>
 
+<%@ page import="quizme.User" %>
 <%@ page import="quizme.links.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -51,17 +54,24 @@
         }
         %>
         
-        <form class='send-message' action='SendMessageServlet' method='POST'>
-			<div class="form-group">
-				<label>Send a message to this user</label>
-				<label>Subject</label>
-				<input type="text" name="subject" value="">
-				<label>Message</label>
-				<textarea class="form-control" rows="5" name="message"></textarea>
-			    <input type='submit' name='send-message' value='Send Message' class='btn btn-success'>
-			    <input type='hidden' name='target-user' value='<%=request.getParameter("username")%>'>");
-			</div>
-		</form>
+        <%
+        if (!(user.getName().equals(request.getParameter("username")))) {
+        	out.println("<form class='send-message' action='SendMessageServlet' method='POST'>");
+        	out.println("<div class='form-group'>");
+        	out.println("<p>Send a message to this user</p>");
+        	out.println("<label>Subject</label>");
+        	out.println("<br>");
+        	out.println("<input type='text' name='subject' value=''>");
+        	out.println("<br><br>");
+        	out.println("<label>Message</label>");
+        	out.println("<textarea class='form-control' rows='5' name='message'></textarea>");
+        	out.println("<br>");
+        	out.println("<input type='submit' name='send-message' value='Send Message' class='btn btn-success'>");
+        	out.println("<input type='hidden' name='target-user' value='" + request.getParameter("username") + "'>");
+			out.println("</div>");
+			out.println("</form>");
+		}
+		%>
 		
       </div>
     </div>

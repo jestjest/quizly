@@ -50,7 +50,7 @@ public static final int REQUEST = 3;
 			pstmt1.setInt(6, type);
 			pstmt1.executeUpdate();
 			
-			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT messageid FROM messages SORT BY messageid ASC");
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT messageid FROM messages ORDER BY messageid ASC");
 			ResultSet rs = pstmt2.executeQuery();
 			rs.last();
 			return rs.getInt(1);

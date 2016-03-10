@@ -54,7 +54,7 @@ public class ChallengeFriendServlet extends HttpServlet {
 		
 		String quizLink = "<a href='QuizSummaryServlet?quizID=" + quizSummary.getQuizID() + "' class='btn'>" + quizSummary.getName() + "</a>";
 		messagesTable.removeChallenge(targetFriend, user.getName(), quizLink);
-		messagesTable.addMessage(targetFriend, user.getName(), new Timestamp(0), 
+		messagesTable.addMessage(targetFriend, user.getName(), new Timestamp(System.currentTimeMillis()), 
 				Float.toString(quizSummary.mySummaryStat().maxScore), quizLink, MessagesTable.CHALLENGE);
 		request.getRequestDispatcher("quiz-summary.jsp").forward(request, response);
 	}

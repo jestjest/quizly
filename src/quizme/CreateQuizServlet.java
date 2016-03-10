@@ -4,6 +4,7 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -22,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import quizme.database.*;
+import quizme.quizzes.Achievement;
 
 /**
  * Servlet implementation class CreateQuizServlet
@@ -62,13 +64,17 @@ public class CreateQuizServlet extends HttpServlet {
 			int quizID = addQuiz(quiz, questions.getLength(), username, quizTable);
 			
 			addQuestions(quizID, questions, context);
+
+			//CHECK ACHIEVEMENTS
+			AchievementsTable achievementsTable = (AchievementsTable) context.getAttribute("achievementsTable");
+			AchievementGuidelinesTable guidelinesTable = (AchievementGuidelinesTable) context.getAttribute("achievementGuidelinesTable");
+			
+			List<Achievement.AchievementGuidelinesData> newAchievements = Achievement.checkForCreateAchievements(username, quizTable, achievementsTable, guidelinesTable);	
+			request.getSession().setAttribute("newAchievements", newAchievements);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//CHECK ACHIEVEMENTS
-		
 	}
 	
 	public void addQuestions(int quizID, NodeList questions, ServletContext context) {

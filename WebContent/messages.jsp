@@ -30,7 +30,7 @@
 			List<MessageLink> messages = (List<MessageLink>) request.getAttribute("myMessages");
 			if (messages.isEmpty()) {
 				out.println("<div class='message-list'>");
-				out.println("<p>You have no further messages.</p>");
+				out.println("<h3 class='text-center'>You have no further messages.</p>");
 				out.println("</div>");
 			} else {
 
