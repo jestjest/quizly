@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -93,7 +94,12 @@ public class QuizResultsServlet extends HttpServlet {
 				quiz.getQuestion(i).setResponse( concatStrings(orderedResponses) );
 			}
 		}
-
+		
+		// if in practiceMode forward to PracticeModeServlet
+		if ( (boolean) request.getSession().getAttribute("practiceMode")) {
+			request.getRequestDispatcher("PracticeModeServlet").forward(request, response);
+		}
+		
 		// Compute score;
 		quiz.computeScore();
 
