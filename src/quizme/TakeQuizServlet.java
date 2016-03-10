@@ -41,7 +41,7 @@ public class TakeQuizServlet extends HttpServlet {
 		int quizid = quizSummaryInfo.getQuizID();
 		int numOfQuestions = quizSummaryInfo.numOfQuestions();
 		boolean randomOrder = quizSummaryInfo.randomOrder();
-		boolean practiceMode = quizSummaryInfo.hasPractice();
+		boolean practiceMode = (request.getAttribute("practice-mode") != null);
 		
 		Quiz quiz = new Quiz(numOfQuestions);
 		addQuestionResponseQuestions(request, quizid, quiz);

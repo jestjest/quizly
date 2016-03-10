@@ -46,7 +46,6 @@ public class QuizResultsServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get quiz object that is stored on the session.
-		System.out.println("#");
 		Quiz quiz = (Quiz) request.getSession().getAttribute("quiz");
 
 		// Stop the timer.
@@ -65,6 +64,7 @@ public class QuizResultsServlet extends HttpServlet {
 			Map<Integer, List<Integer>> responseOrderMap = new HashMap<Integer, List<Integer>>();
 			while ( it.hasNext() ) {
 				String key = it.next();
+				//System.out.println(key);
 				if ( pk.parseKey(key) ) { // i.e., has "response_n_m" format 
 					String value = request.getParameterMap().get(key)[0];
 					if ( responseTextMap.containsKey( pk.questionOrder ) ) {
@@ -78,14 +78,14 @@ public class QuizResultsServlet extends HttpServlet {
 						responseOrder.add( pk.contentOrder );
 						responseTextMap.put( pk.questionOrder, responseText );
 						responseOrderMap.put( pk.questionOrder, responseOrder );
-					}
+					}		
 				}
 			}
 			
 			// convert list of Strings to one String for each question and send it to the question
 			for ( int i = 0; i < quiz.numOfQuestions(); i++ ) {
-				List<String> responses = responseTextMap.get(i);
-				List<Integer> orders = responseOrderMap.get(i);
+				List<String> responses = responseTextMap.get(i + 1);
+				List<Integer> orders = responseOrderMap.get(i + 1);
 				String[] orderedResponses = new String[ responses.size() ];
 				for ( int j = 0; j < responses.size(); j++ ) {
 					orderedResponses[ orders.get(j) ] = responses.get(j);
@@ -115,16 +115,16 @@ public class QuizResultsServlet extends HttpServlet {
 				new Timestamp( calendar.getTime().getTime() ) );
 
 		// Achievement table
-//		AchievementsTable achievementsTable = (AchievementsTable) 
-//				request.getServletContext().getAttribute("achievementsTable");
-//		AchievementGuidelinesTable guidelinesTable = (AchievementGuidelinesTable) 
-//				request.getServletContext().getAttribute("guidelinesTable");
-//		List<Achievement.AchievementGuidelinesData> achievements = Achievement.checkForTakeAchievements(
-//				user.getName(), quizResultTable, achievementsTable, guidelinesTable);
-//		Achievement.AchievementGuidelinesData highScoreAchievement = Achievement.checkForHighScoreAchievement(
-//				user.getName(), quiz.getScore(), quizID, quizResultTable, achievementsTable, guidelinesTable);
-//		achievements.add(highScoreAchievement);
-//		request.setAttribute("achievements", achievements);
+		AchievementsTable achievementsTable = (AchievementsTable) 
+				request.getServletContext().getAttribute("achievementsTable");
+		AchievementGuidelinesTable guidelinesTable = (AchievementGuidelinesTable) 
+				request.getServletContext().getAttribute("achievementGuidelinesTable");
+		List<Achievement.AchievementGuidelinesData> achievements = Achievement.checkForTakeAchievements(
+				user.getName(), quizResultTable, achievementsTable, guidelinesTable);
+		Achievement.AchievementGuidelinesData highScoreAchievement = Achievement.checkForHighScoreAchievement(
+				user.getName(), quiz.getScore(), quizID, quizResultTable, achievementsTable, guidelinesTable);
+		achievements.add(highScoreAchievement);
+		request.setAttribute("achievements", achievements);
 		
 		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
