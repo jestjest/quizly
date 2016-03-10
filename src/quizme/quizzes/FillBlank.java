@@ -3,6 +3,7 @@ package quizme.quizzes;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.jsp.JspWriter;
@@ -34,6 +35,11 @@ public class FillBlank extends Question {
 	 * A list that stores all correct text answers.
 	 */
 	private List<String> correctAnswers;
+	
+	/**
+	 * Lower-case correct answers
+	 */
+	private List<String> correctAnswersLowerCase;
 	
 	/**
 	 * A String that stores the correct response text.
@@ -88,6 +94,10 @@ public class FillBlank extends Question {
 		rightText = rs.getString(columnNames[3]);
 		String answers = rs.getString( columnNames[4] );
 		correctAnswers = Arrays.asList(answers.split("\\s*~~~\\s*"));
+		correctAnswersLowerCase = new ArrayList<String>();
+		for ( String str: correctAnswers ) {
+			correctAnswersLowerCase.add(str.toLowerCase());
+		}
 		int preferredAnswer = rs.getInt(columnNames[5]);
 		correctResponseText = correctAnswers.get(preferredAnswer);
 		responseText = "";
@@ -185,7 +195,7 @@ public class FillBlank extends Question {
 	@Override
 	public void setResponse(String response) {
 		responseText = response;
-		if ( correctAnswers.contains( responseText ) ) {
+		if ( correctAnswersLowerCase.contains( responseText.toLowerCase() ) ) {
 			points = 1;
 		}
 		else {

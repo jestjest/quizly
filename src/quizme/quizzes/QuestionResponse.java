@@ -3,6 +3,7 @@ package quizme.quizzes;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.jsp.JspWriter;
@@ -23,6 +24,11 @@ public class QuestionResponse extends Question {
 	 * A list that stores all correct text answers.
 	 */
 	private List<String> correctAnswers;
+	
+	/**
+	 * Lower-case correct answers
+	 */
+	private List<String> correctAnswersLowerCase;
 	
 	/**
 	 * A string that stores the preferred correct response text.
@@ -74,6 +80,10 @@ public class QuestionResponse extends Question {
 		questionText = rs.getString( columnNames[2] );
 		String answers = rs.getString(columnNames[3]);
 		correctAnswers = Arrays.asList(answers.split("\\s*~~~\\s*"));
+		correctAnswersLowerCase = new ArrayList<String>();
+		for ( String str: correctAnswers ) {
+			correctAnswersLowerCase.add(str.toLowerCase());
+		}
 		int preferredResponse = rs.getInt( columnNames[4] );
 		correctResponseText = correctAnswers.get(preferredResponse);
 		responseText = "";
@@ -150,7 +160,7 @@ public class QuestionResponse extends Question {
 	@Override
 	public void setResponse(String response) {
 		responseText = response;
-		if ( correctAnswers.contains(responseText) ) {
+		if ( correctAnswersLowerCase.contains(responseText.toLowerCase()) ) {
 			points = 1;
 		}
 		else {

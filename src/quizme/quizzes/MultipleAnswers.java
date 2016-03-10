@@ -27,6 +27,11 @@ public class MultipleAnswers extends Question {
 	private List<List<String>> correctAnswers;
 	
 	/**
+	 * Lower-case correct answers
+	 */
+	private List<List<String>> correctAnswersLowerCase;
+	
+	/**
 	 * String containing correctAnswers
 	 */
 	private String correctAnswersText;
@@ -90,8 +95,14 @@ public class MultipleAnswers extends Question {
 	private List<List<String>> textToCorrectAnswers( String txt ) {;
 		List<String> answers = Arrays.asList( txt.split("\\s*|||\\s*") );
 		List<List<String>> correctAnswers = new ArrayList<List<String>>();
+		correctAnswersLowerCase = new ArrayList<List<String>>();
 		for ( String s: answers ) {
 			correctAnswers.add(Arrays.asList( s.split("\\s*~~~\\s*") ) );
+			List<String> oneAnswersLowerCase = new ArrayList<String>();
+			for (String str : Arrays.asList( s.split("\\s*~~~\\s*") ) ){
+				oneAnswersLowerCase.add(str.toLowerCase());
+			}
+			correctAnswersLowerCase.add(oneAnswersLowerCase);
 		}
 		return correctAnswers;
 	}
@@ -207,24 +218,24 @@ public class MultipleAnswers extends Question {
 		points = 0;
 		if ( ordered ) {
 			for ( int i = 0; i < answerSlotsNum; i++ ) {
-				if ( correctAnswers.get(i).contains( responses.get(i) ) ) {
+				if ( correctAnswersLowerCase.get(i).contains( responses.get(i).toLowerCase() ) ) {
 					points++;
 				}
 			}
 		}
 		else {
 			List<Integer> gotPoint = new ArrayList<Integer>();
-			for ( int j = 0; j < correctAnswers.size(); j++ ) {
-				gotPoint.set(j, 0);
+			for ( int j = 0; j < correctAnswersLowerCase.size(); j++ ) {
+				gotPoint.add(0);
 			}
 			for ( int i = 0; i < answerSlotsNum; i++ ) {
-				for ( int j = 0; j < correctAnswers.size(); j++ ) {
-					if ( correctAnswers.get(j).contains(responses.get(i)) ) {
+				for ( int j = 0; j < correctAnswersLowerCase.size(); j++ ) {
+					if ( correctAnswersLowerCase.get(j).contains(responses.get(i).toLowerCase() ) ) {
 						gotPoint.set(j, 1);
 					}
 				}
 			}
-			for ( int j = 0; j < correctAnswers.size(); j++ ) {
+			for ( int j = 0; j < correctAnswersLowerCase.size(); j++ ) {
 				points += gotPoint.get(j);
 			}
 		}
