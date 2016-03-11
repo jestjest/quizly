@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import quizme.database.*;
 import quizme.links.*;
 import quizme.quizzes.*;
+import quizme.quizzes.Achievement.AchievementGuidelinesData;
 
 /**
  * Servlet implementation class PracticeModeServlet
@@ -46,7 +47,8 @@ public class PracticeModeServlet extends HttpServlet {
 			User user = (User) request.getSession().getAttribute("user");
 			AchievementsTable achievementsTable = (AchievementsTable) request.getServletContext().getAttribute("achievementsTable");
 			AchievementGuidelinesTable guidelinesTable = (AchievementGuidelinesTable) request.getServletContext().getAttribute("achievementGuidelinesTable");
-			Achievement.checkForPracticeModeAchievement(user.getName(), achievementsTable, guidelinesTable);
+			AchievementGuidelinesData practiceAchievement = Achievement.checkForPracticeModeAchievement(user.getName(), achievementsTable, guidelinesTable);
+			request.getSession().setAttribute("practiceAchievement", practiceAchievement);
 			request.getRequestDispatcher("HomePageServlet").forward(request, response);
 		} else { /* take the quiz again */
 			quiz.randomizeQuestionOrder();

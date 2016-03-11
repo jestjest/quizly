@@ -139,7 +139,7 @@ public class FillBlank extends Question {
 			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
-		out.append("<b>Question" + questionIndex + ": </b>");
+		out.append("<b>Question " + questionIndex + ": </b>");
 		out.append("Question filled with preferred answer: <br>");
 		out.append(leftText+" <b>"+correctResponseText+"</b> " + rightText);
 		out.append("<br>");

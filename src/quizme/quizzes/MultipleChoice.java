@@ -121,7 +121,7 @@ public class MultipleChoice extends Question {
 			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
-		out.append("<b>Question" + questionIndex + ": </b>");
+		out.append("<b>Question " + questionIndex + ": </b>");
 		out.append(questionText);
 		out.append("<br>");
 		for ( int i = 0; i < choices.length; i++ ) {

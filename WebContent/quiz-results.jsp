@@ -66,7 +66,7 @@
 		SummaryStat allStats = quizSummaryInfo.allSummaryStat();
 		out.println("<p>You've taken this quiz " + (userStats.numberTaken + 1) + " times now.<p>");
 		out.println("<br>");
-		out.println("<h3>Score<h3>");
+		out.println("<h3>Score</h3>");
 		out.println("<p>Your all time highest is " + userStats.maxScore + "%</p>");
 		out.println("<p>Your all time worst is " + userStats.minScore + "%</p>");
 		out.println("<p>Your mean score is " + userStats.meanScore + "%</p>");
@@ -88,7 +88,7 @@
 		}
 		
 		out.println("<br>");
-		out.println("<h3>Time<h3>");
+		out.println("<h3>Time</h3>");
 		out.println("<p>Your fastest completion was " + (userStats.minTime / 1000.0) + " seconds.</p>");
 		out.println("<p>Your slowest completion was " + (userStats.maxTime / 1000.0) + " seconds.</p>");
 		out.println("<p>Your mean completion was " + (userStats.meanTime / 1000.0) + " seconds.</p>");
@@ -99,12 +99,12 @@
 		
 		double timeDifference = (quiz.getTime() - userStats.minTime) / 1000.0;
 		if (timeDifference < 0) {
-			out.println("Good job! You set a personal best by " + (-1 * timeDifference) + " seconds.");
+			out.println("<p>Good job! You set a personal best by " + (-1 * timeDifference) + " seconds.</p>");
 			
 		} else if (quiz.getTime() - userStats.maxTime < 0) {
-			out.println("Keep trying, at least this wasn't a personal worst time!");
+			out.println("<p>Keep trying, at least this wasn't a personal worst time!</p>");
 		} else {
-			out.println("Tough luck, try again for a faster time!");
+			out.println("<p>Tough luck, try again for a faster time!</p>");
 		}
 		%>
 	</div>

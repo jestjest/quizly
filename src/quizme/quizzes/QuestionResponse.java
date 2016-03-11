@@ -123,7 +123,7 @@ public class QuestionResponse extends Question {
 			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
-		out.append("<b>Question" + questionIndex + ": </b>");
+		out.append("<b>Question " + questionIndex + ": </b>");
 		out.append(questionText);
 		out.append("<br>");
 		out.append("<b>Your answer: </b>");

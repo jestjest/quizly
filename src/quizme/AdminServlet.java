@@ -19,7 +19,7 @@ import quizme.links.*;
 @WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Timestamp fromTime = new Timestamp(1970, 1, 1, 0, 0, 0, 0);
+	private static final Timestamp fromTime = new Timestamp(0);
 	private static final int limit = 10000;  
 	
 	/**
@@ -33,14 +33,7 @@ public class AdminServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
-	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		/* Data to show directly on the admin page */
 		AnnouncementsTable announcementsTable = (AnnouncementsTable) request.getServletContext().getAttribute("announcementsTable");
 		List<AnnouncementLink> announcements = announcementsTable.getAllAnnouncementsList();
@@ -63,18 +56,22 @@ public class AdminServlet extends HttpServlet {
 		
 		int[] numOfQuizzesCreated = quizTable.numOfQuizzesCreated();
 		
-		QuizResultsTable resultsTable = (QuizResultsTable) request.getServletContext().getAttribute("resultsTable");
+		QuizResultsTable resultsTable = (QuizResultsTable) request.getServletContext().getAttribute("quizResultTable");
 		int[] numOfQuizzesTaken = resultsTable.numOfQuizzesTaken();
 		
 		AchievementsTable achievementsTable = (AchievementsTable) request.getServletContext().getAttribute("achievementsTable");
 		int[] numOfAchievements = achievementsTable.numOfAchievements();
 		
-		MessagesTable messagesTable = (MessagesTable) request.getServletContext().getAttribute("messagesTable");
-		int[] numOfMessages = messagesTable.numOfMessages();
-		
 		WebsiteStats websiteStats = new WebsiteStats(numOfUsers, numOfFriendRelationships, numOfQuizzesCreated, 
-													numOfQuizzesTaken, numOfAchievements, numOfMessages);
+													numOfQuizzesTaken, numOfAchievements);
 		request.setAttribute("websiteStats", websiteStats);
 		request.getRequestDispatcher("admin.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request,response);
 	}
 }

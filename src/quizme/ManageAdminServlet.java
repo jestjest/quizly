@@ -36,6 +36,7 @@ public class ManageAdminServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("hi");
 		if (request.getParameter("add-announcement") != null) { /* other capabilities to incorporate? */
 			addAnnouncement(request);
 		} else if (request.getParameter("remove-announcement") != null) {
@@ -43,6 +44,7 @@ public class ManageAdminServlet extends HttpServlet {
 		} else if (request.getParameter("remove-user") != null) {
 			removeUser(request);
 		} else if (request.getParameter("add-admin-status") != null) {
+			System.out.println("true");
 			changeAdminStatus(request, true);
 		} else if (request.getParameter("remove-admin-status") != null ) {
 			changeAdminStatus(request, false);
@@ -51,7 +53,7 @@ public class ManageAdminServlet extends HttpServlet {
 		} else if (request.getParameter("remove-quiz-results") != null) {
 			removeQuizResults(request);
 		}
-		request.getRequestDispatcher("admin.jsp").forward(request, response); 
+		request.getRequestDispatcher("AdminServlet").forward(request, response); 
 	}
 
 	private void addAnnouncement(HttpServletRequest request) {
@@ -64,7 +66,8 @@ public class ManageAdminServlet extends HttpServlet {
 	
 	private void removeAnnouncements(HttpServletRequest request) {
 		AnnouncementsTable announcementsTable = (AnnouncementsTable) request.getServletContext().getAttribute("announcementsTable"); 
-		String[] idsToRemove = request.getParameterValues("announcement"); 
+		String[] idsToRemove = request.getParameterValues("announcement");
+		if (idsToRemove == null) return;
 		for (int i = 0; i < idsToRemove.length; i++) {
 			int id = Integer.parseInt(idsToRemove[i]);
 			announcementsTable.removeAnnouncement(id);

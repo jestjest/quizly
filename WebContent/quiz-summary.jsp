@@ -48,15 +48,6 @@
 				%>	
 				<input type='submit' name='take-quiz' value="Take the quiz!" class='btn btn-primary'>
 	        </form>
-	        
-	        <%
-	        if (quizSummary.getCreatorUsername().equals(user.getName())) {
-	        	out.println("<br>");
-	        	out.println("<form class='edit-quiz' action='EditQuizServlet' method='GET'>");
-	        	out.println("<input type='submit' name='edit-quiz' value='Edit quiz' class='btn btn-info'>");
-	        	out.println("</form>");
-	        }
-	        %>
 		</div>
 	</div>
 	

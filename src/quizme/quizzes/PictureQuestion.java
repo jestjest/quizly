@@ -108,7 +108,7 @@ public class PictureQuestion extends Question {
 
 	@Override
 	public void show( JspWriter out, int questionIndex) throws IOException {
-		out.append("<img style='max-height: 100px; max-width: 100px;' src='"+ pictureURL+"' alt='Error. Image not found.'><br>");
+		out.append("<img style='max-height: 300px; max-width: 300px;' src='"+ pictureURL+"' alt='Error. Image not found.'><br>");
 		out.append("<br>");
 		out.append("Please enter your response here:<br>");
 		out.append("<input type='text' name='response_" + questionIndex + "_0'>");
@@ -122,7 +122,7 @@ public class PictureQuestion extends Question {
 			out.append("<p>Looks like you didn't get question " + questionIndex + " completely right.</p>");
 		}
 		
-		out.append("<b>Question" + questionIndex + ": </b>");
+		out.append("<b>Question " + questionIndex + ": </b>");
 		out.append("<img style='max-height: 100px; max-width: 100px;' src='"+ pictureURL + "' alt='Sorry! Image not found.'><br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);

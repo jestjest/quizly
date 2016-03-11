@@ -41,21 +41,17 @@
         %>
         
         <%
-        	List<AchievementGuidelinesData> newAchievements = (List<AchievementGuidelinesData>) request.getSession().getAttribute("newAchievements");        
-        	if (newAchievements != null &&  newAchievements.size() != 0) {
-	        	out.println("<h2>New achievements!</h2>");
+        	AchievementGuidelinesData practiceAchievement = (AchievementGuidelinesData) request.getSession().getAttribute("practiceAchievement");        
+        	if (practiceAchievement != null) {
+	        	out.println("<h2>New achievement!</h2>");
+        		out.println("<img style='max-height: 100px; max-width: 100px;' src='" + practiceAchievement.pictureURL + "'>");
+        		out.println("<br>");
+        		out.println("<b>Name</b>: " + practiceAchievement.name);
+        		out.println("<br>");
+        		out.println("<b>Description</b>: " + practiceAchievement.description);
+        		out.println("<br><br>");
 	        	
-	        	for (int i = 0; i < newAchievements.size(); i++) {
-	        		AchievementGuidelinesData achievement = newAchievements.get(i);
-	        		out.println("<img style='max-height: 100px; max-width: 100px;' src='" + achievement.pictureURL + "'>");
-	        		out.println("<br>");
-	        		out.println("<b>Name</b>: " + achievement.name);
-	        		out.println("<br>");
-	        		out.println("<b>Description</b>: " + achievement.description);
-	        		out.println("<br><br>");
-	        	}
-	        	
-	        	request.getSession().setAttribute("newAchievements", null);
+	        	request.getSession().setAttribute("practiceAchievement", null);
         	}
         %>
       </div>

@@ -1,6 +1,5 @@
 package quizme.database;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -147,35 +146,6 @@ public static final int REQUEST = 3;
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public int numOfMessagesHelper(Timestamp t) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(messageid) FROM messages" 
-				+ "WHERE date > t");
-			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			return rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-	
-	private static final long dayDuration = 24 * 60 * 60 * 1000;
-	private static final long weekDuration = 7 * 24 * 60 * 60 * 1000;
-	public int[] numOfMessages() {
-		int[] numOfMessages = new int[3];
-		
-		Timestamp lastDay = new Timestamp(System.currentTimeMillis() - dayDuration);
-		numOfMessages[0] = numOfMessagesHelper(lastDay); 
-		
-		Timestamp lastWeek = new Timestamp(System.currentTimeMillis() - weekDuration);
-		numOfMessages[1] = numOfMessagesHelper(lastWeek);  
-		
-		Timestamp allTime = new Timestamp(0);
-		numOfMessages[2] = numOfMessagesHelper(allTime); 
-		return numOfMessages;
 	}
 	
 	/* HomePage related functions */
