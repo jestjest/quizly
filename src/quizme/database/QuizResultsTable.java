@@ -46,16 +46,6 @@ public class QuizResultsTable {
 		return -1; /* indicates database error */
 	}
 	
-	public void removeResult(int resultid) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM results WHERE resultid = ?");
-			pstmt.setInt(1, resultid);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void removeAllQuizResultsById(int quizID) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM results WHERE quizid = ?");
@@ -64,26 +54,6 @@ public class QuizResultsTable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public String getUsername(int resultid) {
-		return getString(resultid, "username");
-	}
-	
-	public int getQuizID(int resultid) {
-		return getInt(resultid, "quizid");
-	}
-	
-	public double getScore(int resultid) {
-		return getDouble(resultid, "score");
-	}
-	
-	public long getTime(int resultid) {
-		return getLong(resultid, "time");
-	}
-	
-	public Timestamp getDate(int resultid) {
-		return getDate(resultid, "date");
 	}
 	
 	public int numOfQuizzesTakenHelper(Timestamp t) {
@@ -256,73 +226,6 @@ public class QuizResultsTable {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	/* helper functions */
-	
-	private String getString(int resultid, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM results WHERE resultid = ?");
-			pstmt.setInt(1, resultid);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getString(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null; /* indicates database error */
-	}
-	
-	private int getInt(int resultid, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM results WHERE resultid = ?");
-			pstmt.setInt(1, resultid);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return -1; /* indicates database error */
-	}
-	
-	private double getDouble(int resultid, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM results WHERE resultid = ?");
-			pstmt.setInt(1, resultid);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getDouble(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return -1; /* indicates database error */
-	}
-	
-	private long getLong(int resultid, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM results WHERE resultid = ?");
-			pstmt.setInt(1, resultid);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getLong(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return -1; /* indicates database error */
-	}
-	
-	private Timestamp getDate(int resultid, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM results WHERE resultid = ?");
-			pstmt.setInt(1, resultid);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getTimestamp(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null; /* indicates database error */
 	}
 }
 

@@ -95,57 +95,9 @@ public static final int REQUEST = 3;
   		}
   	}
 	
-	/* ONLY USE FOR TESTING */
-	public void clearAllMessages() {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM messages");
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void setSeen(int messageid, boolean seen) {
 		int seenNum = seen ? 1 : 0;
 		setInt(messageid, "seen", seenNum);
-	}
-	
-	public boolean getSeen(int messageid) {
-		return (getInt(messageid, "seen") > 0);
-	}
-	
-	public ResultSet getAllUserReceivedMessages(String toUsername) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM messages WHERE toUsername = ? ORDER BY date DESC");
-			pstmt.setString(1, toUsername);
-			return pstmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public ResultSet getRecentUserReceivedMessages(String toUsername, int numOfResults) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM messages WHERE toUsername = ? ORDER BY date DESC LIMIT ?");
-			pstmt.setString(1, toUsername);
-			pstmt.setInt(2, numOfResults);
-			return pstmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public ResultSet getAllUserSentMessages(String fromUsername) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM messages WHERE fromUsername = ? ORDER BY date DESC");
-			pstmt.setString(1, fromUsername);
-			return pstmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	/* HomePage related functions */
@@ -205,33 +157,6 @@ public static final int REQUEST = 3;
 		return null;
 	}
 	
-	/**
-	 * Check if username1 has requested to be friend with username2
-	 * @param username1
-	 * @param username2
-	 * @return true/false, null if exception occurs.
-	 */
-	public Boolean hasRequested( String username1, String username2 ) {
-		try {
-			PreparedStatement pstmt = 
-					db.getPreparedStatement("SELECT * FROM messages "
-							+ "WHERE fromUsername = ? AND toUsername = ? AND type = 3");
-			pstmt.setString(1, username1);
-			pstmt.setString(1, username2);
-			ResultSet rs = pstmt.executeQuery(); // Query
-			rs.last();
-			if ( rs.getRow() > 0 ) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		} catch( SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	/* helper functions */
 	private void setInt(int messageid, String field, int value) {
 		try {
@@ -242,18 +167,5 @@ public static final int REQUEST = 3;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private int getInt(int messageid, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " +  field + " FROM messages WHERE messageid = ?");
-			pstmt.setInt(1, messageid);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return -1; /* indicates database error */
 	}
 }

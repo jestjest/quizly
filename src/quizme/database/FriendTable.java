@@ -58,16 +58,6 @@ private DBConnection db;
 		}
 	}
 	
-	/* ONLY USE FOR TESTING */
-	public void clearAllFriends() {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM friends");
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public boolean areFriends(String username1, String username2) {
 		try {
 			String searchName1 = (username1.compareTo(username2) < 0) ? username1 : username2; 

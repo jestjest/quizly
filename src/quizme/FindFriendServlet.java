@@ -1,7 +1,6 @@
 package quizme;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import quizme.database.*;
-import quizme.links.*;
 
 /**
  * Servlet implementation class FindFriendServlet

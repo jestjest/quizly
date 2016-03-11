@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import quizme.database.FriendTable;
 import quizme.database.MessagesTable;
+import quizme.database.UsersTable;
 import quizme.links.QuizSummaryInfo;
 
 /**
@@ -45,9 +46,10 @@ public class ChallengeFriendServlet extends HttpServlet {
 		String targetFriend = request.getParameter("friend");
 		MessagesTable messagesTable = (MessagesTable) request.getServletContext().getAttribute("messagesTable");
 		FriendTable friendTable = (FriendTable) request.getServletContext().getAttribute("friendTable");
+		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
 		
 		// if not friends or user does not exist
-		if (!(friendTable.areFriends(user.getName(), targetFriend))) {
+		if (!(friendTable.areFriends(user.getName(), targetFriend) && usersTable.usernameAlreadyExists(targetFriend))) {
 			displayError("You cannot challenge '" + targetFriend + "'. Check if you are friends with the user or if the user exists.", request, response);
 			return;
 		}

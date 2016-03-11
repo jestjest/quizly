@@ -109,26 +109,6 @@ public abstract class Question {
 	}
 
 	/**
-	 * Show the necessary fields for this question type, allowing the
-	 * user (creator) to create a new question. If the question is 
-	 * created previously, this function can be used to edit the contents.
-	 * @param out a StringBuilder used to write contents
-	 * @see #show(java.io.PrintWriter)
-	 */
-	public void create( StringBuilder out ) {
-		out.append("<h1>Create a super question</h1>");
-	}
-
-	/**
-	 * Present a question and the answer of user.
-	 * @param out a StringBuilder used to write contents.
-	 * @see #show(java.io.PrintWriter)
-	 */
-	public void answer( StringBuilder out ) {
-		out.append("<h1>Super answer</h1>");
-	}
-
-	/**
 	 * Present a summary of the question and user answer.
 	 * @param out a StringBuilder used to write contents.
 	 * @throws IOException 
@@ -145,6 +125,4 @@ public abstract class Question {
 	public int points() {
 		return points;
 	}
-
-
 }

@@ -56,8 +56,6 @@ public class TakeQuizServlet extends HttpServlet {
 		addFillBlankQuestions(request, quizid, quiz);
 		addMultipleChoiceQuestions(request, quizid, quiz);
 		addPictureResponseQuestions(request, quizid, quiz);
-		addMultipleAnswersQuestions(request, quizid, quiz);
-		addTrueFalseQuestions(request, quizid, quiz);
 		
 		if (randomOrder) quiz.randomizeQuestionOrder();
 		if (practiceMode) { 
@@ -120,27 +118,4 @@ public class TakeQuizServlet extends HttpServlet {
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
-
-	private void addMultipleAnswersQuestions(HttpServletRequest request, int quizid, Quiz quiz) {
-		MultipleAnswersQuestionTable multipleAnswersTable = (MultipleAnswersQuestionTable) request.getServletContext().getAttribute("multipleAnswersTable");
-		ResultSet rs = multipleAnswersTable.getAllQuizEntries(quizid);
-		try {
-			while(rs.next()) {
-				MultipleAnswers ma = new MultipleAnswers(rs);
-				quiz.setQuestion(ma.order, ma);
-			}
-		} catch (SQLException e) { e.printStackTrace(); }
-	}
-	
-	private void addTrueFalseQuestions(HttpServletRequest request, int quizid, Quiz quiz) {
-		TrueFalseQuestionTable trueFalseTable = (TrueFalseQuestionTable) request.getServletContext().getAttribute("trueFalseTable");
-		ResultSet rs = trueFalseTable.getAllQuizEntries(quizid);
-		try {
-			while(rs.next()) {
-				TrueFalse tf = new TrueFalse(rs);
-				quiz.setQuestion(tf.order, tf);
-			}
-		} catch (SQLException e) { e.printStackTrace(); }
-	}
-	
 }

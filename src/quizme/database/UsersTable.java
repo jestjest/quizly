@@ -73,15 +73,6 @@ public class UsersTable {
 		return false;
 	}
 	
-	public void setPassword(String username, String password) {
-		/* assumes the new password has already been hashed */
-		setString(username, "password", password);
-	}
-	
-	public String getPassword(String username) {
-		return getString(username, "password");
-	}
-	
 	public void setAdmin(String username, boolean admin) {
 		int adminNum = (admin) ? 1 : 0;
 		setInt(username, "admin", adminNum);
@@ -136,33 +127,7 @@ public class UsersTable {
 		}
 		return null;
 	}
-	
-	/* helper functions */
-	
-	private void setString(String username, String field, String value) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("UPDATE users SET " + field + " = ?  WHERE username = ?");
-			pstmt.setString(1, value);
-			pstmt.setString(2, username);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private String getString(String username, String field) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT " + field + " FROM users WHERE username = ?");
-			pstmt.setString(1, username);
-			ResultSet rs = pstmt.executeQuery();
-			rs.first();
-			return rs.getString(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null; /* indicates database error */
-	}
-	
+
 	private void setInt(String username, String field, int value) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("UPDATE users SET " + field + " = ? WHERE username = ?");

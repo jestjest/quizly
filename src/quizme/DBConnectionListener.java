@@ -57,12 +57,6 @@ public class DBConnectionListener implements ServletContextListener {
 		PictureResponseQuestionTable prTable = new PictureResponseQuestionTable(con);
 		arg0.getServletContext().setAttribute("pictureTable", prTable);
 
-		MultipleAnswersQuestionTable multipleAnswersTable = new MultipleAnswersQuestionTable(con);
-		arg0.getServletContext().setAttribute("multipleAnswersTable", multipleAnswersTable);
-
-		TrueFalseQuestionTable trueFalseTable = new TrueFalseQuestionTable(con);
-		arg0.getServletContext().setAttribute("trueFalseTable", trueFalseTable);
-
 		QuizResultsTable quizResultTable = new QuizResultsTable(con);
 		arg0.getServletContext().setAttribute("quizResultTable", quizResultTable);
 

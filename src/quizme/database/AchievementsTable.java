@@ -51,17 +51,7 @@ public class AchievementsTable {
 			e.printStackTrace();
 		}
 	}
-
-	/* ONLY USE FOR TESTING */
-	public void clearAllAchievements() {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM achievements");
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	public boolean hasAchievement(String username, String achievement) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements WHERE username = ? and achievement = ?");
@@ -79,19 +69,6 @@ public class AchievementsTable {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements WHERE username = ? ORDER BY date DESC");
 			pstmt.setString(1, username);
-			return pstmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public ResultSet getRecentUserAchievements(String username, int numOfResults) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("SELECT * FROM achievements "
-					+ "WHERE username = ? ORDER BY date DESC LIMIT ? ");
-			pstmt.setString(1, username);
-			pstmt.setInt(2, numOfResults);
 			return pstmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
