@@ -79,31 +79,60 @@
 		%>
 	</div>
 	
+	<hr>
+	
 	<div class="container text-center">
 		<h3>Users</h3>
 		<%
 		if (users.isEmpty()) {
 			out.println("No users");
 		} else {
-			out.println("<form action='ManageAdminServlet' method='POST'>");
 	       	for (User user : users) {
+				out.println("<form action='ManageAdminServlet' method='POST'>");
 	       		out.println("<div class='row'>");
-	       		out.println("<b><span name='username'>" + user.getName() + "</span></b> &nbsp;&nbsp;&nbsp;");
+	       		out.println("<b><span>" + user.getName() + "</span></b> &nbsp;&nbsp;&nbsp;");
 	       		out.println("<br><br>");
 	       		out.println("<input style='width: 175px !important;' class='btn btn-danger' type='submit' name='remove-user' value='Delete this user'>");
 	       		
 	       		if (user.isAdmin()) {
 		       		out.println("<input style='width: 175px !important;' class='btn btn-warning' type='submit' name='remove-admin-status' value='Remove admin status'>");
 	       		} else {
-		       		out.println("<input style='width: 175px !important;' class='btn btn-warning' type='submit' name='add-admin-status' value='Add admin status'>");
+		       		out.println("<input style='width: 175px !important;' class='btn btn-primary' type='submit' name='add-admin-status' value='Add admin status'>");
 	       		}
+	       		out.println("<input type='hidden' name='username' value='" + user.getName() + "'>");
 	       		out.println("</div>");
 	       		out.println("<br><br>");
+		       	out.println("</form>");
 	       	}
-	       	out.println("</form>");
 		}
 		%>
 	</div>
+	
+	<hr>
+	
+	<div class="container text-center">
+		<h3>Quizzes</h3>
+		<%
+		if (quizzes.isEmpty()) {
+			out.println("No quizzes");
+		} else {
+	       	for (QuizLink quiz : quizzes) {
+				out.println("<form action='ManageAdminServlet' method='POST'>");
+	       		out.println("<div class='row'>");
+	       		out.println("<b>" + quiz.getQuizLink() + "</b> by " + quiz.getCreatorLink() + "&nbsp;&nbsp;&nbsp;");
+	       		out.println("<br>");
+	       		out.println("<input style='width: 175px !important;' class='btn btn-danger' type='submit' name='remove-quiz' value='Delete this quiz'>");
+	       		out.println("<input style='width: 175px !important;' class='btn btn-danger' type='submit' name='remove-quiz-results' value='Clear quiz history'>");
+	       		out.println("<input type='hidden' name='quizID' value='" + quiz.getQuizID() + "'");
+	       		out.println("</div>");
+	       		out.println("<br><br>");
+		       	out.println("</form>");
+	       	}
+		}
+		%>
+	</div>
+	
+	<hr>
 	
 	<div class="container text-center">
       	<h3>Website stats:</h3>

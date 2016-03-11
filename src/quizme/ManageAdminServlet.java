@@ -36,7 +36,6 @@ public class ManageAdminServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("hi");
 		if (request.getParameter("add-announcement") != null) { /* other capabilities to incorporate? */
 			addAnnouncement(request);
 		} else if (request.getParameter("remove-announcement") != null) {
@@ -44,7 +43,6 @@ public class ManageAdminServlet extends HttpServlet {
 		} else if (request.getParameter("remove-user") != null) {
 			removeUser(request);
 		} else if (request.getParameter("add-admin-status") != null) {
-			System.out.println("true");
 			changeAdminStatus(request, true);
 		} else if (request.getParameter("remove-admin-status") != null ) {
 			changeAdminStatus(request, false);
@@ -88,13 +86,13 @@ public class ManageAdminServlet extends HttpServlet {
 	
 	private void removeQuiz(HttpServletRequest request) {
 		QuizTable quizTable = (QuizTable) request.getServletContext().getAttribute("quizTable");
-		String quizName = request.getParameter("quizName");
-		quizTable.removeQuizByName(quizName);
+		int quizID= Integer.parseInt(request.getParameter("quizID"));
+		quizTable.removeQuiz(quizID);
 	}
 	
 	private void removeQuizResults(HttpServletRequest request) {
 		QuizResultsTable resultsTable = (QuizResultsTable) request.getServletContext().getAttribute("resultsTable");
-		String quizName = request.getParameter("quizName");
-		resultsTable.removeAllQuizResultsByName(quizName);
+		int quizID= Integer.parseInt(request.getParameter("quizID"));
+		resultsTable.removeAllQuizResultsById(quizID);
 	}
 }

@@ -60,21 +60,21 @@ public class QuizLink {
 	 * Returns an HTML link element for the quiz link.
 	 */
 	public String getQuizLink() {
-		return "<a href='QuizSummaryServlet?quizID=" + quizID + "' class='btn'>" + name + "</a>";
+		return "<a class='btn btn-primary' href='QuizSummaryServlet?quizID=" + quizID + "' class='btn'>" + name + "</a>";
 	}
 	
 	/**
 	 * Returns an HTML link element for the creator.
 	 */
 	public String getCreatorLink() {
-		return "<a href='UserPageServlet?username=" + creatorUsername + "' class='btn'>" + creatorUsername + "</a>";
+		return "<a class='btn btn-default' href='UserPageServlet?username=" + creatorUsername + "' class='btn'>" + creatorUsername + "</a>";
 	}
 	
 	/**
 	 * Return an HTML link element for the quiz-taker
 	 */
 	public String getTakerLink() {
-		return "<a href='UserPageServlet?username=" + takenUsername + "' class='btn'>" + takenUsername + "</a>";
+		return "<a class='btn btn-default' href='UserPageServlet?username=" + takenUsername + "' class='btn'>" + takenUsername + "</a>";
 	}
 	
 	/**
@@ -82,6 +82,13 @@ public class QuizLink {
 	 */
 	public Timestamp getDateCreated() {
 		return dateCreated;
+	}
+	
+	/**
+	 * Returns the quiz ID of the quiz link object
+	 */
+	public int getQuizID() {
+		return quizID;
 	}
 
 	/**

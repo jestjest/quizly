@@ -22,7 +22,7 @@
     
     <div class="jumbotron">
       <div class="container text-center">
-        <h1>Welcome to <%=request.getParameter("username")%>'s page!</h1>
+        <h2>Welcome to <%=request.getParameter("username")%>'s page!</h2>
         <%
         int friendStatus = (int) request.getAttribute("friendStatus");
         if (friendStatus == 0) {

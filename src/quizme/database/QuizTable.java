@@ -64,16 +64,6 @@ public class QuizTable {
 			e.printStackTrace();
 		}
 	}
-	
-	public void removeQuizByName(String name) {
-		try {
-			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM quizzes WHERE name = ?");
-			pstmt.setString(1, name);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public ResultSet getEntry(int quizid) {
 		try {

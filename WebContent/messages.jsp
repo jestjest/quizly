@@ -20,7 +20,7 @@
 	
 	<div class="jumbotron">
 		<div class="container text-center">
-			<h1>Your Messages</h2>
+			<h2>Your Messages</h2>
 		</div>
 	</div>
 

@@ -14,9 +14,10 @@
 <body>
 	<jsp:include page="header.jsp"/>
 	
-    <div class="jumbotron vertical-center">
+    <div class="jumbotron">
       <div class="container text-center">
-        <h1>Create a quiz!</h1>
+      	<br>
+        <h2>Create a quiz!</h2>
         If you leave this page, your quiz will not be created or saved. 
         <br><br>
         

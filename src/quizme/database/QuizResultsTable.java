@@ -56,16 +56,11 @@ public class QuizResultsTable {
 		}
 	}
 	
-	public void removeAllQuizResultsByName(String quizName) {
+	public void removeAllQuizResultsById(int quizID) {
 		try {
-			PreparedStatement pstmt1 = db.getPreparedStatement("SELECT quizid FROM quizzes WHERE name = ?");
-			pstmt1.setString(1, quizName);
-			ResultSet rs = pstmt1.executeQuery();
-			rs.next();
-			int quizid = rs.getInt(1); 
-			PreparedStatement pstmt2 = db.getPreparedStatement("DELETE FROM results WHERE quizid = ?");
-			pstmt2.setInt(1, quizid);
-			pstmt2.executeUpdate();
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM results WHERE quizid = ?");
+			pstmt.setInt(1, quizID);
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

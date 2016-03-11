@@ -20,7 +20,7 @@
 	
 	<div class="jumbotron">
 		<div class="container text-center">
-			<h1>Quiz: <b><%=quizSummary.getName() %></b></h1>
+			<h2>Quiz: <b><%=quizSummary.getName() %></b></h2>
 			<p>Created by: <b><%=quizSummary.getCreatorUsername() %></b>.</p>
 			<h3>Number of questions: <%=quizSummary.numOfQuestions() %></h3>
 			<h3><b>Go!</b></h3>

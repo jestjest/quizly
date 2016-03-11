@@ -14,7 +14,9 @@
 	    	<input type="hidden" name="username" value=<%=user.getName() %>>
 			<a href="UserPageServlet?username=<%=user.getName()%>" class="btn btn-success" style="color: white">Hi <%=user.getName()%>!</a> &nbsp;&nbsp;&nbsp;
 		 	<a href="create-quiz.jsp" class="btn btn-primary">Create a Quiz</a>
-		 	<a href="MessagesServlet" class="btn btn-primary">See Messages</a>
+		 	<a href="QuizDirectoryServlet" class="btn btn-primary">Quiz Directory</a>
+		 	<a href="friend-search.jsp" class="btn btn-primary">Users Directory</a>
+		 	<a href="MessagesServlet" class="btn btn-primary">Messages</a>
 		 	<a href="HistoryServlet" class="btn btn-primary">History</a>
 		 	<%
 		 	if (user.isAdmin()) {

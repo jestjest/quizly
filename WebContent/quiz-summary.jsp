@@ -28,7 +28,7 @@
 	
 	<div class="jumbotron">
 		<div class="container text-center">
-			<h1>Quiz: <b><%=quizSummary.getName() %></b></h1>
+			<h2>Quiz: <b><%=quizSummary.getName() %></b></h2>
 			<p>Created by: <b><%=quizSummary.getCreatorUsername() %></b></p>
 			<p>Last modified on <b><%=quizSummary.getModifiedDate() %></b></p>
 			<h3>Description: <%=quizSummary.getDescription() %></h3>

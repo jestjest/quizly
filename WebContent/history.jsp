@@ -21,7 +21,7 @@
 	
 	<div class="jumbotron">
       <div class="container text-center">
-      	<h1>Your QuizMe history</h1>
+      	<h2>Your QuizMe history</h2>
       	<%
       	SummaryStat myStats = (SummaryStat) request.getAttribute("myAllSummaryStat");
       	out.println("<p><b>Your overall summary:</b></p>");
