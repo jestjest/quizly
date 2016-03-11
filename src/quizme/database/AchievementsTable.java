@@ -102,7 +102,8 @@ public class AchievementsTable {
 	public int numOfAchievementsHelper(Timestamp t) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(username) FROM achievements " 
-				+ "WHERE date > t");
+				+ "WHERE date > ?");
+			pstmt.setTimestamp(1, t);
 			ResultSet rs = pstmt.executeQuery();
 			rs.next();
 			return rs.getInt(1);

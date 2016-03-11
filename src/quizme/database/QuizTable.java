@@ -168,7 +168,8 @@ public class QuizTable {
 	public int numOfQuizzesCreatedHelper(Timestamp t) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(quizid) FROM quizzes " 
-				+ "WHERE modifiedDate > t");
+				+ "WHERE modifiedDate > ?");
+			pstmt.setTimestamp(1, t);
 			ResultSet rs = pstmt.executeQuery();
 			rs.next();
 			return rs.getInt(1);

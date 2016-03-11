@@ -94,7 +94,8 @@ public class QuizResultsTable {
 	public int numOfQuizzesTakenHelper(Timestamp t) {
 		try {
 			PreparedStatement pstmt = db.getPreparedStatement("SELECT COUNT(resultid) FROM results " 
-				+ "WHERE date > t");
+				+ "WHERE date > ?");
+			pstmt.setTimestamp(1, t);
 			ResultSet rs = pstmt.executeQuery();
 			rs.next();
 			return rs.getInt(1);
