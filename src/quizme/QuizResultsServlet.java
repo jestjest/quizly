@@ -85,7 +85,7 @@ public class QuizResultsServlet extends HttpServlet {
 					}		
 				}
 			}
-			
+
 			// convert list of Strings to one String for each question and send it to the question
 			for ( int i = 0; i < quiz.numOfQuestionsRemaining(); i++ ) {
 				List<String> responses = responseTextMap.get(i + 1);
@@ -97,13 +97,13 @@ public class QuizResultsServlet extends HttpServlet {
 				quiz.getQuestion(i).setResponse( concatStrings(orderedResponses) );
 			}
 		}
-		
+
 		// if in practiceMode forward to PracticeModeServlet
 		if ( (boolean) request.getSession().getAttribute("practiceMode")) {
 			request.getRequestDispatcher("PracticeModeServlet").forward(request, response);
 			return;
 		}
-		
+
 		// Compute score;
 		quiz.computeScore();
 
@@ -159,7 +159,7 @@ public class QuizResultsServlet extends HttpServlet {
 		
 		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
-	
+
 	private String concatStrings( String[] S ) {
 		if ( S.length == 0 ) {
 			return "";
