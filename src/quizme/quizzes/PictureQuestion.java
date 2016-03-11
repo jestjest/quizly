@@ -123,7 +123,7 @@ public class PictureQuestion extends Question {
 		}
 		
 		out.append("<b>Question " + questionIndex + ": </b>");
-		out.append("<img style='max-height: 100px; max-width: 100px;' src='"+ pictureURL + "' alt='Sorry! Image not found.'><br>");
+		out.append("<img style='max-height: 300px; max-width: 300px;' src='"+ pictureURL + "' alt='Sorry! Image not found.'><br>");
 		out.append("<b>Your answer: </b>");
 		out.append(responseText);
 		out.append("<br>");

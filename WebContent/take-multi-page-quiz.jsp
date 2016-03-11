@@ -22,7 +22,7 @@
 		<div class="container text-center">
 			<h2>Quiz: <b><%=quizSummary.getName() %></b></h2>
 			<p>Created by: <b><%=quizSummary.getCreatorUsername() %></b>.</p>
-			<h3>Number of questions: <%=quizSummary.numOfQuestions() %></h3>
+			<h3>Number of questions: <%=quiz.numOfQuestionsRemaining()%></h3>
 			<h3><b>Go!</b></h3>
 		</div>
 	</div>
@@ -38,7 +38,7 @@
        	<input type='hidden' name='questionIndex' value='<%=questionIndex%>'>
 		
 		<%
-		if (questionIndex == quiz.numOfQuestions()) {
+		if (questionIndex == quiz.numOfQuestionsRemaining()) {
         	out.println("<input type='submit' name='submit-quiz' value='Finish' class='btn btn-success'>");
 		} else {
 			out.println("<input type='submit' name='next-question' value='Next question' class='btn btn-primary'>");

@@ -22,14 +22,15 @@
 		<div class="container text-center">
 			<h2>Quiz: <b><%=quizSummary.getName() %></b></h2>
 			<p>Created by: <b><%=quizSummary.getCreatorUsername() %></b>.</p>
-			<h3>Number of questions: <%=quizSummary.numOfQuestions() %></h3>
+			<h3>Number of questions: <%=quiz.numOfQuestionsRemaining() %></h3>
 			<h3><b>Go!</b></h3>
 		</div>
 	</div>
 	
+	<div class='container text-center'>
 	<form action='QuizResultsServlet' method='POST'>
 		<%
-		for (int i = 0; i < quiz.numOfQuestions(); i++) {
+		for (int i = 0; i < quiz.numOfQuestionsRemaining(); i++) {
 			Question question = quiz.getQuestion(i);
 			out.println("Question " + (i+1) + "). ");
 			question.show(out, i+1);
@@ -39,6 +40,7 @@
 	
         <input type="submit" name="submit-quiz" value="I'm done!" class="btn btn-primary">
 	</form>
+	</div>
 
 </body>
 </html>

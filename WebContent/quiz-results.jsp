@@ -57,8 +57,6 @@
 		%>	
 	</div>
 	
-	<hr>
-	
 	<div class="container text-center">
 		<h2>How well you did</h2>		
 		<%
@@ -79,12 +77,12 @@
 		
 		float difference = quiz.getScore() - userStats.maxScore;
 		if (difference > 0) {
-			out.println("<p>Good job! You set a personal best by " + difference + "%.</p>");
+			out.println("<b><p>Good job! You set a personal best by " + difference + "%.</p></b>");
 			
 		} else if (quiz.getScore() - userStats.minScore > 0) {
-			out.println("Keep trying, at least this wasn't a personal worst score!");
+			out.println("<b>Keep trying, at least this wasn't a personal worst score!</b>");
 		} else {
-			out.println("Tough luck, try again for a higher score!");
+			out.println("<b>Tough luck, try again for a higher score!</b>");
 		}
 		
 		out.println("<br>");
@@ -96,15 +94,17 @@
 		out.println("<p>The all time fastest completion was " + (allStats.minTime / 1000.0) + " seconds.</p>");
 		out.println("<p>The all time slowest completion was " + (allStats.maxTime / 1000.0) + " seconds.</p>");
 		out.println("<p>The all time mean completion was " + (allStats.meanTime / 1000.0) + " seconds.</p>");
-		
+		out.println("<br>");
+					
 		double timeDifference = (quiz.getTime() - userStats.minTime) / 1000.0;
 		if (timeDifference < 0) {
-			out.println("<p>Good job! You set a personal best by " + (-1 * timeDifference) + " seconds.</p>");
-			
+			out.println("<b><p>Good job! You set a personal best by " + (-1 * timeDifference) + " seconds.</p></b>");
+		} else if (userStats.minTime == 0.0) {
+			out.println("<b><p>Good job! You set a personal best by " + timeDifference + " seconds.</p></b>");
 		} else if (quiz.getTime() - userStats.maxTime < 0) {
-			out.println("<p>Keep trying, at least this wasn't a personal worst time!</p>");
+			out.println("<b><p>Keep trying, at least this wasn't a personal worst time!</p></b>");
 		} else {
-			out.println("<p>Tough luck, try again for a faster time!</p>");
+			out.println("<b><p>Tough luck, try again for a faster time!</p></b>");
 		}
 		%>
 	</div>
