@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import quizme.database.*;
+import quizme.links.Performance;
 import quizme.links.QuizSummaryInfo;
 import quizme.quizzes.*;
 
@@ -135,7 +138,25 @@ public class QuizResultsServlet extends HttpServlet {
 		}
 		request.setAttribute("achievements", achievements);
 		
-
+		// recompute quizSUmmaryInfo
+ 		// determine the time after which is considered "recent" or "next day"
+ 		Timestamp recentTime = new Timestamp(System.currentTimeMillis() - QuizSummaryServlet.recentDuration );
+ 		Timestamp lastDayTime = new Timestamp(System.currentTimeMillis() - QuizSummaryServlet.dayDuration );
+ 
+		QuizSummaryInfo newQuizSummary = quizTable.getQuizSummaryInfo(quizID, user.getName(),
+ 				recentTime, lastDayTime, QuizSummaryServlet.resultNumLimit);
+ 
+ 		Collections.sort(newQuizSummary.getMyPerformances(), new Comparator<Performance>(){
+ 			public int compare(Performance o1, Performance o2){
+ 				if(o1.dateTaken == o2.dateTaken) {
+ 					return 0;
+ 				}
+ 				return o1.dateTaken.getTime() < o2.dateTaken.getTime() ? -1 : 1;
+ 			}
+ 		});
+ 		Collections.reverse(newQuizSummary.getMyPerformances());
+ 		request.setAttribute("newQuizSummary", newQuizSummary);
+		
 		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
 	

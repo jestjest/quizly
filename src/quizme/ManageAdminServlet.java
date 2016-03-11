@@ -1,6 +1,8 @@
 package quizme;
 
 import java.io.IOException;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -85,13 +87,26 @@ public class ManageAdminServlet extends HttpServlet {
 	}
 	
 	private void removeQuiz(HttpServletRequest request) {
-		QuizTable quizTable = (QuizTable) request.getServletContext().getAttribute("quizTable");
+		ServletContext context = request.getServletContext();
+		QuizTable quizTable = (QuizTable) context.getAttribute("quizTable");
+		QuestionResponseTable qrTable = (QuestionResponseTable) context.getAttribute("qrTable");
+		FillInTheBlankTable blankTable = (FillInTheBlankTable) context.getAttribute("blankTable");
+		MultipleChoiceQuestionTable mcTable = (MultipleChoiceQuestionTable) context.getAttribute("mcTable");
+		PictureResponseQuestionTable prTable = (PictureResponseQuestionTable) context.getAttribute("pictureTable");
+		
 		int quizID= Integer.parseInt(request.getParameter("quizID"));
 		quizTable.removeQuiz(quizID);
+		qrTable.removeQuizQuestions(quizID);
+		blankTable.removeQuizQuestions(quizID);
+		mcTable.removeQuizQuestions(quizID);
+		prTable.removeQuizQuestions(quizID);
+		
+		
+		// delete results?
 	}
 	
 	private void removeQuizResults(HttpServletRequest request) {
-		QuizResultsTable resultsTable = (QuizResultsTable) request.getServletContext().getAttribute("resultsTable");
+		QuizResultsTable resultsTable = (QuizResultsTable) request.getServletContext().getAttribute("quizResultTable");
 		int quizID= Integer.parseInt(request.getParameter("quizID"));
 		resultsTable.removeAllQuizResultsById(quizID);
 	}

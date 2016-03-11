@@ -50,7 +50,7 @@ public class TakeQuizServlet extends HttpServlet {
 		addPictureResponseQuestions(request, quizid, quiz);
 		addMultipleAnswersQuestions(request, quizid, quiz);
 		addTrueFalseQuestions(request, quizid, quiz);
-			
+		
 		if (randomOrder) quiz.randomizeQuestionOrder();
 		if (practiceMode) { 
 		/* set up an array to keep track of the number of times each question is answered correctly */

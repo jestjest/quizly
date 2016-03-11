@@ -8,6 +8,7 @@
 
 <% Quiz quiz = (Quiz) request.getSession().getAttribute("quiz"); %>    
 <% QuizSummaryInfo quizSummaryInfo = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");%>
+<% QuizSummaryInfo newQuizSummary = (QuizSummaryInfo) request.getAttribute("newQuizSummary");%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -61,18 +62,21 @@
 		<h2>How well you did</h2>		
 		<%
 		SummaryStat userStats = quizSummaryInfo.mySummaryStat();
-		SummaryStat allStats = quizSummaryInfo.allSummaryStat();
-		out.println("<p>You've taken this quiz " + (userStats.numberTaken + 1) + " times now.<p>");
+		SummaryStat newUserStats = newQuizSummary.mySummaryStat();
+		
+		SummaryStat newAllStats = newQuizSummary.allSummaryStat();
+		
+		out.println("<p>You've taken this quiz " + newUserStats.numberTaken + " times now.<p>");
 		out.println("<br>");
 		out.println("<h3>Score</h3>");
-		out.println("<p>Your all time highest is " + userStats.maxScore + "%</p>");
-		out.println("<p>Your all time worst is " + userStats.minScore + "%</p>");
-		out.println("<p>Your mean score is " + userStats.meanScore + "%</p>");
+		out.println("<p>Your all time highest is " + newUserStats.maxScore + "%</p>");
+		out.println("<p>Your all time worst is " + newUserStats.minScore + "%</p>");
+		out.println("<p>Your mean score is " + newUserStats.meanScore + "%</p>");
 		
 		out.println("<br>");
-		out.println("<p>The all time highest is " + allStats.maxScore + "%</p>");
-		out.println("<p>The all time worst is " + allStats.minScore + "%</p>");
-		out.println("<p>The all time mean is " + allStats.meanScore + "%</p>");
+		out.println("<p>The all time highest is " + newAllStats.maxScore + "%</p>");
+		out.println("<p>The all time worst is " + newAllStats.minScore + "%</p>");
+		out.println("<p>The all time mean is " + newAllStats.meanScore + "%</p>");
 		out.println("<br>");
 		
 		float difference = quiz.getScore() - userStats.maxScore;
@@ -87,13 +91,13 @@
 		
 		out.println("<br>");
 		out.println("<h3>Time</h3>");
-		out.println("<p>Your fastest completion was " + (userStats.minTime / 1000.0) + " seconds.</p>");
-		out.println("<p>Your slowest completion was " + (userStats.maxTime / 1000.0) + " seconds.</p>");
-		out.println("<p>Your mean completion was " + (userStats.meanTime / 1000.0) + " seconds.</p>");
+		out.println("<p>Your fastest completion is " + (newUserStats.minTime / 1000.0) + " seconds.</p>");
+		out.println("<p>Your slowest completion is " + (newUserStats.maxTime / 1000.0) + " seconds.</p>");
+		out.println("<p>Your mean completion is " + (newUserStats.meanTime / 1000.0) + " seconds.</p>");
 		out.println("<br>");
-		out.println("<p>The all time fastest completion was " + (allStats.minTime / 1000.0) + " seconds.</p>");
-		out.println("<p>The all time slowest completion was " + (allStats.maxTime / 1000.0) + " seconds.</p>");
-		out.println("<p>The all time mean completion was " + (allStats.meanTime / 1000.0) + " seconds.</p>");
+		out.println("<p>The all time fastest completion is " + (newAllStats.minTime / 1000.0) + " seconds.</p>");
+		out.println("<p>The all time slowest completion is " + (newAllStats.maxTime / 1000.0) + " seconds.</p>");
+		out.println("<p>The all time mean completion is " + (newAllStats.meanTime / 1000.0) + " seconds.</p>");
 		out.println("<br>");
 					
 		double timeDifference = (quiz.getTime() - userStats.minTime) / 1000.0;

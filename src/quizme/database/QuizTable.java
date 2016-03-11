@@ -45,10 +45,10 @@ public class QuizTable {
 			pstmt1.setInt(10, numOfTimesTaken);
 			pstmt1.executeUpdate();
 
-			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT quizid FROM quizzes ORDER BY quizid ASC");
+			PreparedStatement pstmt2 = db.getPreparedStatement("SELECT MAX(quizid) as quizid FROM quizzes");
 			ResultSet rs = pstmt2.executeQuery();
 			rs.last();
-			return 2 * rs.getRow() - 1;
+			return rs.getInt("quizid");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

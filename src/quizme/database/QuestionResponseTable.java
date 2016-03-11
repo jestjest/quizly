@@ -57,6 +57,16 @@ public class QuestionResponseTable {
 		}
 	}
 	
+	public void removeQuizQuestions(int quizid) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM questionresponse WHERE quizid = ?");
+			pstmt.setInt(1, quizid);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int getQuizID(int quizid, int questionOrder) {
 		return getInt(quizid, questionOrder, "quizid");
 	}

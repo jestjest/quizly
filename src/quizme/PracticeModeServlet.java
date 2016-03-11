@@ -51,7 +51,9 @@ public class PracticeModeServlet extends HttpServlet {
 			request.getSession().setAttribute("practiceAchievement", practiceAchievement);
 			request.getRequestDispatcher("HomePageServlet").forward(request, response);
 		} else { /* take the quiz again */
-			quiz.randomizeQuestionOrder();
+			if (quizSummaryInfo.randomOrder()) 
+				quiz.randomizeQuestionOrder();			
+			
 			if (quizSummaryInfo.onePage()) {
 				request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response); 
 			} else {

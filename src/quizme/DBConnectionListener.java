@@ -1,6 +1,7 @@
 package quizme;
 
 import java.io.File;
+import java.net.URL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -20,6 +21,8 @@ import quizme.database.*;
  */
 @WebListener
 public class DBConnectionListener implements ServletContextListener {
+
+	private static final String XML_DIR = "../quiz-xml/";
 
 	/**
 	 * Default constructor. 
@@ -90,23 +93,31 @@ public class DBConnectionListener implements ServletContextListener {
 
 	}
 
+	/**
+	 * Loads all quizzes in XML format in the quiz-xml folder located in the same directory as the quizme folder (src folder)
+	 */
+	
 	private void readFromXML( String directoryName, ServletContext context ) throws Exception {
-		File dir = new File( directoryName );
-		File[] directoryListing = dir.listFiles();
-		if (directoryListing != null) {
+		URL url = DBConnectionListener.class.getResource(XML_DIR);
+		if (url == null) {
+		     // error - missing folder
+			System.out.println("Missing XML folder.");
+		} else {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			for (File file : directoryListing) {
-				if ( file.getName().indexOf(".xml") > -1 ) {
-					System.out.println(file.getName());
+		    File dir = new File(url.toURI());
+		    for (File file : dir.listFiles()) {
+		    	if ( file.getName().indexOf(".xml") > -1 ) {
 					DocumentBuilder builder = factory.newDocumentBuilder();
 					Document quiz = builder.parse(file);
 					NodeList questions = quiz.getElementsByTagName("question");
 					QuizTable quizTable = (QuizTable) context.getAttribute("quizTable");
 					int quizID = CreateQuizServlet.addQuiz(quiz, questions.getLength(), "xml_reader", quizTable);                                                                                   
 					CreateQuizServlet.addQuestions(quizID, questions, context);                                                                                                                    
+					System.out.println("Added XML quiz: " + file.getName());
 				}
-			}
+		    }
 		}
+		
 	}
 
 	/**

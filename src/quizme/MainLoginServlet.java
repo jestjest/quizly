@@ -107,7 +107,9 @@ public class MainLoginServlet extends HttpServlet {
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		User user = new User(username, isAdmin);
-		request.getSession().setAttribute("user",  user);
+		request.getSession().setAttribute("user", user);
+		Cookie ck = new Cookie("username", username);  
+		response.addCookie(ck);  
 		request.getRequestDispatcher("HomePageServlet").forward(request, response);
 	}
 	

@@ -60,6 +60,16 @@ public class MultipleChoiceQuestionTable {
 		}
 	}
 	
+	public void removeQuizQuestions(int quizid) {
+		try {
+			PreparedStatement pstmt = db.getPreparedStatement("DELETE FROM multiplechoice WHERE quizid = ?");
+			pstmt.setInt(1, quizid);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int getQuizID(int quizid, int questionOrder) {
 		return getInt(quizid, questionOrder, "quizid");
 	}

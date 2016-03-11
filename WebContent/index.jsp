@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="quizme.User" %>
+<%@ page import="quizme.database.UsersTable" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,7 +17,22 @@
 </head>
 
 <body>
-	
+	<%
+	Cookie ck[] = request.getCookies();  
+    if(ck != null) {  
+		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
+
+    	for (int i = 0; i < ck.length; i++) {
+	    	String name = ck[i].getValue();  
+		    if (name != null && usersTable.usernameAlreadyExists(name)) {  
+				boolean isAdmin = usersTable.getAdmin(name);
+				User user = new User(name, isAdmin);
+				request.getSession().setAttribute("user", user);
+				response.sendRedirect("HomePageServlet");
+		    }  
+    	}
+    }
+	%>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">	
         <div class="navbar-header">
