@@ -21,9 +21,9 @@ import quizme.links.Performance;;
 @WebServlet("/QuizSummaryServlet")
 public class QuizSummaryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final long recentDuration = 30 * 60 * 1000; // recent mean last 30mins
-	private static final long dayDuration = 24 * 60 * 60 * 1000; // last 24 hours
-	private static final int resultNumLimit = 5;
+	public static final long recentDuration = 30 * 60 * 1000; // recent mean last 30mins
+	public static final long dayDuration = 24 * 60 * 60 * 1000; // last 24 hours
+	public static final int resultNumLimit = 5;
 
 	/**
 	 * @see HttpServlet#HttpServlet()

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import quizme.database.*;
+import quizme.links.Performance;
 import quizme.links.QuizSummaryInfo;
 import quizme.quizzes.*;
 
@@ -82,7 +85,7 @@ public class QuizResultsServlet extends HttpServlet {
 					}		
 				}
 			}
-			
+
 			// convert list of Strings to one String for each question and send it to the question
 			for ( int i = 0; i < quiz.numOfQuestionsRemaining(); i++ ) {
 				List<String> responses = responseTextMap.get(i + 1);
@@ -94,13 +97,13 @@ public class QuizResultsServlet extends HttpServlet {
 				quiz.getQuestion(i).setResponse( concatStrings(orderedResponses) );
 			}
 		}
-		
+
 		// if in practiceMode forward to PracticeModeServlet
 		if ( (boolean) request.getSession().getAttribute("practiceMode")) {
 			request.getRequestDispatcher("PracticeModeServlet").forward(request, response);
 			return;
 		}
-		
+
 		// Compute score;
 		quiz.computeScore();
 
@@ -134,11 +137,30 @@ public class QuizResultsServlet extends HttpServlet {
 			achievements.add(highScoreAchievement);
 		}
 		request.setAttribute("achievements", achievements);
-		
+
+		// recompute quizSUmmaryInfo
+		// determine the time after which is considered "recent" or "next day"
+		Timestamp recentTime = new Timestamp(System.currentTimeMillis() - QuizSummaryServlet.recentDuration );
+		Timestamp lastDayTime = new Timestamp(System.currentTimeMillis() - QuizSummaryServlet.dayDuration );
+
+		QuizSummaryInfo quizSummaryInfo = quizTable.getQuizSummaryInfo(quizID, user.getName(),
+				recentTime, lastDayTime, QuizSummaryServlet.resultNumLimit);
+
+		Collections.sort(quizSummaryInfo.getMyPerformances(), new Comparator<Performance>(){
+			public int compare(Performance o1, Performance o2){
+				if(o1.dateTaken == o2.dateTaken) {
+					return 0;
+				}
+				return o1.dateTaken.getTime() < o2.dateTaken.getTime() ? -1 : 1;
+			}
+		});
+		Collections.reverse(quizSummaryInfo.getMyPerformances());
+		request.getSession().setAttribute("quizSummaryInfo", quizSummaryInfo);
+
 
 		request.getRequestDispatcher("quiz-results.jsp").forward(request, response);
 	}
-	
+
 	private String concatStrings( String[] S ) {
 		if ( S.length == 0 ) {
 			return "";
