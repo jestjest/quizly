@@ -78,6 +78,9 @@ public class ManageAdminServlet extends HttpServlet {
 		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
 		String username = request.getParameter("username");
 		usersTable.removeUser(username);
+
+		BlackListTable blacklist = (BlackListTable) request.getServletContext().getAttribute("blacklist");
+		blacklist.addUser(username);
 	}
 	
 	private void changeAdminStatus(HttpServletRequest request, boolean admin) {
@@ -95,14 +98,12 @@ public class ManageAdminServlet extends HttpServlet {
 		PictureResponseQuestionTable prTable = (PictureResponseQuestionTable) context.getAttribute("pictureTable");
 		
 		int quizID= Integer.parseInt(request.getParameter("quizID"));
-		quizTable.removeQuiz(quizID);
+		quizTable.setNumOfQuestions(quizID, -1);
+		
 		qrTable.removeQuizQuestions(quizID);
 		blankTable.removeQuizQuestions(quizID);
 		mcTable.removeQuizQuestions(quizID);
 		prTable.removeQuizQuestions(quizID);
-		
-		
-		// delete results?
 	}
 	
 	private void removeQuizResults(HttpServletRequest request) {

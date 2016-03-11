@@ -46,7 +46,14 @@ public class UserPageServlet extends HttpServlet {
 
 		// get the user (who is visited)
 		String pageUsername = (String) request.getParameter("username");
-
+		
+		BlackListTable blacklist = (BlackListTable) request.getServletContext().getAttribute("blacklist");
+		if (blacklist.inBlacklist(pageUsername)) {
+			request.setAttribute("pageUsername", pageUsername);
+			request.getRequestDispatcher("user-error.jsp").forward(request, response);
+			return;
+		}
+		
 		// created quizzes by this user
 		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
 		List<QuizLink> pageUserQuizzesCreated  = quizTable.getRecentQuizzesCreated(

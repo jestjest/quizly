@@ -56,6 +56,16 @@ public class QuizSummaryServlet extends HttpServlet {
 		User user = (User) request.getSession().getAttribute("user");
 		int quizID = Integer.parseInt(request.getParameter("quizID"));
 		
+		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
+		if (quizTable.getNumOfQuestions(quizID) == -1) {
+			String quizName = quizTable.getName(quizID);
+			String quizCreator = quizTable.getCreatorUsername(quizID);
+			request.setAttribute("quizName", quizName);
+			request.setAttribute("creator", quizCreator);
+			request.getRequestDispatcher("quiz-not-found.jsp").forward(request, response);
+			return;
+		}
+		
 		String ordering = request.getParameter("order");
 		int order = (ordering == null) ? 0 : Integer.parseInt(ordering); // default ordering
 		
@@ -63,9 +73,7 @@ public class QuizSummaryServlet extends HttpServlet {
 		Timestamp recentTime = new Timestamp(System.currentTimeMillis() - recentDuration );
 		Timestamp lastDayTime = new Timestamp(System.currentTimeMillis() - dayDuration );
 
-
 		// Get quiz summary info
-		QuizTable quizTable = (QuizTable) getServletContext().getAttribute("quizTable");
 		QuizSummaryInfo quizSummaryInfo = quizTable.getQuizSummaryInfo(quizID, user.getName(),
 				recentTime, lastDayTime, resultNumLimit);
 

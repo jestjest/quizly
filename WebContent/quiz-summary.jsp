@@ -56,15 +56,28 @@
 		<form action='ChallengeFriendServlet' method='POST'>
 			<label for='friend'>Friend name</label>
 			<input type='text' name='friend' id='friend'>
+			<br><br>
+			<input class='btn btn-danger' type='submit' name='send-challenge' value='Send challenge'>
 		</form>
 	</div>
 	
    	<% 
    	if (request.getAttribute("error") != null) {
+   		out.println("<br>");
    		out.println("<div class='alert alert-danger text-center'>");
    		out.println(request.getAttribute("error"));
    		out.println("</div>");
-   		request.setAttribute("error", "");
+   		request.setAttribute("error", null);
+   	}
+   	%>
+   	
+  	<% 
+   	if (request.getAttribute("success") != null) {
+   		out.println("<br>");
+   		out.println("<div class='alert alert-success text-center'>");
+   		out.println("Challenge sent successfully!");
+   		out.println("</div>");
+   		request.setAttribute("success", null);
    	}
    	%>
 	

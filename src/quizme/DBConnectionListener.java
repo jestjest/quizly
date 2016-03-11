@@ -22,6 +22,8 @@ import quizme.database.*;
 @WebListener
 public class DBConnectionListener implements ServletContextListener {
 
+	// DIRECTORY OF XML QUIZ FILES
+	// Remove quizzes from this folder once loaded or else the quiz will be loaded twice.
 	private static final String XML_DIR = "../quiz-xml/";
 
 	/**
@@ -81,12 +83,15 @@ public class DBConnectionListener implements ServletContextListener {
 
 		UsersTable usersTable = new UsersTable(con);
 		arg0.getServletContext().setAttribute("usersTable", usersTable);
+		
+		BlackListTable blacklist = new BlackListTable(con);
+		arg0.getServletContext().setAttribute("blacklist", blacklist);
 
 		FriendRequestTable requestTable = new FriendRequestTable(con);
 		arg0.getServletContext().setAttribute("requestTable", requestTable);
 		
 		try {
-			readFromXML( "quiz-xml", arg0.getServletContext() );
+			readFromXML(arg0.getServletContext() );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -97,7 +102,7 @@ public class DBConnectionListener implements ServletContextListener {
 	 * Loads all quizzes in XML format in the quiz-xml folder located in the same directory as the quizme folder (src folder)
 	 */
 	
-	private void readFromXML( String directoryName, ServletContext context ) throws Exception {
+	private void readFromXML(ServletContext context ) throws Exception {
 		URL url = DBConnectionListener.class.getResource(XML_DIR);
 		if (url == null) {
 		     // error - missing folder

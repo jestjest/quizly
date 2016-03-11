@@ -44,7 +44,7 @@ public class AdminServlet extends HttpServlet {
 		request.setAttribute("users", users);
 		
 		QuizTable quizTable = (QuizTable) request.getServletContext().getAttribute("quizTable");
-		List<QuizLink> quizzes = quizTable.getRecentQuizzesCreated(limit, fromTime);
+		List<QuizLink> quizzes = quizTable.getRecentValidQuizzesCreated(limit, fromTime);
 		request.setAttribute("quizzes", quizzes);
 		
 		/* Data for the website statistics */

@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
+import quizme.database.BlackListTable;
 import quizme.database.UsersTable;
 
 /**
@@ -62,9 +63,13 @@ public class MainLoginServlet extends HttpServlet {
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
+		BlackListTable blacklist = (BlackListTable) request.getServletContext().getAttribute("blacklist");
+		
 		if (usersTable.correctPassword(username, hashed)) {
 			boolean isAdmin = usersTable.getAdmin(username);
 			forwardLoginSuccess(username, isAdmin, request, response);
+		} else if (blacklist.inBlacklist(username)) {
+			displayError("Your account is no longer valid.", request, response);
 		} else {
 			displayError("Username/password combination was wrong.", request, response);
 		}
@@ -78,8 +83,12 @@ public class MainLoginServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		
 		UsersTable usersTable = (UsersTable) request.getServletContext().getAttribute("usersTable");
+		BlackListTable blacklist = (BlackListTable) request.getServletContext().getAttribute("blacklist");
+
 		if (usersTable.usernameAlreadyExists(username)) {
 			displayError("Username already exists.", request, response);
+		} else if (blacklist.inBlacklist(username)) {
+			displayError("This username is no longer valid.", request, response);
 		} else {
 			createAccount(usersTable, username, hashed, request, response);
 		}

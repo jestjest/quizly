@@ -27,24 +27,26 @@
 		</div>
 	</div>
 	
-	<form action='UpdateQuizServlet' method='POST'>
-		<%
-			int questionIndex = Integer.parseInt(request.getParameter("questionIndex"));
-			Question question = quiz.getQuestion(questionIndex - 1);
-			out.println("Question " + questionIndex + "). ");
-			question.show(out, questionIndex);
-		%>
-		
-       	<input type='hidden' name='questionIndex' value='<%=questionIndex%>'>
-		
-		<%
-		if (questionIndex == quiz.numOfQuestionsRemaining()) {
-        	out.println("<input type='submit' name='submit-quiz' value='Finish' class='btn btn-success'>");
-		} else {
-			out.println("<input type='submit' name='next-question' value='Next question' class='btn btn-primary'>");
-		}
-		%>
-	</form>
+	<div class='container text-center'>
+		<form action='UpdateQuizServlet' method='POST'>
+			<%
+				int questionIndex = Integer.parseInt(request.getParameter("questionIndex"));
+				Question question = quiz.getQuestion(questionIndex - 1);
+				out.println("Question " + questionIndex + "). ");
+				question.show(out, questionIndex);
+			%>
+			
+	       	<input type='hidden' name='questionIndex' value='<%=questionIndex%>'>
+			
+			<%
+			if (questionIndex == quiz.numOfQuestionsRemaining()) {
+	        	out.println("<input type='submit' name='submit-quiz' value='Finish' class='btn btn-success'>");
+			} else {
+				out.println("<input type='submit' name='next-question' value='Next question' class='btn btn-primary'>");
+			}
+			%>
+		</form>
+	</div>
 
 </body>
 </html>

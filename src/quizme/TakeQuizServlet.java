@@ -44,6 +44,14 @@ public class TakeQuizServlet extends HttpServlet {
 		boolean practiceMode = (request.getParameter("practice-mode") != null);
 		
 		Quiz quiz = new Quiz(numOfQuestions);
+		
+		if (numOfQuestions == 0) {
+			request.getSession().setAttribute("quiz", quiz);			
+			quiz.beginTiming();
+			request.getRequestDispatcher("QuizResultsServlet").forward(request, response);
+			return;
+		}
+
 		addQuestionResponseQuestions(request, quizid, quiz);
 		addFillBlankQuestions(request, quizid, quiz);
 		addMultipleChoiceQuestions(request, quizid, quiz);
@@ -57,9 +65,11 @@ public class TakeQuizServlet extends HttpServlet {
 			int[] correctAnswerCounts = new int[numOfQuestions];
 			request.getSession().setAttribute("correctAnswerCounts", correctAnswerCounts);
 		}
+
 		quiz.beginTiming();
 		request.getSession().setAttribute("quiz", quiz);
 		request.getSession().setAttribute("practiceMode", practiceMode);
+		
 		if (quizSummaryInfo.onePage()) {
 			request.getRequestDispatcher("take-single-page-quiz.jsp").forward(request, response); 
 		} else {

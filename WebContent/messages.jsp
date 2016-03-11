@@ -57,6 +57,7 @@
 					
 					} else if (message.getType() == MessageLink.MType.CHALLENGE) {
 						out.println("I challenge you to take this quiz: " + message.getSubject());
+						out.println("<br>");
 						out.println("My score is " + message.getContent() + "%.");
 					}
 					

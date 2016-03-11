@@ -214,6 +214,29 @@ public class QuizTable {
 		}
 		return null;
 	}
+	
+	public List<QuizLink> getRecentValidQuizzesCreated( int n, Timestamp t ) {
+		try {
+			PreparedStatement pstmt = 
+					db.getPreparedStatement("SELECT * FROM quizzes "
+							+ "WHERE modifiedDate > ? AND numOfQuestions <> -1 ORDER BY modifiedDate DESC LIMIT ?");
+			pstmt.setTimestamp(1, t);
+			pstmt.setInt(2, n);
+			ResultSet rs = pstmt.executeQuery(); // Query
+
+			List<QuizLink> quizLinks = new ArrayList<QuizLink>();
+			while( rs.next() ) {
+				QuizLink quizLink = new QuizLink( rs.getInt("quizid"), rs.getString("name"),
+						rs.getString("creatorUsername"), rs.getTimestamp("modifiedDate"), null, 
+						rs.getInt("numOfTimesTaken"), null, 0);
+				quizLinks.add(quizLink);
+			}
+			return quizLinks;
+		} catch( SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * Query list of recently created quizzes by a person determined by its user name
