@@ -57,7 +57,7 @@ public class UpdateQuizServlet extends HttpServlet {
 				request.getRequestDispatcher("question-feedback.jsp").forward(request, response);
 			} else {
 				Integer nextIndex = currentIndex + 1;
-				request.getRequestDispatcher("take-quiz-multi.jsp?questionIndex=" + nextIndex).forward(request, response);
+				request.getRequestDispatcher("take-multi-page-quiz.jsp?questionIndex=" + nextIndex).forward(request, response);
 			}
 		} else {
 			if (immediateFeedback) {

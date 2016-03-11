@@ -21,7 +21,6 @@
 		<div class="container text-center">
 		<h2>Feedback for question <%=questionIndex %></h2>
 		<%question.answerSummary(out, questionIndex);%>
-		</div>
 		
 		<%
 		if (questionIndex == quiz.numOfQuestions()) {
@@ -35,6 +34,8 @@
 			out.println("</form>");
 		}
 		%>
+		</div>
+		
 	</div>
 	
 </body>
