@@ -65,7 +65,7 @@
 		SummaryStat newUserStats = newQuizSummary.mySummaryStat();
 		
 		SummaryStat newAllStats = newQuizSummary.allSummaryStat();
-		
+
 		out.println("<p>You've taken this quiz " + newUserStats.numberTaken + " times now.<p>");
 		out.println("<br>");
 		out.println("<h3>Score</h3>");

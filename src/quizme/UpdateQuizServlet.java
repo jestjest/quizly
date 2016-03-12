@@ -51,7 +51,7 @@ public class UpdateQuizServlet extends HttpServlet {
 
 		QuizSummaryInfo quizSummaryInfo = (QuizSummaryInfo) request.getSession().getAttribute("quizSummaryInfo");
 		boolean immediateFeedback = quizSummaryInfo.immediateCorrection();
-		if (currentIndex < quiz.numOfQuestions()) {
+		if (currentIndex < quiz.numOfQuestionsRemaining()) {
 			if (immediateFeedback) {
 				request.getRequestDispatcher("question-feedback.jsp").forward(request, response);
 			} else {

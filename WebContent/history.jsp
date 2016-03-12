@@ -65,9 +65,11 @@
     		out.println("<p>You have not taken any quizzes.</p>");
     	} else {
     		for (QuizLink quiz : takenQuizzes) {
+    			String score = String.format("%.2f", quiz.getScore());
+    			
 				String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateTaken());
 				out.println("You took " + quiz.getQuizLink() + " on " + date +
-						" and scored " + quiz.getScore() + "%.");
+						" and scored " + score + "%.");
 				out.println("<br>");
 			}
     	}

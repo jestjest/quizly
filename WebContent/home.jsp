@@ -137,8 +137,9 @@
 					
 					for (QuizLink quiz : userTakenQuizzes) {
 						String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateTaken());
+						String score = String.format("%.2f", quiz.getScore());
 						out.println("You took " + quiz.getQuizLink() + " on " + date +
-								" and scored " + quiz.getScore() + "%.");
+								" and scored " + score + "%.");
 						out.println("<br>");
 					}
 				%>
@@ -221,8 +222,10 @@
 					
 					for (QuizLink quiz : friendsQuizzesTaken) {
 						String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(quiz.getDateTaken());
+						String score = String.format("%.2f", quiz.getScore());
+						
 						out.println(quiz.getTakerLink() + " took " + quiz.getQuizLink() + " on " + date +
-								" and scored " + quiz.getScore() + "%.");
+								" and scored " + score + "%.");
 						out.println("<br>");
 					}
 				%>

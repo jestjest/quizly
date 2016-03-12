@@ -31,6 +31,8 @@
 		<form action='UpdateQuizServlet' method='POST'>
 			<%
 				int questionIndex = Integer.parseInt(request.getParameter("questionIndex"));
+				System.out.println("multipage: " + questionIndex);
+				System.out.println("size: " + quiz.numOfQuestionsRemaining());
 				Question question = quiz.getQuestion(questionIndex - 1);
 				out.println("Question " + questionIndex + "). ");
 				question.show(out, questionIndex);

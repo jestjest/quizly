@@ -108,8 +108,10 @@
 		out.println("You have not taken this quiz yet.");
 	} else {
 		for (Performance performance : myPerformance) {
+			String score = String.format("%.2f", performance.score);
+			String time = String.format("%.2f", performance.time / 1000.0);
 			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-			out.println("<p>On " + date + ", you scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
+			out.println("<p>On " + date + ", you scored " + score + "% in " + time + " seconds.</p>");
 		}
 	}
 	%>
@@ -125,8 +127,10 @@
 		out.println("No one has taken this quiz yet.");
 	} else {
 		for (Performance performance : bestPerformances) {
+			String score = String.format("%.2f", performance.score);
+			String time = String.format("%.2f", performance.time / 1000.0);
 			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-			out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
+			out.println("<p>On " + date + ", " + performance.username + " scored " + score + "% in " + time + " seconds.</p>");
 		}
 	}
 	%>
@@ -142,8 +146,10 @@
 			out.println("No one has taken this quiz today yet.");
 		} else {
 			for (Performance performance : topDayPerformances) {
+				String score = String.format("%.2f", performance.score);
+				String time = String.format("%.2f", performance.time / 1000.0);
 				String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-				out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
+				out.println("<p>On " + date + ", " + performance.username + " scored " + score + "% in " + time + " seconds.</p>");
 			}
 		}
 		%>
@@ -159,8 +165,10 @@
 			out.println("No one has recently taken this quiz.");
 		} else {
 			for (Performance performance : recentPerformances) {
+				String score = String.format("%.2f", performance.score);
+				String time = String.format("%.2f", performance.time / 1000.0);
 				String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(performance.dateTaken);
-				out.println("<p>On " + date + ", " + performance.username + " scored " + performance.score + "% in " + (performance.time / 1000.0) + " seconds.</p>");
+				out.println("<p>On " + date + ", " + performance.username + " scored " + score + "% in " + time + " seconds.</p>");
 			}
 		}
 		%>
